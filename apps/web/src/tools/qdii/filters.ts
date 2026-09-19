@@ -125,6 +125,30 @@ export function refine(funds: readonly FundRecord[], filters: QdiiFilters): Fund
   return sortFunds(filterFunds(funds, filters), filters.sort);
 }
 
+export type FacetDimension = 'region' | 'theme';
+
+/**
+ * 分面计数：各选项数量随其它筛选条件（币种、状态、额度、搜索…）实时变化。
+ * 统计时排除该维度自身的选择，避免已选项把同维其它选项清零。
+ */
+export function facetCounts(
+  funds: readonly FundRecord[],
+  filters: QdiiFilters,
+  dimension: FacetDimension,
+): Map<string, number> {
+  const base = filterFunds(funds, {
+    ...filters,
+    regions: dimension === 'region' ? [] : filters.regions,
+    themes: dimension === 'theme' ? [] : filters.themes,
+  });
+  const counts = new Map<string, number>();
+  for (const fund of base) {
+    const key = fund[dimension];
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  return counts;
+}
+
 export function toggleValue(list: readonly string[], value: string): string[] {
   return list.includes(value) ? list.filter((item) => item !== value) : [...list, value];
 }

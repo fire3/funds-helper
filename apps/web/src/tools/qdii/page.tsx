@@ -11,6 +11,7 @@ import { FundTable } from './FundTable.tsx';
 import {
   CURRENCY_FILTERS,
   DEFAULT_FILTERS,
+  facetCounts,
   fromSearchParams,
   LIMIT_BANDS,
   type QdiiFilters,
@@ -100,6 +101,8 @@ export default function QdiiPage() {
 
   const funds = datasetQuery.data?.funds ?? [];
   const visible = useMemo(() => refine(funds, filters), [funds, filters]);
+  const regionCounts = useMemo(() => facetCounts(funds, filters, 'region'), [funds, filters]);
+  const themeCounts = useMemo(() => facetCounts(funds, filters, 'theme'), [funds, filters]);
   const selectedRecord = useMemo(
     () => funds.find((fund) => fund.code === selectedCode) ?? null,
     [funds, selectedCode],
@@ -211,7 +214,9 @@ export default function QdiiPage() {
                   }
                 >
                   {item.name}
-                  <span className="ml-1 text-xs opacity-70">{item.count}</span>
+                  <span className="ml-1 text-xs opacity-70">
+                    {regionCounts.get(item.name) ?? 0}
+                  </span>
                 </Chip>
               ))}
             </FilterRow>
@@ -226,7 +231,7 @@ export default function QdiiPage() {
                   }
                 >
                   {item.name}
-                  <span className="ml-1 text-xs opacity-70">{item.count}</span>
+                  <span className="ml-1 text-xs opacity-70">{themeCounts.get(item.name) ?? 0}</span>
                 </Chip>
               ))}
             </FilterRow>

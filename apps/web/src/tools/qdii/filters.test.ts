@@ -2,6 +2,7 @@ import type { FundRecord } from '@funds-helper/shared';
 import { describe, expect, it } from 'vitest';
 import {
   DEFAULT_FILTERS,
+  facetCounts,
   filterFunds,
   fromSearchParams,
   type QdiiFilters,
@@ -230,6 +231,53 @@ describe('URL 同步（查询可分享）', () => {
 
   it('非法 sort 回退到默认值', () => {
     expect(fromSearchParams(new URLSearchParams('sort=bogus')).sort).toBe(DEFAULT_FILTERS.sort);
+  });
+});
+
+describe('分面计数', () => {
+  it('地区数量随币种筛选变化', () => {
+    const all = facetCounts(SAMPLE, filters({ status: '全部', currency: 'ALL' }), 'region');
+    expect(all.get('纳斯达克100')).toBe(2);
+    expect(all.get('美国')).toBe(1);
+
+    const cny = facetCounts(SAMPLE, filters({ status: '全部', currency: 'CNY' }), 'region');
+    expect(cny.get('纳斯达克100')).toBe(2);
+    expect(cny.get('美国') ?? 0).toBe(0);
+
+    const usd = facetCounts(SAMPLE, filters({ status: '全部', currency: 'USD' }), 'region');
+    expect(usd.get('美国')).toBe(1);
+    expect(usd.get('纳斯达克100') ?? 0).toBe(0);
+  });
+
+  it('主题数量随币种筛选变化', () => {
+    const cny = facetCounts(SAMPLE, filters({ status: '全部', currency: 'CNY' }), 'theme');
+    expect(cny.get('宽基指数')).toBe(5);
+
+    const usd = facetCounts(SAMPLE, filters({ status: '全部', currency: 'USD' }), 'theme');
+    expect(usd.get('宽基指数')).toBe(1);
+  });
+
+  it('统计时排除该维度自身的选择，同维其它选项不被清零', () => {
+    const counts = facetCounts(
+      SAMPLE,
+      filters({ status: '全部', currency: 'ALL', regions: ['纳斯达克100'] }),
+      'region',
+    );
+    expect(counts.get('标普500')).toBe(1);
+    expect(counts.get('全球')).toBe(1);
+
+    const themes = facetCounts(
+      SAMPLE,
+      filters({ status: '全部', currency: 'ALL', regions: ['纳斯达克100'] }),
+      'theme',
+    );
+    expect(themes.get('宽基指数')).toBe(2);
+  });
+
+  it('数量随其它维度条件变化', () => {
+    const buyable = facetCounts(SAMPLE, filters({ status: '可买', currency: 'ALL' }), 'region');
+    expect(buyable.get('纳斯达克100')).toBe(2);
+    expect(buyable.get('标普500') ?? 0).toBe(0);
   });
 });
 
