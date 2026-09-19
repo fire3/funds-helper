@@ -1,3 +1,4 @@
+import type { PurchaseSnapshotRow } from '@funds-helper/sources';
 import { buildApp } from '../app.ts';
 import type { AppConfig } from '../config.ts';
 import { createQdiiTool } from '../tools/qdii/index.ts';
@@ -17,18 +18,27 @@ export interface Harness {
   close(): Promise<void>;
 }
 
+export interface HarnessOptions {
+  config?: Partial<AppConfig>;
+  /** 覆盖假数据源的行（例如测试美元份额时需要美元行） */
+  rows?: PurchaseSnapshotRow[];
+  /** 用同一个假数据源与「当前时间」构造被测工具；默认只注册 QDII 工具 */
+  buildTools?: (deps: { source: FakeQdiiSource; now: () => number }) => ServerTool[];
+}
+
 /**
  * 起一个完整应用（内存库 + 假数据源），用 `app.inject()` 打接口 ——
  * 不占端口、不触网，但仍走真实的路由 / 错误处理 / 服务层链路。
  */
-export async function createHarness(
-  options: { config?: Partial<AppConfig>; tools?: ServerTool[] } = {},
-): Promise<Harness> {
-  const source = createFakeQdiiSource();
+export async function createHarness(options: HarnessOptions = {}): Promise<Harness> {
+  const source = createFakeQdiiSource(options.rows === undefined ? {} : { rows: options.rows });
   let now = Date.parse('2026-09-14T10:00:00.000Z');
+  const nowFn = (): number => now;
 
   const config = testConfig(options.config);
-  const tools = options.tools ?? [createQdiiTool({ source, now: () => now })];
+  const tools = options.buildTools
+    ? options.buildTools({ source, now: nowFn })
+    : [createQdiiTool({ source, now: nowFn })];
 
   const built = await buildApp({
     config,

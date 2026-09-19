@@ -1,5 +1,16 @@
-import { CURRENCY_VALUES, PurchaseStatus, REDEEM_STATUS_VALUES } from '@funds-helper/core';
-import { CURRENCIES, PURCHASE_STATUSES, REDEEM_STATUSES, TOOL_CATALOG } from '@funds-helper/shared';
+import {
+  USD_KINDS as CORE_USD_KINDS,
+  CURRENCY_VALUES,
+  PurchaseStatus,
+  REDEEM_STATUS_VALUES,
+} from '@funds-helper/core';
+import {
+  CURRENCIES,
+  PURCHASE_STATUSES,
+  REDEEM_STATUSES,
+  USD_KINDS as SHARED_USD_KINDS,
+  TOOL_CATALOG,
+} from '@funds-helper/shared';
 import { describe, expect, it } from 'vitest';
 import { createServerTools } from './tools/registry.ts';
 
@@ -25,6 +36,10 @@ describe('core 领域模型 ↔ shared 传输契约', () => {
   it('申购与赎回是两套不同的枚举（防止有人图省事合并它们）', () => {
     expect([...PURCHASE_STATUSES]).not.toEqual([...REDEEM_STATUSES]);
   });
+
+  it('美元份额形式取值完全一致（含顺序）', () => {
+    expect(Object.values(CORE_USD_KINDS)).toEqual([...SHARED_USD_KINDS]);
+  });
 });
 
 describe('工具注册表与 shared 目录', () => {
@@ -37,15 +52,20 @@ describe('工具注册表与 shared 目录', () => {
 
   it('注册表里的描述符与 shared 目录指向同一个对象（服务端启动时的一致性断言）', () => {
     const tools = createServerTools();
-    expect(tools).toHaveLength(1);
+    expect(tools).toHaveLength(2);
     expect(tools[0]?.descriptor).toBe(TOOL_CATALOG.qdii);
+    expect(tools[1]?.descriptor).toBe(TOOL_CATALOG.usd);
   });
 
-  it('QDII 工具声明了定时任务', () => {
+  it('每个工具都声明了 5 段式 cron 的定时任务', () => {
     const tools = createServerTools();
-    const jobs = tools[0]?.jobs?.({} as never) ?? [];
-    expect(jobs.map((job) => job.name)).toEqual(['qdii.snapshot', 'qdii.premium']);
-    for (const job of jobs) {
+    const qdiiJobs = tools[0]?.jobs?.({} as never) ?? [];
+    const usdJobs = tools[1]?.jobs?.({} as never) ?? [];
+
+    expect(qdiiJobs.map((job) => job.name)).toEqual(['qdii.snapshot', 'qdii.premium']);
+    expect(usdJobs.map((job) => job.name)).toEqual(['usd.snapshot']);
+
+    for (const job of [...qdiiJobs, ...usdJobs]) {
       expect(job.cron.split(' ')).toHaveLength(5);
     }
   });

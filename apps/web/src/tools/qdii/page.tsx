@@ -5,7 +5,7 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Chart } from '../../components/Chart.tsx';
 import { FreshnessBadge } from '../../components/FreshnessBadge.tsx';
 import { Chip, EmptyState, ErrorState, Spinner } from '../../components/ui.tsx';
-import { api } from '../../lib/api.ts';
+import { api, apiErrorDetail } from '../../lib/api.ts';
 import { FundDrawer } from './FundDrawer.tsx';
 import { FundTable } from './FundTable.tsx';
 import {
@@ -176,12 +176,7 @@ export default function QdiiPage() {
         </p>
       ) : null}
       {refreshMutation.isError ? (
-        <ErrorState
-          message="重新抓取失败"
-          detail={
-            refreshMutation.error instanceof Error ? refreshMutation.error.message : undefined
-          }
-        />
+        <ErrorState message="重新抓取失败" detail={apiErrorDetail(refreshMutation.error)} />
       ) : null}
 
       <nav className="flex gap-1 border-b border-slate-200 dark:border-slate-800">
@@ -209,8 +204,8 @@ export default function QdiiPage() {
       {datasetQuery.isPending ? <Spinner label="加载 QDII 数据集…" /> : null}
       {datasetQuery.isError ? (
         <ErrorState
-          message="数据集加载失败"
-          detail={datasetQuery.error instanceof Error ? datasetQuery.error.message : undefined}
+          message="数据集加载失败（上游可能临时不可用，可点右上角「重新抓取上游」重试）"
+          detail={apiErrorDetail(datasetQuery.error)}
         />
       ) : null}
 

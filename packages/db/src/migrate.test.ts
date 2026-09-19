@@ -112,10 +112,24 @@ describe('runMigrations', () => {
       'qdii_notice',
       'qdii_premium',
       'qdii_detail_cache',
+      'usd_fund',
+      'usd_snapshot',
+      'usd_sibling',
+      'usd_detail_cache',
       'schema_migration',
     ]) {
       expect(tables).toContain(expected);
     }
+    db.close();
+  });
+
+  it('usd_snapshot 具备 channel_not_sold 列（这条列由 0003 追加迁移补齐）', () => {
+    const db = openDb(':memory:');
+    runMigrations(db);
+    const columns = db
+      .all<{ name: string }>('PRAGMA table_info(usd_snapshot)')
+      .map((row) => row.name);
+    expect(columns).toContain('channel_not_sold');
     db.close();
   });
 

@@ -1,46 +1,10 @@
-import {
-  type FundDetailData,
-  fetchFundDetail,
-  fetchHoldings,
-  fetchLimitNotices,
-  fetchPeriodIncrease,
-  fetchPingzhong,
-  fetchPurchaseSnapshot,
-  fetchQuotes,
-  type HoldingsData,
-  type HttpClient,
-  type PeriodIncreaseData,
-  type PurchaseSnapshot,
-  type QuoteItem,
-  type RawNotice,
-} from '@funds-helper/sources';
-
 /**
- * QDII 工具所需的数据源能力集合。
+ * QDII 切片的数据源转发。
  *
- * 收敛成接口是为了让测试可以注入替身 —— 服务端集成测试的降级路径
- * （上游故障时返回陈旧快照）靠的就是替换这一层。
+ * 上游能力本身与 QDII 无关，已上移到 `../../data-sources/eastmoney.ts`
+ * （「美元份额」工具共用同一份）。这里保留转发与旧别名，使 QDII 内部与既有测试
+ * 的 `./data-source.ts` / `QdiiDataSource` 引用无需改动。
  */
-export interface QdiiDataSource {
-  readonly name: string;
-  fetchSnapshot(): Promise<PurchaseSnapshot>;
-  fetchFundDetail(code: string): Promise<FundDetailData>;
-  fetchNotices(code: string, size?: number): Promise<RawNotice[]>;
-  fetchPingzhong(code: string): Promise<Record<string, unknown>>;
-  fetchPeriodIncrease(code: string): Promise<PeriodIncreaseData>;
-  fetchHoldings(code: string): Promise<HoldingsData>;
-  fetchQuotes(codes: readonly string[]): Promise<QuoteItem[]>;
-}
 
-export function createEastmoneyDataSource(http: HttpClient): QdiiDataSource {
-  return {
-    name: 'eastmoney',
-    fetchSnapshot: () => fetchPurchaseSnapshot(http),
-    fetchFundDetail: (code) => fetchFundDetail(http, code),
-    fetchNotices: (code, size) => fetchLimitNotices(http, code, size),
-    fetchPingzhong: (code) => fetchPingzhong(http, code),
-    fetchPeriodIncrease: (code) => fetchPeriodIncrease(http, code),
-    fetchHoldings: (code) => fetchHoldings(http, code),
-    fetchQuotes: (codes) => fetchQuotes(http, codes),
-  };
-}
+export type { EastmoneyFundDataSource as QdiiDataSource } from '../../data-sources/eastmoney.ts';
+export * from '../../data-sources/eastmoney.ts';

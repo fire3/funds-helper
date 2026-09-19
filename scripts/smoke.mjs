@@ -83,6 +83,7 @@ async function main() {
   const health = await getJson('/api/health');
   check('health 状态为 ok', health.body?.status === 'ok', `status=${health.body?.status}`);
   check('工具清单包含 qdii', health.body?.tools?.some((tool) => tool.id === 'qdii') === true);
+  check('工具清单包含 usd', health.body?.tools?.some((tool) => tool.id === 'usd') === true);
 
   const tools = await getJson('/api/tools');
   check('GET /api/tools 正常', tools.status === 200, `HTTP ${tools.status}`);
@@ -143,6 +144,46 @@ async function main() {
 
   const changes = await getJson('/api/tools/qdii/changes');
   check('GET /changes 正常', changes.status === 200);
+
+  // ---- 美元份额工具（复用同一份全市场快照，按币种筛选）----
+  const usdRefreshResponse = await fetch(`${BASE}/api/tools/usd/refresh`, { method: 'POST' });
+  const usdRefresh = await usdRefreshResponse.json().catch(() => null);
+  check(
+    'POST /api/tools/usd/refresh 成功拉取上游',
+    usdRefreshResponse.ok && usdRefresh?.ok === true,
+    usdRefreshResponse.ok ? `total=${usdRefresh?.total}` : JSON.stringify(usdRefresh),
+  );
+
+  const usdDataset = await getJson('/api/tools/usd/dataset');
+  check('GET /api/tools/usd/dataset 正常', usdDataset.status === 200, `HTTP ${usdDataset.status}`);
+  check(
+    '美元份额数量达到预期下限（≥100）',
+    (usdDataset.body?.total ?? 0) >= 100,
+    `total=${usdDataset.body?.total}`,
+  );
+
+  const usdFunds = usdDataset.body?.funds ?? [];
+  const usdSample = usdFunds[0];
+  check(
+    '美元份额记录带份额形式与额度文案',
+    Boolean(usdSample?.usdKind && usdSample?.limitText),
+    usdSample ? `${usdSample.code} ${usdSample.usdKind} ${usdSample.limitText}` : '无记录',
+  );
+  check(
+    '存在现汇/现钞份额',
+    usdFunds.some((fund) => fund.usdKind === '现汇' || fund.usdKind === '现钞'),
+    `${usdFunds.filter((fund) => fund.usdKind !== '未标注').length} 只`,
+  );
+
+  if (usdSample?.code) {
+    const usdDetailResponse = await fetch(`${BASE}/api/tools/usd/funds/${usdSample.code}`);
+    const usdDetail = await usdDetailResponse.json().catch(() => null);
+    check(
+      'GET /api/tools/usd/funds/:code 正常',
+      usdDetailResponse.ok && usdDetail?.code === usdSample.code,
+      usdDetailResponse.ok ? `净值点 ${usdDetail?.navTrend?.length}` : '',
+    );
+  }
 
   // ---- 错误处理 ----
   const badCode = await fetch(`${BASE}/api/tools/qdii/funds/abc`);

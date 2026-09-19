@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./qdii": "./src/qdii/index.ts"
+    "./qdii": "./src/qdii/index.ts",
+    "./usd": "./src/usd/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",

@@ -8,3 +8,8 @@
 - Builds software as an extensible "toolbox": a shared shell/framework plus independent pluggable tools, designed up-front so new tools can be added incrementally over time without touching framework code. Confidence: 0.75
 - Expects the same app to run both locally during development and on a personal server long-term, and wants the design to cover both. Confidence: 0.55
 - Builds personal, single-user tools (no multi-user/account system or auth requirement). Confidence: 0.6
+- Hosts personal projects on GitHub under their own account, and uses SSH remotes (`git@github.com:...`) rather than HTTPS. Confidence: 0.65
+- Uses `main` as the default git branch name. Confidence: 0.6
+- Communicates in Simplified Chinese, including bug reports and change requests (concise, UI-behavior-focused: describes observed vs. expected behavior). Confidence: 0.6
+- Delegates version control to the agent with terse directives ("commit push" / "commit and push") and expects changes committed straight to `main` and pushed — no feature branch or PR review step. Confidence: 0.65
+- Expects error states to surface the real root cause (including server-side `detail`) rather than a misleading or generic message — flagged a UI that only showed 「上游接口不可用…」 as a bug to fix. Confidence: 0.55

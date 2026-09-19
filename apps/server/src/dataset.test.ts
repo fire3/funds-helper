@@ -181,6 +181,18 @@ describe('降级：上游故障时的读路径', () => {
     }
   });
 
+  it('非上游的内部错误必须暴露为 500，不能伪装成「上游不可用」503', async () => {
+    const h = await createHarness();
+    try {
+      h.source.failures.add('snapshot:internal');
+      const response = await h.inject({ method: 'GET', url: '/api/tools/qdii/dataset' });
+      expect(response.statusCode).toBe(500);
+      expect(response.json()).toMatchObject({ error: { code: 'INTERNAL' } });
+    } finally {
+      await h.close();
+    }
+  });
+
   it('数据仍在陈旧窗口内时不会去打上游', async () => {
     const h = await createHarness();
     try {

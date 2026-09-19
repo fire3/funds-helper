@@ -18,9 +18,6 @@ import {
   parseCurrency,
   parsePurchaseStatus,
   parseRedeemStatus,
-  periodLabel,
-  periodRank,
-  summarizeNav,
 } from '@funds-helper/core';
 import type { Db } from '@funds-helper/db';
 import {
@@ -33,27 +30,17 @@ import {
   type QdiiPremiumResponse,
   type ShareClass,
 } from '@funds-helper/shared';
-import {
-  extractAllocation,
-  extractHolders,
-  extractNavTrend,
-  extractScale,
-  noticeUrl,
-  ParseError,
-  tsToDate,
-  UpstreamError,
-} from '@funds-helper/sources';
+import { ParseError, UpstreamError } from '@funds-helper/sources';
 import type { FastifyBaseLogger } from 'fastify';
 import type { AppConfig } from '../../config.ts';
 import { AppError, badRequest, notFound } from '../../errors.ts';
+import { buildFundDetailSections } from '../../fund-detail/sections.ts';
+import { todayInShanghai } from '../../time.ts';
 import type { QdiiDataSource } from './data-source.ts';
 import type { ChangeRow, QdiiRepository, SnapshotRow } from './repository.ts';
 
 /** QDII 数量的回归护栏：跌破这个数说明上游基金类型标签八成变了 */
 export const QDII_MIN_EXPECTED = 500;
-
-/** 净值走势只回传最近约 3.2 年（800 个交易日），全量 3000+ 点没有意义 */
-export const NAV_POINTS = 800;
 
 const DATASET_CACHE_KEY = 'qdii.dataset';
 const PREMIUM_CACHE_KEY = 'qdii.premium';
@@ -74,10 +61,6 @@ export interface QdiiServiceDeps {
   config: AppConfig;
   logger: FastifyBaseLogger;
   now?: () => number;
-}
-
-function todayInShanghai(now: number): string {
-  return new Date(now + 8 * 3_600_000).toISOString().slice(0, 10);
 }
 
 function rowToFundLimit(row: SnapshotRow): FundLimit {
@@ -236,11 +219,15 @@ export class QdiiService {
       try {
         await this.captureSnapshot();
       } catch (error) {
+        // 只有上游故障才降级。数据库/编程错误必须原样暴露（500），
+        // 否则会被伪装成「上游不可用」，掩盖真正的 bug。
+        if (!(error instanceof UpstreamError)) throw error;
+
         const message = error instanceof Error ? error.message : String(error);
         if (!hasData) {
           throw new AppError(
             'UPSTREAM_UNAVAILABLE',
-            '上游接口不可用，且本地还没有任何数据',
+            '上游接口不可用，且本地还没有任何数据（可稍后点「重新抓取上游」重试）',
             message,
           );
         }
@@ -302,119 +289,18 @@ export class QdiiService {
     return detail;
   }
 
-  /** 四类上游数据各自独立容错：某块失败只影响对应区块，其余照常返回 */
+  /**
+   * 通用区块（净值/收益/持仓/公告）交给共享聚合；
+   * 这里只补 QDII 专有的：record、同基金份额类别、购买建议，并把公告落库。
+   */
   private async buildFundDetail(
     record: FundRecord,
     allRecords: readonly FundRecord[],
   ): Promise<QdiiFundDetailResponse> {
     const code = record.code;
-    const errors: string[] = [];
-    const timed = <T extends Error>(label: string, error: T): void => {
-      errors.push(`${label}不可用：${error.message}`);
-    };
-
-    let base: QdiiFundDetailResponse['base'] = null;
-    let navTrend: QdiiFundDetailResponse['navTrend'] = [];
-    let navSummary: QdiiFundDetailResponse['navSummary'] = [];
-    let scale: QdiiFundDetailResponse['scale'] = [];
-    let allocation: QdiiFundDetailResponse['allocation'] = [];
-    let holders: QdiiFundDetailResponse['holders'] = [];
-    let periods: QdiiFundDetailResponse['periods'] = [];
-    let holdings: QdiiFundDetailResponse['holdings'] = {
-      stocks: [],
-      bonds: [],
-      etf: null,
-    };
-    let reportDate: string | null = null;
-    let notices: QdiiFundDetailResponse['notices'] = [];
-
-    try {
-      const detail = await this.deps.source.fetchFundDetail(code);
-      base = {
-        name: detail.name,
-        fundType: detail.fundType,
-        company: detail.company,
-        manager: detail.manager,
-        purchaseStatus: detail.purchaseStatus,
-        redeemStatus: detail.redeemStatus,
-        maxPurchase: toNumberOrNull(detail.maxPurchase),
-        minPurchase: toNumberOrNull(detail.minPurchase),
-        nav: toNumberOrNull(detail.nav),
-        navDate: detail.navDate,
-        nextOpenDate: detail.nextOpenDate,
-        sourceRate: detail.sourceRate,
-        rate: detail.rate,
-        riskLevel: detail.riskLevel,
-      };
-    } catch (error) {
-      if (error instanceof UpstreamError) timed('详情接口', error);
-      else throw error;
-    }
-
-    try {
-      const pingzhong = await this.deps.source.fetchPingzhong(code);
-      const points = extractNavTrend(pingzhong).map((point) => ({
-        date: tsToDate(point.x),
-        nav: point.y,
-        change: point.equityReturn,
-      }));
-      // 区间统计用完整历史，图表只回传最近 NAV_POINTS 个点
-      navSummary = summarizeNav(points);
-      navTrend = points.slice(-NAV_POINTS);
-      scale = extractScale(pingzhong).map((point) => ({
-        date: point.date,
-        scale: point.scale,
-        mom: point.mom,
-      }));
-      allocation = extractAllocation(pingzhong).map((item) => ({
-        name: item.name,
-        value: item.value,
-      }));
-      holders = extractHolders(pingzhong).map((item) => ({ name: item.name, value: item.value }));
-    } catch (error) {
-      if (error instanceof UpstreamError) timed('净值走势', error);
-      else throw error;
-    }
-
-    try {
-      const increase = await this.deps.source.fetchPeriodIncrease(code);
-      periods = increase.periods
-        .map((period) => ({
-          key: period.title,
-          label: periodLabel(period.title),
-          ret: toNumberOrNull(period.ret),
-          avg: toNumberOrNull(period.avg),
-          bench: toNumberOrNull(period.bench),
-          rank: toNumberOrNull(period.rank),
-          total: toNumberOrNull(period.total),
-        }))
-        .sort((a, b) => periodRank(a.key) - periodRank(b.key));
-    } catch (error) {
-      if (error instanceof UpstreamError) timed('阶段涨幅', error);
-      else throw error;
-    }
-
-    try {
-      const raw = await this.deps.source.fetchHoldings(code);
-      reportDate = raw.reportDate;
-      holdings = { stocks: raw.stocks, bonds: raw.bonds, etf: raw.etf };
-    } catch (error) {
-      if (error instanceof UpstreamError) timed('持仓数据', error);
-      else throw error;
-    }
-
-    try {
-      const raw = await this.deps.source.fetchNotices(code, 8);
-      this.deps.repo.upsertNotices(code, raw);
-      notices = raw.map((notice) => ({
-        id: notice.id,
-        title: notice.title,
-        publishDate: notice.publishDate,
-        url: noticeUrl(code, notice.id),
-      }));
-    } catch (error) {
-      if (error instanceof UpstreamError) timed('限购公告', error);
-      else throw error;
+    const sections = await buildFundDetailSections(this.deps.source, code);
+    if (sections.rawNotices.length > 0) {
+      this.deps.repo.upsertNotices(code, sections.rawNotices);
     }
 
     // 同基金其它份额类别（A/C 选择用）
@@ -438,26 +324,26 @@ export class QdiiService {
         limitText: sibling.dailyLimit === null ? '无限额' : `${sibling.dailyLimit} 元`,
         status: sibling.status,
       })),
-      company: base?.company ?? null,
-      rate: base?.rate ?? null,
+      company: sections.base?.company ?? null,
+      rate: sections.base?.rate ?? null,
     });
 
     return {
       code,
       record,
-      base,
-      navTrend,
-      navSummary,
-      scale,
-      allocation,
-      holders,
-      periods,
-      holdings,
-      reportDate,
+      base: sections.base,
+      navTrend: sections.navTrend,
+      navSummary: sections.navSummary,
+      scale: sections.scale,
+      allocation: sections.allocation,
+      holders: sections.holders,
+      periods: sections.periods,
+      holdings: sections.holdings,
+      reportDate: sections.reportDate,
       shareClasses: siblings,
       advice,
-      notices,
-      errors,
+      notices: sections.notices,
+      errors: sections.errors,
       freshness: this.freshness(),
       disclaimer: DISCLAIMER,
     };
@@ -575,12 +461,6 @@ export class QdiiService {
   totalChanges(): number {
     return this.deps.repo.countChanges();
   }
-}
-
-function toNumberOrNull(raw: string | null | undefined): number | null {
-  if (raw === null || raw === undefined || raw === '') return null;
-  const value = Number(raw);
-  return Number.isFinite(value) ? value : null;
 }
 
 /** FundRecord → FundLimit（仅用于把已有记录喂给纯函数，不重新归一化） */

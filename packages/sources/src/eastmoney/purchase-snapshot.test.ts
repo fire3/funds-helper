@@ -59,6 +59,32 @@ describe('parsePurchaseSnapshot —— 接口 A（主数据源）', () => {
   });
 });
 
+describe('parsePurchaseSnapshot —— 美元份额行（币种口径的回归资产）', () => {
+  it('覆盖各类美元份额写法，且「人民币」优先的反例一并保留', () => {
+    const snapshot = parsePurchaseSnapshot(fixture('usd-rows.js.txt'));
+    expect(snapshot.rows).toHaveLength(8);
+
+    const names = snapshot.rows.map((row) => row.name);
+    for (const marker of ['美元现汇', '美元现钞', '美汇', '美钞', '现汇', '美元']) {
+      expect(names.some((name) => name.includes(marker))).toBe(true);
+    }
+    // 美元债主题是「人民币份额」的反例（名称含「美元」但不是美元份额）
+    expect(names.filter((name) => name.includes('人民币') && name.includes('美元'))).toHaveLength(
+      2,
+    );
+  });
+
+  it('保留原始限额值（美元份额常为 0 或极小值，由 core 决定语义）', () => {
+    const snapshot = parsePurchaseSnapshot(fixture('usd-rows.js.txt'));
+    const reits = snapshot.rows.find((row) => row.code === '005615');
+    expect(reits).toMatchObject({
+      name: '摩根富时发达市场REITs指数(QDII)美汇',
+      purchaseStatus: '限大额',
+      dailyLimit: '0',
+    });
+  });
+});
+
 describe('parsePurchaseSnapshot —— 字段残缺的真实行', () => {
   it('个别脏行不会让整个数据集失败（实测：028912 的基金类型为空串）', () => {
     const snapshot = parsePurchaseSnapshot(fixture('sparse-rows.js.txt'));

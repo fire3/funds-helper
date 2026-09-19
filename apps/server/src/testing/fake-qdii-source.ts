@@ -91,6 +91,58 @@ export function defaultRows(): PurchaseSnapshotRow[] {
   ];
 }
 
+/**
+ * 美元份额工具的假数据集：4 只美元份额 + 1 只人民币同类份额（供份额对照测试）
+ * + 1 只非美元基金（必须被过滤）。
+ */
+export function usdRows(): PurchaseSnapshotRow[] {
+  return [
+    row({
+      code: '011000',
+      name: '嘉实美国成长股票美元现汇',
+      fundType: 'QDII-普通股票',
+      purchaseStatus: '限大额',
+      dailyLimit: '0',
+      minPurchase: '10.0',
+    }),
+    // 同基金的人民币份额：应作为 011000 的对照，自身不应出现在美元列表里
+    row({
+      code: '011001',
+      name: '嘉实美国成长股票人民币',
+      fundType: 'QDII-普通股票',
+      purchaseStatus: '限大额',
+      dailyLimit: '100.0',
+      minPurchase: '10.0',
+    }),
+    row({
+      code: '011002',
+      name: '广发纳斯达克100ETF联接美元(QDII)A',
+      fundType: '指数型-海外股票',
+      purchaseStatus: '开放申购',
+      dailyLimit: '100000000000',
+      minPurchase: '100.0',
+    }),
+    row({
+      code: '011003',
+      name: '华夏恒生ETF联接美钞',
+      fundType: '指数型-海外股票',
+      purchaseStatus: '暂停申购',
+      dailyLimit: '0',
+      minPurchase: '10.0',
+    }),
+    row({
+      code: '011004',
+      name: '博时标普500ETF联接美元现汇',
+      fundType: '指数型-海外股票',
+      purchaseStatus: '限大额',
+      dailyLimit: '5000',
+      minPurchase: '10.0',
+    }),
+    // 非美元份额，必须被过滤掉
+    row({ code: '000001', name: '华夏成长混合', fundType: '混合型-灵活' }),
+  ];
+}
+
 export function createFakeQdiiSource(
   options: { rows?: PurchaseSnapshotRow[] } = {},
 ): FakeQdiiSource {
@@ -104,6 +156,8 @@ export function createFakeQdiiSource(
     async fetchSnapshot(): Promise<PurchaseSnapshot> {
       source.calls.snapshot = (source.calls.snapshot ?? 0) + 1;
       if (source.failures.has('snapshot')) throw new UpstreamError('模拟：申购状态接口不可用');
+      // 模拟「非上游」的内部错误（如数据库 schema 漂移）：用于验证它不会被伪装成 503
+      if (source.failures.has('snapshot:internal')) throw new Error('模拟：底层数据库错误');
       return {
         rows: source.rows,
         meta: {

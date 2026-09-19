@@ -1,4 +1,6 @@
 import { SQL as INIT } from './0001-init.ts';
+import { SQL as USD } from './0002-usd.ts';
+import { SQL as USD_CHANNEL_NOT_SOLD } from './0003-usd-channel-not-sold.ts';
 
 export interface Migration {
   id: string;
@@ -11,4 +13,8 @@ export interface Migration {
  * **约定**：已发布的迁移不可修改，只能追加新文件 —— 否则已有数据库无法收敛。
  * 新增一个工具的 schema 时，在这里追加一条。
  */
-export const MIGRATIONS: readonly Migration[] = [{ id: '0001-init', sql: INIT }];
+export const MIGRATIONS: readonly Migration[] = [
+  { id: '0001-init', sql: INIT },
+  { id: '0002-usd', sql: USD },
+  { id: '0003-usd-channel-not-sold', sql: USD_CHANNEL_NOT_SOLD },
+];

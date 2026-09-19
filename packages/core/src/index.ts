@@ -6,3 +6,4 @@
  */
 export * from './fund/code.ts';
 export * from './qdii/index.ts';
+export * from './usd/index.ts';

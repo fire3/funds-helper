@@ -1,5 +1,6 @@
 import type { ChangeItem, FundRecord, QdiiPremiumResponse } from '@funds-helper/shared';
 import { Badge, EmptyState, ErrorState, Spinner } from '../../components/ui.tsx';
+import { apiErrorDetail } from '../../lib/api.ts';
 import { formatPremium } from '../../lib/format.ts';
 
 /**
@@ -20,12 +21,7 @@ export function PremiumPanel({
   if (isPending) return <Spinner label="加载场内行情…" />;
 
   if (error) {
-    return (
-      <ErrorState
-        message="行情加载失败"
-        detail={error instanceof Error ? error.message : undefined}
-      />
-    );
+    return <ErrorState message="行情加载失败" detail={apiErrorDetail(error)} />;
   }
 
   if (!data || data.items.length === 0) {
@@ -103,12 +99,7 @@ export function ChangesPanel({
 }) {
   if (isPending) return <Spinner label="加载变更记录…" />;
   if (error) {
-    return (
-      <ErrorState
-        message="变更记录加载失败"
-        detail={error instanceof Error ? error.message : undefined}
-      />
-    );
+    return <ErrorState message="变更记录加载失败" detail={apiErrorDetail(error)} />;
   }
   if (items.length === 0) {
     return (

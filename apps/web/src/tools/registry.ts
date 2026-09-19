@@ -1,4 +1,4 @@
-import type { ToolDescriptor } from '@funds-helper/shared';
+import { TOOL_CATALOG, type ToolDescriptor } from '@funds-helper/shared';
 import { type ComponentType, type LazyExoticComponent, lazy } from 'react';
 
 export interface WebTool {
@@ -26,6 +26,10 @@ export const WEB_TOOLS: WebTool[] = [
       tags: ['QDII', '限购', '额度', '场内溢价'],
     },
     page: lazy(() => import('./qdii/page.tsx')),
+  },
+  {
+    descriptor: TOOL_CATALOG.usd,
+    page: lazy(() => import('./usd/page.tsx')),
   },
 ];
 

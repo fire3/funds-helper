@@ -12,6 +12,12 @@ import {
   QdiiRefreshResponseSchema,
   type ToolDescriptor,
   ToolListResponseSchema,
+  type UsdDatasetResponse,
+  UsdDatasetResponseSchema,
+  type UsdFundDetailResponse,
+  UsdFundDetailResponseSchema,
+  type UsdRefreshResponse,
+  UsdRefreshResponseSchema,
 } from '@funds-helper/shared';
 import type { ZodType, z } from 'zod';
 
@@ -71,6 +77,25 @@ async function request<S extends ZodType>(
   return parsed.data;
 }
 
+/** 面向用户的中文错误说明 */
+export function apiErrorMessage(error: unknown): string | undefined {
+  if (error instanceof ApiError) return error.message;
+  if (error instanceof Error) return error.message;
+  return undefined;
+}
+
+/**
+ * 面向排障的细节 —— **优先展示服务端返回的 `detail`**。
+ *
+ * 服务端的通用 message（如「上游接口不可用，且本地还没有任何数据」）不说明原因，
+ * 真正有用的是 detail（超时 / DNS / 解析失败…）。界面必须把它显示出来，否则无从排障。
+ */
+export function apiErrorDetail(error: unknown): string | undefined {
+  if (error instanceof ApiError) return error.detail ?? error.message;
+  if (error instanceof Error) return error.message;
+  return undefined;
+}
+
 export const api = {
   listTools: (): Promise<ToolDescriptor[]> =>
     request('/api/tools', ToolListResponseSchema).then((data) => data.tools),
@@ -92,4 +117,16 @@ export const api = {
 
   refreshQdii: (): Promise<QdiiRefreshResponse> =>
     request('/api/tools/qdii/refresh', QdiiRefreshResponseSchema, { method: 'POST' }),
+
+  getUsdDataset: (refresh = false): Promise<UsdDatasetResponse> =>
+    request(`/api/tools/usd/dataset${refresh ? '?refresh=1' : ''}`, UsdDatasetResponseSchema),
+
+  getUsdFund: (code: string, refresh = false): Promise<UsdFundDetailResponse> =>
+    request(
+      `/api/tools/usd/funds/${code}${refresh ? '?refresh=1' : ''}`,
+      UsdFundDetailResponseSchema,
+    ),
+
+  refreshUsd: (): Promise<UsdRefreshResponse> =>
+    request('/api/tools/usd/refresh', UsdRefreshResponseSchema, { method: 'POST' }),
 };

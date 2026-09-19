@@ -14,6 +14,7 @@
 | 工具 | 解决什么问题 | 状态 |
 |---|---|---|
 | **QDII 额度** | 「我想买的这只 QDII，今天还能买多少？」 | ✅ 可用 |
+| **美元份额** | 「我想用美元买基金，全市场有哪些美元份额、现在还能不能买？」 | ✅ 可用 |
 | 后续工具 | 待定 | 规划中 |
 
 ---
@@ -96,10 +97,10 @@ SQLite 落库文件通过 volume 挂在宿主机 `./data`，容器重建不丢�
 ## 架构
 
 ```
-apps/server      Fastify 后端（工具注册 + QDII 路由 + 定时任务）
-apps/web         React + Vite 前端（工具箱外壳 + QDII 页面）
+apps/server      Fastify 后端（工具注册 + QDII/美元份额路由 + 定时任务）
+apps/web         React + Vite 前端（工具箱外壳 + 工具页面）
 packages/shared  前后端共享的类型契约（Zod）
-packages/core    领域逻辑（纯函数：归一化 / 归类 / 排序 / 变更检测）
+packages/core    领域逻辑（纯函数：归一化 / 归类 / 排序 / 币种与份额判定）
 packages/sources 上游数据源适配器（天天基金各接口）
 packages/db      SQLite 持久化（node:sqlite + 版本化迁移）
 ```
@@ -124,6 +125,7 @@ packages/db      SQLite 持久化（node:sqlite + 版本化迁移）
 | [`architecture.md`](docs/design/architecture.md) | 总技术架构方案 —— 分层、monorepo、技术选型（含 8 条 ADR）、数据架构、部署、测试 |
 | [`qdii-tool.md`](docs/design/qdii-tool.md) | QDII 工具详细设计 —— 领域模型、归一化/归类算法、接口、交互、**实测发现** |
 | [`qdii-data-sources.md`](docs/design/qdii-data-sources.md) | 上游接口调研 —— 天天基金 / 东方财富限购相关接口的逆向结论 |
+| [`usd-tool.md`](docs/design/usd-tool.md) | 美元份额工具详细设计 —— 币种/份额形式判定、「渠道不适用」口径、与 QDII 的分工 |
 
 数据源调研与领域规则（QDII 口径、限额哨兵值、币种判定、双维度归类）来源于
 [`qdii-helper`](../qdii-helper)（Python 实现）；本项目复用其**数据结论与业务规则**，

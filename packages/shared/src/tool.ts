@@ -37,8 +37,20 @@ const QDII: ToolDescriptor = {
   tags: ['QDII', '限购', '额度', '场内溢价'],
 };
 
+const USD: ToolDescriptor = {
+  id: 'usd',
+  name: '美元份额',
+  summary: '全市场美元份额 · 可申购筛选 · 渠道提示',
+  question: '我想用美元买基金，全市场有哪些美元份额、现在还能不能买？',
+  status: 'ready',
+  version: '0.1.0',
+  dataFreshness: 'daily',
+  tags: ['美元', '现汇', '现钞', 'QDII'],
+};
+
 export const TOOL_CATALOG = {
   qdii: QDII,
+  usd: USD,
 } as const;
 
 export const TOOL_DESCRIPTORS: readonly ToolDescriptor[] = Object.values(TOOL_CATALOG);
