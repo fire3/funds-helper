@@ -133,7 +133,20 @@ export default function QdiiPage() {
     };
   }, [funds]);
 
-  const closeDrawer = useCallback(() => navigate('/tools/qdii'), [navigate]);
+  // 抽屉与列表共用查询串：开关抽屉都带上当前筛选，避免返回后筛选被重置/列表重排
+  const openDrawer = useCallback(
+    (code: string) =>
+      navigate({
+        pathname: `/tools/qdii/${encodeURIComponent(code)}`,
+        search: searchParams.toString(),
+      }),
+    [navigate, searchParams],
+  );
+
+  const closeDrawer = useCallback(
+    () => navigate({ pathname: '/tools/qdii', search: searchParams.toString() }),
+    [navigate, searchParams],
+  );
 
   return (
     <div className="space-y-4 p-6">
@@ -348,11 +361,7 @@ export default function QdiiPage() {
               }
             />
           ) : (
-            <FundTable
-              funds={visible}
-              selectedCode={selectedCode}
-              onSelect={(code) => navigate(`/tools/qdii/${code}`)}
-            />
+            <FundTable funds={visible} selectedCode={selectedCode} onSelect={openDrawer} />
           )}
         </>
       ) : null}
