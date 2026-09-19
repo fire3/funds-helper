@@ -1,0 +1,22 @@
+{
+  "_meta": {
+    "interface": "I",
+    "capturedAt": "2026-09-14",
+    "url": "https://fundmobapi.eastmoney.com/FundMNewApi/FundMNInverstPosition?FCODE=000041&...",
+    "note": "直投型 QDII：有重仓股与债券，ETFCODE 为空。"
+  },
+  "Datas": {
+    "fundStocks": [
+      { "GPDM": "NVDA", "GPJC": "英伟达", "JZBL": "4.33", "PCTNVCHGTYPE": "增持", "PCTNVCHG": "0.99" },
+      { "GPDM": "MSFT", "GPJC": "微软", "JZBL": "3.80", "PCTNVCHGTYPE": "减持", "PCTNVCHG": "-0.20" },
+      { "GPDM": "AAPL", "GPJC": "苹果", "JZBL": "3.10", "PCTNVCHGTYPE": "新增", "PCTNVCHG": "3.10" }
+    ],
+    "fundboods": [{ "ZQDM": "019666", "ZQMC": "24国债01", "ZJZBL": "2.50" }],
+    "fundfofs": [],
+    "ETFCODE": "",
+    "ETFSHORTNAME": ""
+  },
+  "Expansion": "2026-06-30",
+  "ErrCode": 0,
+  "Success": true
+}

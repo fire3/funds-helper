@@ -1,0 +1,52 @@
+import { CURRENCY_VALUES, PurchaseStatus, REDEEM_STATUS_VALUES } from '@funds-helper/core';
+import { CURRENCIES, PURCHASE_STATUSES, REDEEM_STATUSES, TOOL_CATALOG } from '@funds-helper/shared';
+import { describe, expect, it } from 'vitest';
+import { createServerTools } from './tools/registry.ts';
+
+/**
+ * 口径一致性护栏。
+ *
+ * core 定义**领域模型**、shared 定义**传输契约**，两者各自维护取值字面量。
+ * 这个测试确保它们不漂移 —— 一旦有人只改了一边，这里立刻失败。
+ */
+describe('core 领域模型 ↔ shared 传输契约', () => {
+  it('申购状态取值完全一致（含顺序）', () => {
+    expect(Object.values(PurchaseStatus)).toEqual([...PURCHASE_STATUSES]);
+  });
+
+  it('赎回状态取值完全一致（赎回是另一套枚举，不能复用申购的）', () => {
+    expect(Object.values(REDEEM_STATUS_VALUES)).toEqual([...REDEEM_STATUSES]);
+  });
+
+  it('币种取值完全一致', () => {
+    expect(Object.values(CURRENCY_VALUES)).toEqual([...CURRENCIES]);
+  });
+
+  it('申购与赎回是两套不同的枚举（防止有人图省事合并它们）', () => {
+    expect([...PURCHASE_STATUSES]).not.toEqual([...REDEEM_STATUSES]);
+  });
+});
+
+describe('工具注册表与 shared 目录', () => {
+  it('注册的工具 id 都在 TOOL_CATALOG 中登记', () => {
+    const catalogIds = new Set(Object.values(TOOL_CATALOG).map((tool) => tool.id));
+    for (const tool of createServerTools()) {
+      expect(catalogIds.has(tool.descriptor.id)).toBe(true);
+    }
+  });
+
+  it('注册表里的描述符与 shared 目录指向同一个对象（服务端启动时的一致性断言）', () => {
+    const tools = createServerTools();
+    expect(tools).toHaveLength(1);
+    expect(tools[0]?.descriptor).toBe(TOOL_CATALOG.qdii);
+  });
+
+  it('QDII 工具声明了定时任务', () => {
+    const tools = createServerTools();
+    const jobs = tools[0]?.jobs?.({} as never) ?? [];
+    expect(jobs.map((job) => job.name)).toEqual(['qdii.snapshot', 'qdii.premium']);
+    for (const job of jobs) {
+      expect(job.cron.split(' ')).toHaveLength(5);
+    }
+  });
+});

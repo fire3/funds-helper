@@ -1,0 +1,33 @@
+{
+  "_meta": {
+    "interface": "B",
+    "capturedAt": "2026-09-14",
+    "url": "https://fundmobapi.eastmoney.com/FundMNewApi/FundMNBasicInformation?FCODE=270042&deviceid=funds-helper&plat=Android&product=EFund&version=6.2.8",
+    "note": "单基金实时信息。FSRQ 带完整年份，优于接口 A 的 MM-DD。"
+  },
+  "Datas": {
+    "FCODE": "270042",
+    "SHORTNAME": "广发纳斯达克100ETF联接人民币(QDII)A",
+    "FTYPE": "指数型-海外股票",
+    "SGZT": "限大额",
+    "SHZT": "开放赎回",
+    "MINSG": "2",
+    "MAXSG": "2",
+    "MINSBSG": "2",
+    "MINSBRG": "100",
+    "MINRG": "100",
+    "MINDT": "10",
+    "DWJZ": "8.1177",
+    "FSRQ": "2026-09-11",
+    "DUEDATE": "--",
+    "SOURCERATE": "1.30%",
+    "RATE": "0.13%",
+    "JJGS": "广发基金",
+    "JJJL": "刘杰",
+    "RISKLEVEL": "4",
+    "BUY": true,
+    "ISSALES": "1"
+  },
+  "ErrCode": 0,
+  "Success": true
+}

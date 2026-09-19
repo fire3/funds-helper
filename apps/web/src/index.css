@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+/* 深色模式走 .dark 类（手动切换），而不是仅跟随系统偏好 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans:
+    system-ui, -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    sans-serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100;
+}
+
+/* 数字列统一用等宽数字，便于纵向比对 */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}

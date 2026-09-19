@@ -1,0 +1,21 @@
+{
+  "_meta": {
+    "interface": "H",
+    "capturedAt": "2026-09-14",
+    "url": "https://fundmobapi.eastmoney.com/FundMNewApi/FundMNPeriodIncrease?FCODE=270042&...",
+    "note": "title 里 Y 是「月」、N 是「年」。LN（成立来）的 avg/hs300/rank 常为空字符串。"
+  },
+  "Datas": [
+    { "title": "Z", "syl": "-0.69", "avg": "-2.53", "hs300": "-2.08", "rank": "105", "sc": "362", "diff": "1.84" },
+    { "title": "Y", "syl": "-0.88", "avg": "-3.32", "hs300": "-3.98", "rank": "135", "sc": "362", "diff": "2.44" },
+    { "title": "3Y", "syl": "3.21", "avg": "1.10", "hs300": "-1.20", "rank": "140", "sc": "355", "diff": "2.11" },
+    { "title": "6Y", "syl": "7.50", "avg": "3.30", "hs300": "0.50", "rank": "150", "sc": "352", "diff": "4.20" },
+    { "title": "1N", "syl": "15.00", "avg": "-0.56", "hs300": "-0.93", "rank": "118", "sc": "349", "diff": "4" },
+    { "title": "2N", "syl": "48.20", "avg": "12.00", "hs300": "8.00", "rank": "95", "sc": "300", "diff": "36.20" },
+    { "title": "3N", "syl": "88.30", "avg": "20.00", "hs300": "5.00", "rank": "80", "sc": "280", "diff": "68.30" },
+    { "title": "5N", "syl": "120.10", "avg": "30.00", "hs300": "10.00", "rank": "60", "sc": "220", "diff": "90.10" },
+    { "title": "JN", "syl": "12.40", "avg": "4.00", "hs300": "3.00", "rank": "110", "sc": "350", "diff": "8.40" },
+    { "title": "LN", "syl": "885.36", "avg": "", "hs300": "", "rank": "", "sc": "", "diff": "" }
+  ],
+  "Expansion": { "ESTABDATE": "2012-08-15", "TIME": "2026-09-11" }
+}

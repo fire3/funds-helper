@@ -1,0 +1,10 @@
+{
+  "_meta": {
+    "interface": "F",
+    "capturedAt": "2026-09-14",
+    "note": "上游对未知 secid 返回 data:null —— 这不是错误，应返回空数组。"
+  },
+  "rc": 0,
+  "rt": 11,
+  "data": null
+}

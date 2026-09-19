@@ -1,0 +1,48 @@
+# ---- 依赖 ----
+node_modules/
+.pnpm-store/
+
+# ---- 构建产物 ----
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# ---- 本地配置与密钥 ----
+.env
+.env.*
+!.env.example
+
+# ---- 日志 ----
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-error.log*
+
+# ---- 本地数据（SQLite 落库文件不入库）----
+data/
+*.sqlite
+*.sqlite3
+*.sqlite3-journal
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# ---- 测试与覆盖率 ----
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+
+# ---- 编辑器 / 系统 ----
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# ---- 杂项 ----
+.cache/
+tmp/

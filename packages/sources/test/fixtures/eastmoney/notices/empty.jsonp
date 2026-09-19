@@ -1,0 +1,2 @@
+// 接口 D：无数据 / 空响应 —— 期望返回空数组，不抛错
+cb({"Data":[],"TotalCount":0,"ErrCode":0,"Success":true})

@@ -1,0 +1,26 @@
+{
+  "_meta": {
+    "interface": "B",
+    "capturedAt": "2026-09-14",
+    "url": "https://fundmobapi.eastmoney.com/FundMNewApi/FundMNBasicInformation?FCODE=513100&...",
+    "note": "场内交易品种：MINSG/MAXSG 返回 \"--\"，需容错为 null。"
+  },
+  "Datas": {
+    "FCODE": "513100",
+    "SHORTNAME": "纳指ETF国泰",
+    "FTYPE": "指数型-海外股票",
+    "SGZT": "场内交易",
+    "SHZT": "场内交易",
+    "MINSG": "--",
+    "MAXSG": "--",
+    "DWJZ": "1.9831",
+    "FSRQ": "2026-09-11",
+    "DUEDATE": "--",
+    "JJGS": "国泰基金",
+    "JJJL": "艾小军",
+    "RISKLEVEL": "4",
+    "BUY": false
+  },
+  "ErrCode": 0,
+  "Success": true
+}

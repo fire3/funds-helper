@@ -1,0 +1,18 @@
+{
+  "_meta": {
+    "interface": "I",
+    "capturedAt": "2026-09-14",
+    "url": "https://fundmobapi.eastmoney.com/FundMNewApi/FundMNInverstPosition?FCODE=270042&...",
+    "note": "联接基金：fundStocks 为空（只持有 ETF），必须回退展示 ETFCODE；报告期 Expansion 在响应顶层，不在 Datas 内。"
+  },
+  "Datas": {
+    "fundStocks": [],
+    "fundboods": [],
+    "fundfofs": [],
+    "ETFCODE": "159941",
+    "ETFSHORTNAME": "纳指ETF广发"
+  },
+  "Expansion": "2026-06-30",
+  "ErrCode": 0,
+  "Success": true
+}

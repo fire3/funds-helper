@@ -1,0 +1,3 @@
+// 接口 A：datas 为空数组
+// 期望：必须抛 ParseError
+var reData={datas:[],record:"0",pages:"1",curpage:"1",showday:["2026-09-14"]}

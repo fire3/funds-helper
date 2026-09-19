@@ -1,0 +1,29 @@
+{
+  "name": "funds-helper",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.15.1",
+  "engines": {
+    "node": ">=22.6.0"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter @funds-helper/server --filter @funds-helper/web dev",
+    "dev:server": "pnpm --filter @funds-helper/server dev",
+    "dev:web": "pnpm --filter @funds-helper/web dev",
+    "build": "pnpm --filter @funds-helper/web build",
+    "start": "pnpm --filter @funds-helper/server start",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "smoke": "node scripts/smoke.mjs",
+    "verify": "pnpm typecheck && pnpm lint && pnpm test"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.6",
+    "@types/node": "^26.6.2",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.1"
+  }
+}

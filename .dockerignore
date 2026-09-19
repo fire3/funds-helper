@@ -1,0 +1,20 @@
+node_modules
+**/node_modules
+
+# 构建产物会被镜像内重新构建，不要把宿主机的旧产物带进镜像
+dist
+**/dist
+
+# 本地数据与版本控制信息不进镜像
+data
+.git
+.gitignore
+.commandcode
+
+*.log
+docs
+scripts
+biome.json
+.env
+.env.*
+!.env.example

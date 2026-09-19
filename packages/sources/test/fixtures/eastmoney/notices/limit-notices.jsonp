@@ -1,0 +1,31 @@
+// 接口 D / type=5 申购赎回类公告 / 采集 2026-09-14
+// URL: https://api.fund.eastmoney.com/f10/JJGG?callback=cb&fundcode=270042&pageIndex=1&pageSize=20&type=5
+// 说明：JSONP 包裹，解析前需剥离回调外壳。注意本文件的注释刻意不含 ASCII 括号，
+//      否则 stripJsonp 取「第一个左括号」会取到注释里的括号。
+cb({
+  "Data": [
+    {
+      "FUNDCODE": "270042",
+      "TITLE": "广发基金管理有限公司关于广发纳斯达克100交易型开放式指数证券投资基金联接基金(QDII)人民币份额调整大额申购(含转换转入、定期定额和不定额投资)业务限额的公告",
+      "ShortTitle": "广发纳指100ETF联接人民币(QDII)A",
+      "NEWCATEGORY": "5",
+      "PUBLISHDATE": "2026-09-10T00:00:00",
+      "PUBLISHDATEDesc": "2026-09-10",
+      "ATTACHTYPE": "0",
+      "ID": "AN202609101828123456"
+    },
+    {
+      "FUNDCODE": "270042",
+      "TITLE": "广发基金管理有限公司关于广发纳斯达克100交易型开放式指数证券投资基金联接基金(QDII)A类及C类基金份额调整大额申购业务限额的公告",
+      "ShortTitle": "广发纳指100ETF联接人民币(QDII)A",
+      "NEWCATEGORY": "5",
+      "PUBLISHDATE": "2026-07-20T00:00:00",
+      "PUBLISHDATEDesc": "2026-07-20",
+      "ATTACHTYPE": "0",
+      "ID": "AN202607201828000001"
+    }
+  ],
+  "TotalCount": 353,
+  "ErrCode": 0,
+  "Success": true
+})
