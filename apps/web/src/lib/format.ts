@@ -1,5 +1,16 @@
 /** 展示层格式化。所有金额/百分比都走这里，避免各页面各写一套 */
 
+/**
+ * 涨跌配色：正 = 红、负 = 绿（A 股/公募基金的通行口径，与参考实现 `.pos` / `.neg` 一致）。
+ *
+ * 返回**完整字面量** class（不能拼接前缀），否则 Tailwind 扫描不到、样式不会生成。
+ * 0 / 空值不着色。
+ */
+export function trendClass(value: number | null | undefined): string {
+  if (value === null || value === undefined || !Number.isFinite(value) || value === 0) return '';
+  return value > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400';
+}
+
 export function formatPercent(value: number | null | undefined, digits = 2): string {
   if (value === null || value === undefined || !Number.isFinite(value)) return '--';
   const sign = value > 0 ? '+' : '';

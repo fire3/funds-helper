@@ -13,3 +13,5 @@
 - Communicates in Simplified Chinese, including bug reports and change requests (concise, UI-behavior-focused: describes observed vs. expected behavior). Confidence: 0.6
 - Delegates version control to the agent with terse directives ("commit push" / "commit and push") and expects changes committed straight to `main` and pushed — no feature branch or PR review step. Confidence: 0.65
 - Expects error states to surface the real root cause (including server-side `detail`) rather than a misleading or generic message — flagged a UI that only showed 「上游接口不可用…」 as a bug to fix. Confidence: 0.55
+- Expects a rewrite/port to faithfully reproduce the reference implementation's behavior and presentation conventions: treats a missing detail (e.g. lost gain/loss coloring on a fund card that the reference had) as a bug to be restored, and wants further deviations aligned back to the reference. Confidence: 0.6
+- Wants fund return/gain values colored per the Chinese market convention — positive = red, negative = green (including maximum drawdown rendered green as in the reference implementation). Confidence: 0.55

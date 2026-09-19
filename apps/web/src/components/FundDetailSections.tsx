@@ -1,6 +1,6 @@
 import type { FundDetailSections as FundDetailSectionsData } from '@funds-helper/shared';
 import { useMemo, useState } from 'react';
-import { formatPercent } from '../lib/format.ts';
+import { formatPercent, trendClass } from '../lib/format.ts';
 import { Chart } from './Chart.tsx';
 
 /**
@@ -90,8 +90,12 @@ export function FundDetailSections({ detail }: { detail: FundDetailSectionsData 
                 className="rounded-md bg-slate-50 p-2 text-center dark:bg-slate-800/50"
               >
                 <p className="text-xs text-slate-500 dark:text-slate-400">{row.label}</p>
-                <p className="tabular text-sm font-medium">{formatPercent(row.returnPct)}</p>
-                <p className="tabular text-xs text-rose-500">{formatPercent(row.maxDrawdownPct)}</p>
+                <p className={`tabular text-sm font-medium ${trendClass(row.returnPct)}`}>
+                  {formatPercent(row.returnPct)}
+                </p>
+                <p className="tabular text-xs text-emerald-600 dark:text-emerald-400">
+                  {formatPercent(row.maxDrawdownPct)}
+                </p>
               </div>
             ))}
           </div>
@@ -119,7 +123,9 @@ export function FundDetailSections({ detail }: { detail: FundDetailSectionsData 
                     className="border-b border-slate-100 last:border-0 dark:border-slate-800/60"
                   >
                     <td className="px-3 py-1.5">{period.label}</td>
-                    <td className="tabular px-3 py-1.5 text-right font-medium">
+                    <td
+                      className={`tabular px-3 py-1.5 text-right font-medium ${trendClass(period.ret)}`}
+                    >
                       {formatPercent(period.ret)}
                     </td>
                     <td className="tabular px-3 py-1.5 text-right text-slate-500 dark:text-slate-400">
