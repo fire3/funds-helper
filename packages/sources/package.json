@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./eastmoney": "./src/eastmoney/index.ts"
+    "./eastmoney": "./src/eastmoney/index.ts",
+    "./sina": "./src/sina/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",

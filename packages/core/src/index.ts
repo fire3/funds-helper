@@ -5,5 +5,6 @@
  * 服务端任务、API、前端与测试都以完全相同的方式调用这些规则。
  */
 export * from './fund/code.ts';
+export * from './fx/index.ts';
 export * from './qdii/index.ts';
 export * from './usd/index.ts';

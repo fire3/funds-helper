@@ -1,6 +1,7 @@
 import { SQL as INIT } from './0001-init.ts';
 import { SQL as USD } from './0002-usd.ts';
 import { SQL as USD_CHANNEL_NOT_SOLD } from './0003-usd-channel-not-sold.ts';
+import { SQL as FX_RATE } from './0004-fx-rate.ts';
 
 export interface Migration {
   id: string;
@@ -17,4 +18,5 @@ export const MIGRATIONS: readonly Migration[] = [
   { id: '0001-init', sql: INIT },
   { id: '0002-usd', sql: USD },
   { id: '0003-usd-channel-not-sold', sql: USD_CHANNEL_NOT_SOLD },
+  { id: '0004-fx-rate', sql: FX_RATE },
 ];

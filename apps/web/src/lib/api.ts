@@ -1,5 +1,11 @@
 import {
   type ApiErrorBody,
+  type FxDatasetResponse,
+  FxDatasetResponseSchema,
+  type FxDirection,
+  type FxRange,
+  type FxRefreshResponse,
+  FxRefreshResponseSchema,
   type QdiiChangesResponse,
   QdiiChangesResponseSchema,
   type QdiiDatasetResponse,
@@ -129,4 +135,17 @@ export const api = {
 
   refreshUsd: (): Promise<UsdRefreshResponse> =>
     request('/api/tools/usd/refresh', UsdRefreshResponseSchema, { method: 'POST' }),
+
+  getFxDataset: (params: {
+    range: FxRange;
+    direction: FxDirection;
+    refresh?: boolean;
+  }): Promise<FxDatasetResponse> => {
+    const search = new URLSearchParams({ range: params.range, direction: params.direction });
+    if (params.refresh === true) search.set('refresh', '1');
+    return request(`/api/tools/fx/dataset?${search.toString()}`, FxDatasetResponseSchema);
+  },
+
+  refreshFx: (): Promise<FxRefreshResponse> =>
+    request('/api/tools/fx/refresh', FxRefreshResponseSchema, { method: 'POST' }),
 };

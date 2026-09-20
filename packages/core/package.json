@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./fx": "./src/fx/index.ts",
     "./qdii": "./src/qdii/index.ts",
     "./usd": "./src/usd/index.ts"
   },

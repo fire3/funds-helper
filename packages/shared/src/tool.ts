@@ -48,9 +48,21 @@ const USD: ToolDescriptor = {
   tags: ['美元', '现汇', '现钞', 'QDII'],
 };
 
+const FX: ToolDescriptor = {
+  id: 'fx',
+  name: '人民币汇率',
+  summary: '美元兑人民币 · 数十年走势 · 区间涨跌',
+  question: '美元兑人民币现在多少？过去这些年是怎么波动的？',
+  status: 'ready',
+  version: '0.1.0',
+  dataFreshness: 'daily',
+  tags: ['汇率', '美元', '人民币', 'USDCNY'],
+};
+
 export const TOOL_CATALOG = {
   qdii: QDII,
   usd: USD,
+  fx: FX,
 } as const;
 
 export const TOOL_DESCRIPTORS: readonly ToolDescriptor[] = Object.values(TOOL_CATALOG);

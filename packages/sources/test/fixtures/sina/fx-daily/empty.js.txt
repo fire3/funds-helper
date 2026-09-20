@@ -1,0 +1,4 @@
+// 新浪财经外汇日线：空载荷
+// 期望：必须抛 ParseError
+/*<script>location.href='//sina.com';</script>*/
+x("")

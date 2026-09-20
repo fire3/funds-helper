@@ -12,3 +12,4 @@
 export * from './eastmoney/index.ts';
 export * from './errors.ts';
 export * from './http.ts';
+export * from './sina/index.ts';

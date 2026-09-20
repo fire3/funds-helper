@@ -1,3 +1,4 @@
+import { type CreateFxToolOptions, createFxTool } from './fx/index.ts';
 import { type CreateQdiiToolOptions, createQdiiTool } from './qdii/index.ts';
 import type { ServerTool } from './types.ts';
 import { type CreateUsdToolOptions, createUsdTool } from './usd/index.ts';
@@ -9,7 +10,15 @@ import { type CreateUsdToolOptions, createUsdTool } from './usd/index.ts';
  * 与「这个工具被谁引用」的可追踪性，代价只是每次加一行。
  */
 export function createServerTools(
-  options: { qdii?: CreateQdiiToolOptions; usd?: CreateUsdToolOptions } = {},
+  options: {
+    qdii?: CreateQdiiToolOptions;
+    usd?: CreateUsdToolOptions;
+    fx?: CreateFxToolOptions;
+  } = {},
 ): ServerTool[] {
-  return [createQdiiTool(options.qdii ?? {}), createUsdTool(options.usd ?? {})];
+  return [
+    createQdiiTool(options.qdii ?? {}),
+    createUsdTool(options.usd ?? {}),
+    createFxTool(options.fx ?? {}),
+  ];
 }

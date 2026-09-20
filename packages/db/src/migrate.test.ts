@@ -116,6 +116,7 @@ describe('runMigrations', () => {
       'usd_snapshot',
       'usd_sibling',
       'usd_detail_cache',
+      'fx_rate_daily',
       'schema_migration',
     ]) {
       expect(tables).toContain(expected);

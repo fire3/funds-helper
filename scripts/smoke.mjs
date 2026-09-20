@@ -185,6 +185,56 @@ async function main() {
     );
   }
 
+  // ---- 汇率工具（独立上游：新浪财经，全量历史一次返回）----
+  check('工具清单包含 fx', health.body?.tools?.some((tool) => tool.id === 'fx') === true);
+
+  const fxRefreshResponse = await fetch(`${BASE}/api/tools/fx/refresh`, { method: 'POST' });
+  const fxRefresh = await fxRefreshResponse.json().catch(() => null);
+  check(
+    'POST /api/tools/fx/refresh 成功拉取上游',
+    fxRefreshResponse.ok && fxRefresh?.ok === true,
+    fxRefreshResponse.ok ? `bars=${fxRefresh?.bars}` : JSON.stringify(fxRefresh),
+  );
+  check(
+    '汇率日线数量达到预期下限（≥5000，实测约 8000）',
+    (fxRefresh?.bars ?? 0) >= 5000,
+    `bars=${fxRefresh?.bars}`,
+  );
+
+  const fxDataset = await getJson('/api/tools/fx/dataset?range=5y');
+  check('GET /api/tools/fx/dataset 正常', fxDataset.status === 200, `HTTP ${fxDataset.status}`);
+
+  const fx = fxDataset.body;
+  check(
+    '汇率走势点数与历史跨度合理',
+    (fx?.points?.length ?? 0) > 200 && (fx?.summary?.totalBars ?? 0) >= 5000,
+    `points=${fx?.points?.length} totalBars=${fx?.summary?.totalBars} ${fx?.summary?.firstDate}~${fx?.summary?.lastDate}`,
+  );
+  check(
+    '最新汇率落在合理区间（1 美元 = 5~9 元）',
+    (fx?.summary?.latest?.rate ?? 0) > 5 && (fx?.summary?.latest?.rate ?? 0) < 9,
+    `latest=${fx?.summary?.latest?.rate} (${fx?.summary?.latest?.date})`,
+  );
+  check(
+    '年度统计覆盖多年（「数年波动」的核心证据）',
+    (fx?.yearly?.length ?? 0) >= 10,
+    `${fx?.yearly?.length} 年`,
+  );
+  check(
+    '区间涨跌表包含全部统计区间',
+    (fx?.intervals?.length ?? 0) === 8,
+    `${fx?.intervals?.length} 个区间`,
+  );
+
+  const fxReverse = await getJson('/api/tools/fx/dataset?range=5y&direction=CNY%2FUSD');
+  const fxLatest = fx?.summary?.latest?.rate ?? 0;
+  const fxInverse = fxReverse.body?.summary?.latest?.rate ?? 0;
+  check(
+    'CNY/USD 方向是倒数（涨跌幅在服务端重算，前端不取倒数）',
+    fxLatest > 0 && Math.abs(fxInverse - 1 / fxLatest) < 1e-9,
+    `USD/CNY=${fxLatest} CNY/USD=${fxInverse}`,
+  );
+
   // ---- 错误处理 ----
   const badCode = await fetch(`${BASE}/api/tools/qdii/funds/abc`);
   check('非法基金代码返回 400', badCode.status === 400, `HTTP ${badCode.status}`);
@@ -212,6 +262,14 @@ async function main() {
   const again = await fetch(`${BASE}/api/tools/qdii/refresh`, { method: 'POST' });
   const second = await again.json().catch(() => null);
   check('重复抓取幂等（inserted = 0）', second?.inserted === 0, `inserted=${second?.inserted}`);
+
+  const fxAgain = await fetch(`${BASE}/api/tools/fx/refresh`, { method: 'POST' });
+  const fxSecond = await fxAgain.json().catch(() => null);
+  check(
+    '汇率重复抓取幂等（inserted = 0）',
+    fxSecond?.inserted === 0,
+    `inserted=${fxSecond?.inserted}`,
+  );
 
   rmSync(dataDir, { recursive: true, force: true });
   return 0;

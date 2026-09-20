@@ -31,6 +31,10 @@ export const WEB_TOOLS: WebTool[] = [
     descriptor: TOOL_CATALOG.usd,
     page: lazy(() => import('./usd/page.tsx')),
   },
+  {
+    descriptor: TOOL_CATALOG.fx,
+    page: lazy(() => import('./fx/page.tsx')),
+  },
 ];
 
 export function findWebTool(id: string | undefined): WebTool | undefined {

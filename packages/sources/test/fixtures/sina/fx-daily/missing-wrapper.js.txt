@@ -1,0 +1,4 @@
+// 新浪财经外汇日线：缺少 JSONP 外壳
+// 期望：必须抛 ParseError（上游改版信号，不能静默返回空数据）
+/*<script>location.href='//sina.com';</script>*/
+var reData={symbol:"fx_susdcny",status:0}

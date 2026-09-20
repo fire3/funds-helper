@@ -1,13 +1,19 @@
 import {
+  FX_DIRECTIONS as CORE_FX_DIRECTIONS,
   USD_KINDS as CORE_USD_KINDS,
   CURRENCY_VALUES,
+  FX_INTERVAL_KEYS,
+  FX_RANGE_KEYS,
   PurchaseStatus,
   REDEEM_STATUS_VALUES,
 } from '@funds-helper/core';
 import {
   CURRENCIES,
+  FX_INTERVALS,
+  FX_RANGES,
   PURCHASE_STATUSES,
   REDEEM_STATUSES,
+  FX_DIRECTIONS as SHARED_FX_DIRECTIONS,
   USD_KINDS as SHARED_USD_KINDS,
   TOOL_CATALOG,
 } from '@funds-helper/shared';
@@ -40,6 +46,18 @@ describe('core 领域模型 ↔ shared 传输契约', () => {
   it('美元份额形式取值完全一致（含顺序）', () => {
     expect(Object.values(CORE_USD_KINDS)).toEqual([...SHARED_USD_KINDS]);
   });
+
+  it('汇率报价方向取值完全一致（含顺序）', () => {
+    expect(Object.values(CORE_FX_DIRECTIONS)).toEqual([...SHARED_FX_DIRECTIONS]);
+  });
+
+  it('汇率展示区间取值完全一致（含顺序）', () => {
+    expect([...FX_RANGE_KEYS]).toEqual([...FX_RANGES]);
+  });
+
+  it('汇率统计区间取值完全一致（含顺序）', () => {
+    expect([...FX_INTERVAL_KEYS]).toEqual([...FX_INTERVALS]);
+  });
 });
 
 describe('工具注册表与 shared 目录', () => {
@@ -52,20 +70,23 @@ describe('工具注册表与 shared 目录', () => {
 
   it('注册表里的描述符与 shared 目录指向同一个对象（服务端启动时的一致性断言）', () => {
     const tools = createServerTools();
-    expect(tools).toHaveLength(2);
+    expect(tools).toHaveLength(3);
     expect(tools[0]?.descriptor).toBe(TOOL_CATALOG.qdii);
     expect(tools[1]?.descriptor).toBe(TOOL_CATALOG.usd);
+    expect(tools[2]?.descriptor).toBe(TOOL_CATALOG.fx);
   });
 
   it('每个工具都声明了 5 段式 cron 的定时任务', () => {
     const tools = createServerTools();
     const qdiiJobs = tools[0]?.jobs?.({} as never) ?? [];
     const usdJobs = tools[1]?.jobs?.({} as never) ?? [];
+    const fxJobs = tools[2]?.jobs?.({} as never) ?? [];
 
     expect(qdiiJobs.map((job) => job.name)).toEqual(['qdii.snapshot', 'qdii.premium']);
     expect(usdJobs.map((job) => job.name)).toEqual(['usd.snapshot']);
+    expect(fxJobs.map((job) => job.name)).toEqual(['fx.daily']);
 
-    for (const job of [...qdiiJobs, ...usdJobs]) {
+    for (const job of [...qdiiJobs, ...usdJobs, ...fxJobs]) {
       expect(job.cron.split(' ')).toHaveLength(5);
     }
   });

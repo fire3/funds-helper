@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { DISCLAIMER, FreshnessSchema } from './envelope.ts';
 import { PurchaseStatusSchema } from './fund.ts';
+import { FxDatasetResponseSchema, FxDirectionSchema } from './fx.ts';
 import { QdiiDatasetResponseSchema } from './qdii.ts';
 import { TOOL_CATALOG, TOOL_DESCRIPTORS, ToolDescriptorSchema } from './tool.ts';
 import { UsdDatasetResponseSchema } from './usd.ts';
@@ -30,6 +31,12 @@ describe('工具目录', () => {
     expect(TOOL_CATALOG.usd.question).toContain('美元');
   });
 
+  it('fx 工具已登记且状态为 ready', () => {
+    expect(TOOL_CATALOG.fx.id).toBe('fx');
+    expect(TOOL_CATALOG.fx.status).toBe('ready');
+    expect(TOOL_CATALOG.fx.question).toContain('波动');
+  });
+
   it('描述符的必填字段不含空串（避免界面上出现空白卡片）', () => {
     for (const descriptor of TOOL_DESCRIPTORS) {
       expect(descriptor.name.length).toBeGreaterThan(0);
@@ -52,6 +59,15 @@ describe('传输契约 schema', () => {
 
   it('usd 数据集响应缺少必要字段时校验失败', () => {
     expect(UsdDatasetResponseSchema.safeParse({ total: 1 }).success).toBe(false);
+  });
+
+  it('fx 数据集响应缺少必要字段时校验失败', () => {
+    expect(FxDatasetResponseSchema.safeParse({ points: [] }).success).toBe(false);
+  });
+
+  it('汇率报价方向只接受已知取值', () => {
+    expect(FxDirectionSchema.safeParse('USD/CNY').success).toBe(true);
+    expect(FxDirectionSchema.safeParse('usdcny').success).toBe(false);
   });
 
   it('新鲜度 schema 要求 stale 字段（降级必须显式表达）', () => {
