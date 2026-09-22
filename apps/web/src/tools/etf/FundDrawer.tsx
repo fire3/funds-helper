@@ -151,6 +151,38 @@ export function FundDrawer({ record, onClose }: { record: EtfRecord; onClose: ()
           </p>
         </Section>
 
+        {/* 2.5) 场外联接基金：场内买不了 / 想定投时的替代路径（反查接口 I，独立快照） */}
+        <Section title="场外联接基金">
+          {record.feederFunds.length === 0 ? (
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              未查到场外联接基金。该 ETF 可能本来就没有场外份额（债券/商品类常见），
+              也可能是反查尚未覆盖 —— 实测反查覆盖全市场 61% 的 ETF。
+            </p>
+          ) : (
+            <ul className="space-y-1 text-sm">
+              {record.feederFunds.map((fund) => (
+                <li key={fund.code} className="flex items-baseline justify-between gap-3">
+                  <span className="truncate" title={fund.name}>
+                    {fund.name}
+                  </span>
+                  <a
+                    className="tabular shrink-0 text-sky-600 hover:underline dark:text-sky-400"
+                    href={`https://fund.eastmoney.com/${fund.code}.html`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {fund.code} ↗
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="mt-2 text-xs text-slate-400">
+            联接基金按场外净值申赎（可定投），代价是多一层费用与申赎确认时间；
+            本工具未采集联接基金的净值与限购，点代码可外链到天天基金查看。
+          </p>
+        </Section>
+
         {/* 3) 区间表现（接口 B） */}
         <Section title="区间表现">
           <div>

@@ -41,6 +41,8 @@ export function FundTable({
   // 否则一屏 1600 行 '--' 只会让人以为「数据坏了」
   const hasPremium = funds.some((fund) => fund.premiumRate !== null);
   const hasListingDate = funds.some((fund) => fund.listingDate !== null);
+  // 场外联接基金是**独立的反查快照**：没反查过时整个表都是空数组，此时不该多出一列 '--'
+  const hasFeeder = funds.some((fund) => fund.feederFunds.length > 0);
 
   return (
     <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
@@ -51,6 +53,14 @@ export function FundTable({
             <th className="px-3 py-2 font-medium">简称</th>
             <th className="px-3 py-2 font-medium">分类</th>
             <th className="px-3 py-2 font-medium">跟踪指数</th>
+            {hasFeeder ? (
+              <th
+                className="px-3 py-2 text-right font-medium"
+                title="场外可申赎的联接基金份额数（点开详情看代码）"
+              >
+                场外联接
+              </th>
+            ) : null}
             <th className="px-3 py-2 text-right font-medium">最新价</th>
             <th className="px-3 py-2 text-right font-medium">涨跌幅</th>
             {hasPremium ? <th className="px-3 py-2 text-right font-medium">折溢价</th> : null}
@@ -87,6 +97,11 @@ export function FundTable({
               >
                 {fund.indexName ?? '--'}
               </td>
+              {hasFeeder ? (
+                <td className="tabular px-3 py-2 text-right text-slate-500 dark:text-slate-400">
+                  {fund.feederFunds.length > 0 ? `${fund.feederFunds.length} 只` : '--'}
+                </td>
+              ) : null}
               <td className="tabular px-3 py-2 text-right">{formatNumber(fund.price, 3)}</td>
               <td className={`tabular px-3 py-2 text-right ${trendClass(fund.changePct)}`}>
                 {formatPercent(fund.changePct)}

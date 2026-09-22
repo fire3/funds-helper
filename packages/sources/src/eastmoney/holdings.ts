@@ -34,7 +34,8 @@ export interface HoldingsData {
   reportDate: string | null;
 }
 
-const BASE_URL = 'https://fundmobapi.eastmoney.com/FundMNewApi/FundMNInverstPosition';
+/** 接口 I 的地址（`feeder-funds.ts` 反查目标 ETF 时复用同一次请求） */
+export const HOLDINGS_URL = 'https://fundmobapi.eastmoney.com/FundMNewApi/FundMNInverstPosition';
 
 export function parseHoldings(text: string): HoldingsData {
   let payload: unknown;
@@ -93,6 +94,6 @@ export async function fetchHoldings(client: HttpClient, code: string): Promise<H
     product: 'EFund',
     version: '6.2.8',
   });
-  const text = await client.getText(`${BASE_URL}?${params.toString()}`);
+  const text = await client.getText(`${HOLDINGS_URL}?${params.toString()}`);
   return parseHoldings(text);
 }

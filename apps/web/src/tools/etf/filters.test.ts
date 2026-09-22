@@ -46,6 +46,7 @@ function fund(overrides: Partial<EtfRecord> = {}): EtfRecord {
     quoteAt: '2026-09-22T08:11:33.000Z',
     dataDate: '2026-09-22',
     capturedAt: '2026-09-22T08:20:00.000Z',
+    feederFunds: [],
     ...overrides,
   };
 }
@@ -62,6 +63,10 @@ const SAMPLE: EtfRecord[] = [
     amount: 1_500_000_000,
     premiumRate: 0.43,
     premiumLevel: '溢价',
+    feederFunds: [
+      { code: '110026', name: '易方达创业板ETF联接A' },
+      { code: '004744', name: '易方达创业板ETF联接C' },
+    ],
   }),
   fund({
     code: '512880',
@@ -82,6 +87,8 @@ const SAMPLE: EtfRecord[] = [
     amount: 30_000_000,
     premiumRate: -2,
     premiumLevel: '高折价',
+    // 跨境 QDII 的联接基金：份额后缀更多
+    feederFunds: [{ code: '050025', name: '博时标普500ETF联接A' }],
   }),
   fund({
     code: '159985',
@@ -243,5 +250,38 @@ describe('toggleValue', () => {
   it('未选中则加入，已选中则移除', () => {
     expect(toggleValue([], '宽基')).toEqual(['宽基']);
     expect(toggleValue(['宽基', '跨境'], '宽基')).toEqual(['跨境']);
+  });
+});
+
+describe('场外联接基金筛选', () => {
+  it("'has' 只看有联接基金的 ETF（空数组 = 没查到，不进结果）", () => {
+    const codes = filterEtfs(SAMPLE, { ...DEFAULT_FILTERS, feeder: 'has' }).map(
+      (item) => item.code,
+    );
+    expect(codes).toEqual(['159915', '513100']);
+  });
+
+  it("'any' 不过滤（默认值）", () => {
+    expect(filterEtfs(SAMPLE, DEFAULT_FILTERS)).toHaveLength(SAMPLE.length);
+  });
+
+  it('与其它维度是 AND：有联接 + 深市 = 只剩创业板 ETF', () => {
+    const codes = filterEtfs(SAMPLE, {
+      ...DEFAULT_FILTERS,
+      feeder: 'has',
+      markets: ['深市'],
+    }).map((item) => item.code);
+    expect(codes).toEqual(['159915']);
+  });
+
+  it('URL 双向同步：has 会写进链接，未知取值回落到默认', () => {
+    const params = toSearchParams({ ...DEFAULT_FILTERS, feeder: 'has' });
+    expect(params.get('feeder')).toBe('has');
+    expect(fromSearchParams(params).feeder).toBe('has');
+
+    // 默认值不写进链接（分享链接尽量短）
+    expect(toSearchParams(DEFAULT_FILTERS).get('feeder')).toBeNull();
+    // 手改链接里的脏值不能让页面空掉
+    expect(fromSearchParams(new URLSearchParams({ feeder: 'nope' })).feeder).toBe('any');
   });
 });

@@ -143,7 +143,7 @@ describe('工具注册表与 shared 目录', () => {
     expect(qdiiJobs.map((job) => job.name)).toEqual(['qdii.snapshot', 'qdii.premium']);
     expect(usdJobs.map((job) => job.name)).toEqual(['usd.snapshot']);
     expect(fxJobs.map((job) => job.name)).toEqual(['fx.daily']);
-    expect(etfJobs.map((job) => job.name)).toEqual(['etf.snapshot']);
+    expect(etfJobs.map((job) => job.name)).toEqual(['etf.snapshot', 'etf.feeders']);
 
     for (const job of [...qdiiJobs, ...usdJobs, ...fxJobs, ...etfJobs]) {
       expect(job.cron.split(' ')).toHaveLength(5);
@@ -153,5 +153,12 @@ describe('工具注册表与 shared 目录', () => {
   it('ETF 快照只在交易时段跑（场内行情收盘后不再变化）', () => {
     const etfJobs = createServerTools()[3]?.jobs?.({} as never) ?? [];
     expect(etfJobs[0]?.cron).toBe('*/30 9-15 * * 1-5');
+  });
+
+  it('联接基金反查每周只跑一次（全量约 2300 个请求，不能跟着行情快照的节奏）', () => {
+    const etfJobs = createServerTools()[3]?.jobs?.({} as never) ?? [];
+    const feederJob = etfJobs.find((job) => job.name === 'etf.feeders');
+    expect(feederJob?.cron).toBe('0 3 * * 1');
+    expect(feederJob?.runOnBoot).toBe(true);
   });
 });

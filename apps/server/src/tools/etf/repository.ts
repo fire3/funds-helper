@@ -106,6 +106,22 @@ export interface EtfProfileInput {
   shares: number | null;
 }
 
+export interface EtfFeederRow {
+  etf_code: string;
+  feeder_code: string;
+  feeder_name: string;
+  /** 接口 I 的持仓报告期（`Expansion`） */
+  report_date: string | null;
+  captured_at: string;
+}
+
+export interface EtfFeederInput {
+  etfCode: string;
+  feederCode: string;
+  feederName: string;
+  reportDate: string | null;
+}
+
 export class EtfRepository {
   private readonly db: Db;
 
@@ -335,5 +351,82 @@ export class EtfRepository {
 
   clearDetail(code: string): void {
     this.db.run('DELETE FROM etf_detail_cache WHERE code = ?', [code]);
+  }
+
+  // ---------------------------------------------------------------------------
+  // 场外联接基金（0009，反查接口 I）
+  // ---------------------------------------------------------------------------
+
+  /**
+   * 写入/更新本轮反查到的联接基金（按 `feeder_code` upsert）。
+   *
+   * 增量刷新**不能**用「先清空再插入」：一只联接基金查询失败时不该把已有的映射删掉。
+   * 冲突键是 `feeder_code`，因此联接基金更换目标 ETF 时是**改**而不是新增一行。
+   * 清理交给 `sweepFeederFunds`（只在全量重建成功后调用）。
+   */
+  upsertFeederFunds(rows: readonly EtfFeederInput[], capturedAt: string): void {
+    this.db.transaction(() => {
+      for (const row of rows) {
+        this.db.run(
+          `INSERT INTO etf_feeder_fund (feeder_code, etf_code, feeder_name, report_date, captured_at)
+           VALUES (?, ?, ?, ?, ?)
+           ON CONFLICT(feeder_code) DO UPDATE SET
+             etf_code = excluded.etf_code,
+             feeder_name = excluded.feeder_name,
+             report_date = excluded.report_date,
+             captured_at = excluded.captured_at`,
+          [row.feederCode, row.etfCode, row.feederName, row.reportDate, capturedAt],
+        );
+      }
+    });
+  }
+
+  /**
+   * 全量重建：**整表替换**（事务内先清空再写入）。
+   *
+   * 与 `upsertFeederFunds` 的差别是它会删掉本轮没扫到的行，这解决了两个增量刷新
+   * 覆盖不了的情况：联接基金清盘（候选池里不再有它）、联接基金更换目标 ETF
+   * （旧行的 `etf_code` 会被 upsert 改掉，但若它整个从候选池消失就只能靠这里清）。
+   *
+   * 刻意**不**用「时间戳不等于本轮就删除」的写法：那要求两次扫描的时间戳必然不同，
+   * 而调用方（测试、同毫秒内的重跑）并不保证这一点，删不干净会静默留下脏行。
+   * 危险操作放在事务里，由调用方保证「只在全量且无失败时调用」（见 service）。
+   */
+  replaceFeederFunds(rows: readonly EtfFeederInput[], capturedAt: string): void {
+    this.db.transaction(() => {
+      this.db.run('DELETE FROM etf_feeder_fund');
+      this.upsertFeederFunds(rows, capturedAt);
+    });
+  }
+
+  loadFeederFunds(): EtfFeederRow[] {
+    return this.db.all<EtfFeederRow>(
+      'SELECT * FROM etf_feeder_fund ORDER BY etf_code, feeder_code',
+    );
+  }
+
+  /** 已经落库的联接基金代码（增量刷新据此只补新的候选） */
+  knownFeederCodes(): Set<string> {
+    return new Set(
+      this.db
+        .all<{ feeder_code: string }>('SELECT DISTINCT feeder_code FROM etf_feeder_fund')
+        .map((row) => row.feeder_code),
+    );
+  }
+
+  countFeederFunds(): number {
+    return this.db.get<{ n: number }>('SELECT COUNT(*) AS n FROM etf_feeder_fund')?.n ?? 0;
+  }
+
+  /** 有联接基金的 ETF 只数（去重计数，用于界面上的覆盖率说明） */
+  countFeederEtfs(): number {
+    return (
+      this.db.get<{ n: number }>('SELECT COUNT(DISTINCT etf_code) AS n FROM etf_feeder_fund')?.n ??
+      0
+    );
+  }
+
+  clearFeederFunds(): void {
+    this.db.run('DELETE FROM etf_feeder_fund');
   }
 }

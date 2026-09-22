@@ -36,6 +36,18 @@ export const SCALE_FILTERS = [
   { value: '100', label: '≥100 亿' },
 ] as const;
 
+/**
+ * 场外联接基金：有没有可以申赎的场外份额。
+ *
+ * 只有「有 / 不限」两档，没有「没有联接基金」这一档 ——
+ * 反查覆盖 61% 的 ETF，`0 只` 里既有「本来就没有联接基金」（债券/商品）
+ * 也有「还没反查到」，把它做成一档筛选等于在筛选里混进一个不确定的口径。
+ */
+export const FEEDER_FILTERS = [
+  { value: 'any', label: '不限' },
+  { value: 'has', label: '有联接基金' },
+] as const;
+
 /** 成交额档位（值 = 亿元下限） */
 export const AMOUNT_FILTERS = [
   { value: 'any', label: '不限' },
@@ -56,6 +68,8 @@ export interface EtfFilters {
   minScale: string;
   /** 成交额下限（亿元），'any' = 不限 */
   minAmount: string;
+  /** 场外联接基金：'any' = 不限，'has' = 只看有联接基金的 */
+  feeder: string;
   keyword: string;
   sort: EtfSortKey;
 }
@@ -66,6 +80,7 @@ export const DEFAULT_FILTERS: EtfFilters = {
   premiums: [],
   minScale: 'any',
   minAmount: 'any',
+  feeder: 'any',
   keyword: '',
   // 默认按规模降序：先看主流品种，避免一屏全是迷你 ETF
   sort: ETF_DEFAULT_SORT,
@@ -77,6 +92,7 @@ const MARKET_SET = new Set<string>([ETF_MARKETS.Sh, ETF_MARKETS.Sz]);
 const PREMIUM_SET = new Set<string>(PREMIUM_FILTERS.map((item) => item.value));
 const SCALE_SET = new Set<string>(SCALE_FILTERS.map((item) => item.value));
 const AMOUNT_SET = new Set<string>(AMOUNT_FILTERS.map((item) => item.value));
+const FEEDER_SET = new Set<string>(FEEDER_FILTERS.map((item) => item.value));
 
 function pick(value: string | null, allowed: Set<string>, fallback: string): string {
   return value !== null && allowed.has(value) ? value : fallback;
@@ -94,6 +110,7 @@ export function fromSearchParams(params: URLSearchParams): EtfFilters {
     premiums: pickAll(params.getAll('premium'), PREMIUM_SET),
     minScale: pick(params.get('minScale'), SCALE_SET, DEFAULT_FILTERS.minScale),
     minAmount: pick(params.get('minAmount'), AMOUNT_SET, DEFAULT_FILTERS.minAmount),
+    feeder: pick(params.get('feeder'), FEEDER_SET, DEFAULT_FILTERS.feeder),
     keyword: params.get('q') ?? '',
     sort: pick(params.get('sort'), SORT_SET, DEFAULT_FILTERS.sort) as EtfSortKey,
   };
@@ -107,6 +124,7 @@ export function toSearchParams(filters: EtfFilters): URLSearchParams {
   for (const premium of filters.premiums) params.append('premium', premium);
   if (filters.minScale !== DEFAULT_FILTERS.minScale) params.set('minScale', filters.minScale);
   if (filters.minAmount !== DEFAULT_FILTERS.minAmount) params.set('minAmount', filters.minAmount);
+  if (filters.feeder !== DEFAULT_FILTERS.feeder) params.set('feeder', filters.feeder);
   if (filters.keyword.trim() !== '') params.set('q', filters.keyword.trim());
   if (filters.sort !== DEFAULT_FILTERS.sort) params.set('sort', filters.sort);
   return params;
@@ -144,6 +162,9 @@ export function filterEtfs(records: readonly EtfRecord[], filters: EtfFilters): 
     // 设了档位就必须有数据：缺失值无法证明「够大」，不能因为 null 就放行
     if (minScale !== null && (record.scale === null || record.scale < minScale)) return false;
     if (minAmount !== null && (record.amount === null || record.amount < minAmount)) return false;
+
+    // 「有联接基金」是**存在性**判定：空数组只能说明没查到，所以只做正向筛选
+    if (filters.feeder === 'has' && record.feederFunds.length === 0) return false;
 
     if (keyword !== '') {
       const haystack = `${record.code} ${record.name} ${record.indexName ?? ''}`.toLowerCase();

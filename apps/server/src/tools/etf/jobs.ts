@@ -10,6 +10,13 @@ import type { EtfService } from './service.ts';
  *
  * 每次快照 19 个请求（行情 17 页 + 目录 2 页，见 docs/design/etf-data-sources.md §5），
  * 约 266 请求/天。
+ *
+ * 第二个任务 `etf.feeders` 是**场外联接基金反查**：上游没有「按 ETF 查联接基金」的接口，
+ * 只能扫全市场含「联接」的基金（实测 2319 只）再逐只反查，所以：
+ * - 频率降到**每周一次**（周一 03:00，非交易时段、不与行情快照抢通道）；
+ * - 首次建库是全量（约 2300 个请求 / 4 分钟），之后都是**增量**（只查新增候选，几十个请求）；
+ * - 启动补跑带「距上次 ≥6 天」的门槛，避免开发时反复重启把上游打穿。
+ * 详见 docs/design/etf-tool.md §11。
  */
 export function etfJobs(service: EtfService): JobDefinition[] {
   return [
@@ -19,6 +26,17 @@ export function etfJobs(service: EtfService): JobDefinition[] {
       runOnBoot: true,
       handler: async () => {
         const stats = await service.captureSnapshot();
+        return { stats: { ...stats } };
+      },
+    },
+    {
+      name: 'etf.feeders',
+      cron: '0 3 * * 1',
+      runOnBoot: true,
+      handler: async () => {
+        const plan = service.feederScanPlan();
+        if (!plan.due) return { stats: { skipped: true, reason: '距上次反查不足 6 天' } };
+        const stats = await service.refreshFeederFunds({ full: plan.full });
         return { stats: { ...stats } };
       },
     },

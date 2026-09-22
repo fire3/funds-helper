@@ -17,6 +17,7 @@ import {
   CATEGORY_FILTERS,
   DEFAULT_FILTERS,
   type EtfFilters,
+  FEEDER_FILTERS,
   facetCounts,
   fromSearchParams,
   MARKET_FILTERS,
@@ -79,6 +80,14 @@ export default function EtfPage() {
   const switchSourceMutation = useMutation({
     mutationFn: (spotSource: EtfSpotSourceId) => api.updateEtfConfig(spotSource),
     // 切换后服务端已经重抓过，这里只要让数据集/配置重新拉一次
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['etf'] }),
+  });
+
+  // 场外联接基金的反查是**独立慢链路**：默认增量（几十个请求），
+  // 只有从没查过时才需要全量重建（约 2300 个请求 / 4 分钟）
+  const feederScanned = datasetQuery.data?.feeder.updatedAt ?? null;
+  const feederMutation = useMutation({
+    mutationFn: () => api.refreshEtfFeeders(feederScanned === null),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['etf'] }),
   });
 
@@ -215,6 +224,21 @@ export default function EtfPage() {
           detail={apiErrorDetail(switchSourceMutation.error)}
         />
       ) : null}
+      {feederMutation.isPending ? (
+        <p className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300">
+          正在反查场外联接基金：每只联接基金一个上游请求，首次全量约 2300 个请求 / 4 分钟
+          （之后是增量补查，几秒钟）。期间可以正常浏览其它内容。
+        </p>
+      ) : null}
+      {feederMutation.data ? (
+        <p className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300">
+          {feederMutation.data.message}（用时 {(feederMutation.data.durationMs / 1000).toFixed(1)}{' '}
+          秒）
+        </p>
+      ) : null}
+      {feederMutation.isError ? (
+        <ErrorState message="反查场外联接基金失败" detail={apiErrorDetail(feederMutation.error)} />
+      ) : null}
 
       {datasetQuery.isPending ? <Spinner label="加载全市场 ETF 数据集…" /> : null}
       {datasetQuery.isError ? (
@@ -314,6 +338,18 @@ export default function EtfPage() {
               ))}
             </FilterRow>
 
+            <FilterRow label="场外">
+              {FEEDER_FILTERS.map((item) => (
+                <Chip
+                  key={item.value}
+                  active={filters.feeder === item.value}
+                  onClick={() => applyFilters({ ...filters, feeder: item.value })}
+                >
+                  {item.label}
+                </Chip>
+              ))}
+            </FilterRow>
+
             <div className="flex flex-wrap items-center gap-3 border-t border-slate-100 pt-3 dark:border-slate-800">
               <input
                 ref={searchRef}
@@ -364,6 +400,27 @@ export default function EtfPage() {
                   {formatYuan(visible.reduce((sum, fund) => sum + (fund.amount ?? 0), 0))}
                 </span>
               ) : null}
+              <span className="flex flex-wrap items-center gap-2">
+                <span title="场外联接基金由接口 I 反查得到（独立于行情快照），覆盖不到的是本来就没有联接基金的品种">
+                  场外联接：{datasetQuery.data.feeder.etfCount} 只 ETF /{' '}
+                  {datasetQuery.data.feeder.fundCount} 只联接基金
+                  {feederScanned === null
+                    ? '（尚未反查）'
+                    : `（更新于 ${feederScanned.slice(0, 10)}）`}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => feederMutation.mutate()}
+                  disabled={feederMutation.isPending}
+                  className="rounded-md border border-slate-300 px-2 py-0.5 text-xs text-slate-600 hover:bg-slate-100 disabled:opacity-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                >
+                  {feederMutation.isPending
+                    ? '反查中…'
+                    : feederScanned === null
+                      ? '反查场外联接基金'
+                      : '补查新增'}
+                </button>
+              </span>
             </div>
           </section>
 

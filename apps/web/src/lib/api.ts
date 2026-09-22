@@ -6,6 +6,8 @@ import {
   EtfConfigUpdateResponseSchema,
   type EtfDatasetResponse,
   EtfDatasetResponseSchema,
+  type EtfFeederRefreshResponse,
+  EtfFeederRefreshResponseSchema,
   type EtfFundDetailResponse,
   EtfFundDetailResponseSchema,
   type EtfRefreshResponse,
@@ -171,6 +173,19 @@ export const api = {
 
   refreshEtf: (): Promise<EtfRefreshResponse> =>
     request('/api/tools/etf/refresh', EtfRefreshResponseSchema, { method: 'POST' }),
+
+  /**
+   * 反查场外联接基金。默认为增量（只补候选池里的新增）；
+   * `full` = 全量重建，服务端要打约 2300 个请求（4 分钟），只在首次建库时用。
+   */
+  refreshEtfFeeders: (full = false): Promise<EtfFeederRefreshResponse> =>
+    request(
+      `/api/tools/etf/feeders/refresh${full ? '?full=1' : ''}`,
+      EtfFeederRefreshResponseSchema,
+      {
+        method: 'POST',
+      },
+    ),
 
   getEtfConfig: (): Promise<EtfConfigResponse> =>
     request('/api/tools/etf/config', EtfConfigResponseSchema),

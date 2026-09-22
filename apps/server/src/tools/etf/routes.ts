@@ -86,4 +86,15 @@ export function registerEtfRoutes(
     const result = await ctx.jobs.execute('etf.snapshot', 'manual');
     return refreshResponse((result?.stats ?? {}) as Partial<EtfCaptureStats>);
   });
+
+  /**
+   * 手动触发一次「场外联接基金」反查。
+   *
+   * 默认只补候选池里的新增（几十个请求）；`?full=1` 是全量重建（**约 2300 个请求 / 4 分钟**），
+   * 用于首次建库或清理已清盘的联接基金 —— 界面上的按钮只在「还没查过」时才带这个参数。
+   * 不走调度器：这个链路是独立任务，且比行情快照慢得多，混在一起会让 job_run 很难读。
+   */
+  app.post('/feeders/refresh', async (request) =>
+    service.refreshFeederFundsResponse({ full: flag(queryOf(request).full) }),
+  );
 }

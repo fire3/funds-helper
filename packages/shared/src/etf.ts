@@ -93,6 +93,30 @@ export type EtfConfigUpdate = z.infer<typeof EtfConfigUpdateSchema>;
 // 数据集
 // ---------------------------------------------------------------------------
 
+/**
+ * 场外联接基金（由「ETF → 场外」反查得到，见 docs/design/etf-tool.md §11）。
+ *
+ * 一只 ETF 通常有多个份额（A/C/E/I/F），因此这里是数组而不是单个值；
+ * `[]` 的含义是**没查到**（该 ETF 本来就没有联接基金，或反查还没跑过）——
+ * 前端文案统一写「未查到场外联接基金」，避免把「没有」说成「不存在」。
+ */
+export const EtfFeederFundSchema = z.object({
+  code: z.string(),
+  name: z.string(),
+});
+export type EtfFeederFund = z.infer<typeof EtfFeederFundSchema>;
+
+/** 反查快照的元信息（界面据此说明「联接名单是什么时候查的」） */
+export const EtfFeederInfoSchema = z.object({
+  /** 上次**成功**反查的时刻（ISO8601）；null = 还没跑过 */
+  updatedAt: z.string().nullable(),
+  /** 有场外联接基金的 ETF 只数 */
+  etfCount: z.number(),
+  /** 反查到的联接基金只数 */
+  fundCount: z.number(),
+});
+export type EtfFeederInfo = z.infer<typeof EtfFeederInfoSchema>;
+
 export const EtfRecordSchema = z.object({
   code: z.string(),
   name: z.string(),
@@ -145,6 +169,9 @@ export const EtfRecordSchema = z.object({
   /** 近一年最大回撤（%，负值） */
   maxDrawdown1y: z.number().nullable(),
 
+  /** 场外联接基金（A/C/E 各份额）；空数组 = 未查到（见 EtfFeederFundSchema） */
+  feederFunds: z.array(EtfFeederFundSchema),
+
   /** 行情时间戳（ISO8601，Asia/Shanghai 语义） */
   quoteAt: z.string().nullable(),
   dataDate: z.string().nullable(),
@@ -193,6 +220,8 @@ export const EtfDatasetResponseSchema = z.object({
   total: z.number(),
   stats: EtfStatsSchema,
   funds: z.array(EtfRecordSchema),
+  /** 场外联接基金的覆盖度与新鲜度（反查是独立的慢链路，与行情快照分开计时） */
+  feeder: EtfFeederInfoSchema,
   disclaimer: z.string(),
 });
 export type EtfDatasetResponse = z.infer<typeof EtfDatasetResponseSchema>;
@@ -255,6 +284,33 @@ export const EtfRefreshResponseSchema = z.object({
   message: z.string(),
 });
 export type EtfRefreshResponse = z.infer<typeof EtfRefreshResponseSchema>;
+
+/**
+ * 「场外联接基金」反查的刷新响应。
+ *
+ * 这是**慢**链路（全量约 2300 个请求），因此单独回一个响应体：
+ * 成功/空/失败分别计数 —— 「查了 2319 只、13 只上游还没建仓」和
+ * 「查了 2319 只、2000 只请求失败」是两件完全不同的事。
+ */
+export const EtfFeederRefreshResponseSchema = z.object({
+  ok: z.boolean(),
+  /** 是否全量重建（false = 只补新的候选池代码） */
+  full: z.boolean(),
+  /** 本次实际反查的基金只数 */
+  scanned: z.number(),
+  /** 拿到目标 ETF 的只数 */
+  mapped: z.number(),
+  /** 上游没给目标 ETF 的只数（新成立未建仓 / 联接的是 LOF） */
+  empty: z.number(),
+  /** 请求失败的只数（下次刷新会自动重试） */
+  failed: z.number(),
+  /** 落库后的总量：有联接基金的 ETF 只数 / 联接基金只数 */
+  etfCount: z.number(),
+  fundCount: z.number(),
+  durationMs: z.number(),
+  message: z.string(),
+});
+export type EtfFeederRefreshResponse = z.infer<typeof EtfFeederRefreshResponseSchema>;
 
 /**
  * 切换行情渠道的响应：**新的配置 + 切换后立刻重抓的结果**。

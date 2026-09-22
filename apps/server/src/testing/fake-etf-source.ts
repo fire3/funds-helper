@@ -1,6 +1,11 @@
 import {
   type EtfSpotItem,
+  type FeederScanResult,
+  type FeederTarget,
+  type FundCatalogEntry,
   type FundProfileData,
+  fetchFeederTargets,
+  type HttpClient,
   type RawEtfProfile,
   UpstreamError,
 } from '@funds-helper/sources';
@@ -23,12 +28,116 @@ export interface FakeEtfSource extends EtfDataSource {
   sinaSpot: EtfSpotItem[];
   profiles: RawEtfProfile[];
   detail: FundProfileData | null;
+  /** 接口 E 的全量基金表（联接基金候选池从它筛出来） */
+  feederCatalog: FundCatalogEntry[];
+  /** feederCode → 目标 ETF（接口 I 的替身结果） */
+  feederTargets: Map<string, FeederTarget>;
   /** 最近一次批量报价收到的代码池（断言服务层确实把目录代码传下去了） */
   lastSpotCodes: string[];
+  /** 最近一次反查收到的候选代码（断言增量刷新只补了新的） */
+  lastFeederCodes: string[];
   /** 让指定接口抛错 */
   failures: Set<string>;
   calls: Record<string, number>;
 }
+
+/**
+ * 接口 E 的样本：**真实行**（2026-09-22 采集），只保留与本文件 8 只 ETF 相关的联接基金
+ * 及其对应的 ETF 行本身。
+ *
+ * 覆盖三类：有多个份额的（510300 四个）、只有一个份额的（159915）、
+ * 以及**目标 ETF 不在行情池里**的 `000942`（广发信息技术联接A → 159939，
+ * 反查会落库，但数据集 join 不到任何 ETF —— 不能因此报错）。
+ */
+export function etfFeederCatalog(): FundCatalogEntry[] {
+  const rows: [string, string, string, string][] = [
+    ['006131', '华泰柏瑞沪深300ETF联接C', '指数型-股票', 'HUATAIBAIRUIHUSHEN300ETFLIANJIEC'],
+    ['022699', '华泰柏瑞沪深300ETF联接I', '指数型-股票', 'HUATAIBAIRUIHUSHEN300ETFLIANJIEI'],
+    ['022948', '华泰柏瑞沪深300ETF联接Y', '指数型-股票', 'HUATAIBAIRUIHUSHEN300ETFLIANJIEY'],
+    ['460300', '华泰柏瑞沪深300ETF联接A', '指数型-股票', 'HUATAIBAIRUIHUSHEN300ETFLIANJIEA'],
+    ['004744', '易方达创业板ETF联接C', '指数型-股票', 'YIFANGDACHUANGYEBANETFLIANJIEC'],
+    ['022907', '易方达创业板ETF联接Y', '指数型-股票', 'YIFANGDACHUANGYEBANETFLIANJIEY'],
+    ['110026', '易方达创业板ETF联接A', '指数型-股票', 'YIFANGDACHUANGYEBANETFLIANJIEA'],
+    [
+      '012362',
+      '国泰中证全指证券公司ETF联接A',
+      '指数型-股票',
+      'GUOTAIZHONGZHENGQUANZHIZHENGQUANGONGSIETFLIANJIEA',
+    ],
+    [
+      '012363',
+      '国泰中证全指证券公司ETF联接C',
+      '指数型-股票',
+      'GUOTAIZHONGZHENGQUANZHIZHENGQUANGONGSIETFLIANJIEC',
+    ],
+    [
+      '022509',
+      '国泰中证全指证券公司ETF联接E',
+      '指数型-股票',
+      'GUOTAIZHONGZHENGQUANZHIZHENGQUANGONGSIETFLIANJIEE',
+    ],
+    ['007937', '华夏饲料豆粕期货ETF联接A', '指数型-其他', 'HUAXIASILIAODOUPOQIHUOETFLIANJIEA'],
+    ['007938', '华夏饲料豆粕期货ETF联接C', '指数型-其他', 'HUAXIASILIAODOUPOQIHUOETFLIANJIEC'],
+    ['006075', '博时标普500ETF联接C', '指数型-海外股票', 'BOSHIBIAOPU500ETFLIANJIEC'],
+    [
+      '013425',
+      '博时标普500ETF联接美元汇(QDII)A',
+      '指数型-海外股票',
+      'BOSHIBIAOPU500ETFLIANJIEMEIYUANHUIQDIIA',
+    ],
+    ['050025', '博时标普500ETF联接A', '指数型-海外股票', 'BOSHIBIAOPU500ETFLIANJIEA'],
+    ['007300', '国联安中证半导体ETF联接A', '指数型-股票', 'GUOLIANANZHONGZHENGBANDAOTIETFLIANJIEA'],
+    ['007301', '国联安中证半导体ETF联接C', '指数型-股票', 'GUOLIANANZHONGZHENGBANDAOTIETFLIANJIEC'],
+    // 名称里没有「ETF」但同样是联接基金（core.isFeederFundName 的核心用例）
+    ['000942', '广发信息技术联接A', '指数型-股票', 'GUANGFAXINXIJISHULIANJIEA'],
+    // 非联接基金：用来断言候选池确实做了过滤
+    ['510300', '沪深300ETF华泰柏瑞', '指数型-股票', 'HUSHEN300ETFHUATAIBAIRUI'],
+    ['159915', '创业板ETF易方达', '指数型-股票', 'CHUANGYEBANETFYIFANGDA'],
+  ];
+  return rows.map(([code, name, fundType, pinyinFull]) => ({
+    code,
+    name,
+    pinyinAbbr: null,
+    fundType,
+    pinyinFull,
+  }));
+}
+
+/** feederCode → 目标 ETF（真实映射，2026-09-22 实测） */
+export function etfFeederTargets(): Map<string, FeederTarget> {
+  const report = '2026-06-30';
+  const mapping: [string, string, string][] = [
+    ['006131', '510300', '沪深300ETF华泰柏瑞'],
+    ['022699', '510300', '沪深300ETF华泰柏瑞'],
+    ['022948', '510300', '沪深300ETF华泰柏瑞'],
+    ['460300', '510300', '沪深300ETF华泰柏瑞'],
+    ['004744', '159915', '创业板ETF易方达'],
+    ['022907', '159915', '创业板ETF易方达'],
+    ['110026', '159915', '创业板ETF易方达'],
+    ['012362', '512880', '证券ETF国泰'],
+    ['012363', '512880', '证券ETF国泰'],
+    ['022509', '512880', '证券ETF国泰'],
+    ['007937', '159985', '豆粕ETF华夏'],
+    ['007938', '159985', '豆粕ETF华夏'],
+    ['006075', '513500', '标普500ETF博时'],
+    ['013425', '513500', '标普500ETF博时'],
+    ['050025', '513500', '标普500ETF博时'],
+    ['007300', '512480', '半导体ETF国联'],
+    ['007301', '512480', '半导体ETF国联'],
+    // 目标 ETF 不在行情池里：允许存在，数据集里 join 不到而已
+    ['000942', '159939', '信息技术ETF广发'],
+  ];
+  return new Map(
+    mapping.map(([feeder, etfCode, etfName]) => [feeder, { etfCode, etfName, reportDate: report }]),
+  );
+}
+
+/** 替身不传真实 client（所有请求都走注入的 `fetchOne`）；误用时报错而不是静默返回空 */
+const neverClient = {
+  getText: async () => {
+    throw new Error('替身不应发起真实 HTTP 请求');
+  },
+} as unknown as HttpClient;
 
 function spotItem(overrides: Partial<EtfSpotItem> = {}): EtfSpotItem {
   return {
@@ -352,6 +461,8 @@ export function createFakeEtfSource(
     sinaSpot?: EtfSpotItem[];
     profiles?: RawEtfProfile[];
     detail?: FundProfileData | null;
+    feederCatalog?: FundCatalogEntry[];
+    feederTargets?: Map<string, FeederTarget>;
   } = {},
 ): FakeEtfSource {
   // 通用区块（净值/收益/持仓/公告）复用 QDII 的假数据源
@@ -364,7 +475,10 @@ export function createFakeEtfSource(
     sinaSpot: options.sinaSpot ?? etfSinaSpotItems(options.spot ?? etfSpotItems()),
     profiles: options.profiles ?? etfProfiles(),
     detail: options.detail === undefined ? etfFundProfile() : options.detail,
+    feederCatalog: options.feederCatalog ?? etfFeederCatalog(),
+    feederTargets: options.feederTargets ?? etfFeederTargets(),
     lastSpotCodes: [],
+    lastFeederCodes: [],
     failures: new Set<string>(),
     calls: {},
 
@@ -397,6 +511,36 @@ export function createFakeEtfSource(
       source.calls.profiles = (source.calls.profiles ?? 0) + 1;
       if (source.failures.has('profiles')) throw new UpstreamError('模拟：ETF 目录接口不可用');
       return source.profiles;
+    },
+
+    async fetchFundCatalog(): Promise<FundCatalogEntry[]> {
+      source.calls.fundCatalog = (source.calls.fundCatalog ?? 0) + 1;
+      if (source.failures.has('fundCatalog'))
+        throw new UpstreamError('模拟：全量基金表（接口 E）不可用');
+      return source.feederCatalog;
+    },
+
+    /**
+     * 逐只反查的替身：复用**真实编排**（`fetchFeederTargets`），只把单只查询换成查表。
+     * 这样并发/空/失败分流的逻辑由 `sources` 的单测保证，这里只需保证数据形状。
+     */
+    async fetchFeederTargets(
+      codes: readonly string[],
+      options?: { onProgress?: (done: number, total: number) => void },
+    ): Promise<FeederScanResult> {
+      source.calls.feeders = (source.calls.feeders ?? 0) + 1;
+      source.lastFeederCodes = [...codes];
+      if (source.failures.has('feeders')) throw new UpstreamError('模拟：联接基金反查不可用');
+      return fetchFeederTargets(neverClient, codes, {
+        concurrency: 4,
+        fetchOne: async (code) => {
+          if (source.failures.has(`feeder:${code}`)) {
+            throw new UpstreamError(`模拟：${code} 反查失败`);
+          }
+          return source.feederTargets.get(code) ?? null;
+        },
+        ...(options?.onProgress === undefined ? {} : { onProgress: options.onProgress }),
+      });
     },
 
     async fetchFundProfile(code: string): Promise<FundProfileData | null> {

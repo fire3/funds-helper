@@ -379,6 +379,52 @@ async function main() {
     `inserted=${fxSecond?.inserted}`,
   );
 
+  // 场外联接基金：契约为先（反查是独立慢链路，见下）
+  check(
+    'ETF 数据集带场外联接基金字段（每只 ETF 都有 feederFunds 数组，覆盖度自洽）',
+    typeof etf?.feeder === 'object' &&
+      etf?.feeder !== null &&
+      (etf.feeder.updatedAt === null || typeof etf.feeder.updatedAt === 'string') &&
+      typeof etf.feeder.etfCount === 'number' &&
+      typeof etf.feeder.fundCount === 'number' &&
+      // 一只 ETF 至少有一个联接份额（而且大概率不止一个）→ ETF 数不该超过基金数
+      etf.feeder.etfCount <= etf.feeder.fundCount &&
+      (etf?.funds ?? []).every((fund) => Array.isArray(fund.feederFunds)),
+    `更新于 ${etf?.feeder?.updatedAt ?? '尚未反查'}，${etf?.feeder?.etfCount} 只 ETF / ${etf?.feeder?.fundCount} 只联接基金`,
+  );
+
+  // 全量反查要打约 2300 个请求（≈4 分钟），因此默认不在冒烟里跑；
+  // 显式 SMOKE_FEEDERS=1 时才验证真实链路（改了反查逻辑请跑一次）。
+  if (process.env.SMOKE_FEEDERS === '1') {
+    const feederResponse = await fetch(`${BASE}/api/tools/etf/feeders/refresh?full=1`, {
+      method: 'POST',
+    });
+    const feeder = await feederResponse.json().catch(() => null);
+    check(
+      'POST /api/tools/etf/feeders/refresh?full=1 全量反查成功',
+      feederResponse.ok && (feeder?.mapped ?? 0) >= 2000 && (feeder?.failed ?? 1) === 0,
+      `scanned=${feeder?.scanned} mapped=${feeder?.mapped} empty=${feeder?.empty} failed=${feeder?.failed} ${((feeder?.durationMs ?? 0) / 1000).toFixed(1)}s`,
+    );
+
+    const after = (await getJson('/api/tools/etf/dataset')).body;
+    const withFeeder = (after?.funds ?? []).filter((fund) => fund.feederFunds.length > 0);
+    check(
+      '反查覆盖率合理（≥900 只 ETF 有场外联接基金）',
+      (after?.feeder?.etfCount ?? 0) >= 900 && withFeeder.length === (after?.feeder?.etfCount ?? 0),
+      `etfCount=${after?.feeder?.etfCount} fundCount=${after?.feeder?.fundCount}`,
+    );
+
+    const hs300 = (after?.funds ?? []).find((fund) => fund.code === '510300');
+    check(
+      '抽样：510300 的联接份额（A/C/I/Y）都在',
+      (hs300?.feederFunds?.length ?? 0) >= 3 &&
+        hs300.feederFunds.every((fund) => /^\d{6}$/.test(fund.code) && fund.name.length > 0),
+      (hs300?.feederFunds ?? []).map((fund) => `${fund.code} ${fund.name}`).join('，'),
+    );
+  } else {
+    console.log('  - 跳过场外联接基金全量反查（设 SMOKE_FEEDERS=1 可开启，约 4 分钟）');
+  }
+
   const etfAgain = await fetch(`${BASE}/api/tools/etf/refresh`, { method: 'POST' });
   const etfSecond = await etfAgain.json().catch(() => null);
   check(

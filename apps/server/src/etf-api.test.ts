@@ -28,6 +28,7 @@ interface EtfHarness {
   app: App;
   source: FakeEtfSource;
   db: Awaited<ReturnType<typeof createHarness>>['db'];
+  scheduler: Awaited<ReturnType<typeof createHarness>>['scheduler'];
 }
 
 async function etfHarness(options: EtfHarnessOptions = {}): Promise<EtfHarness> {
@@ -37,7 +38,7 @@ async function etfHarness(options: EtfHarnessOptions = {}): Promise<EtfHarness> 
     config: { etfEastmoneyEnabled: eastmoney },
     buildTools: ({ now }) => [createEtfTool({ source, now })],
   });
-  return { app, source, db: app.db };
+  return { app, source, db: app.db, scheduler: app.scheduler };
 }
 
 async function datasetOf(app: App): Promise<EtfDatasetResponse> {
@@ -667,6 +668,239 @@ describe('切换行情渠道时的数据一致性', () => {
       expect(switched.total).toBe(10);
       // 同一个数据日期上只剩一个渠道
       expect(switched.funds.every((fund) => fund.premiumRate === null)).toBe(true);
+    } finally {
+      await app.close();
+    }
+  });
+});
+
+describe('场外联接基金反查（ETF → 场外）', () => {
+  async function feedersOf(app: App): Promise<EtfDatasetResponse> {
+    // 反查会清数据集缓存，这里显式取一份最新的
+    return datasetOf(app);
+  }
+
+  it('没反查过时：联接列表为空、覆盖度为 0，且接口不会自己去打上游', async () => {
+    const { app, source } = await etfHarness({ eastmoney: true });
+    try {
+      const body = await feedersOf(app);
+      expect(body.feeder).toEqual({ updatedAt: null, etfCount: 0, fundCount: 0 });
+      expect(body.funds.every((fund) => fund.feederFunds.length === 0)).toBe(true);
+      // 2320 个请求的慢链路绝不能挂在用户请求上
+      expect(source.calls.feeders ?? 0).toBe(0);
+      expect(source.calls.fundCatalog ?? 0).toBe(0);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('全量反查：363 行落库后，每只 ETF 拿到自己的联接份额（A/C/I/Y 都在）', async () => {
+    const { app, source } = await etfHarness({ eastmoney: true });
+    try {
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/tools/etf/feeders/refresh?full=1',
+      });
+      expect(response.statusCode).toBe(200);
+      const body = await response.json();
+      expect(body.full).toBe(true);
+      // 候选池 = 名称含「联接」的那些（替身里 18 只，另有 2 只 ETF 本身不该入选）
+      expect(body.scanned).toBe(18);
+      expect(body.mapped).toBe(18);
+      expect(body.empty).toBe(0);
+      expect(body.failed).toBe(0);
+      expect(source.lastFeederCodes).not.toContain('510300');
+
+      const dataset = await feedersOf(app);
+      const hs300 = dataset.funds.find((fund) => fund.code === '510300');
+      expect(hs300?.feederFunds.map((fund) => fund.code)).toEqual([
+        '006131',
+        '022699',
+        '022948',
+        '460300',
+      ]);
+      const chuangye = dataset.funds.find((fund) => fund.code === '159915');
+      expect(chuangye?.feederFunds).toHaveLength(3);
+      // 没有联接基金的 ETF（替身里 513100/511990 是空集）保持空数组，不是 null
+      expect(dataset.funds.find((fund) => fund.code === '513100')?.feederFunds).toEqual([]);
+      // 覆盖度：7 只 ETF 有联接（8 只行情里的 513100/511990 没有），18 只联接基金
+      expect(dataset.feeder.etfCount).toBe(7);
+      expect(dataset.feeder.fundCount).toBe(18);
+      expect(dataset.feeder.updatedAt).not.toBeNull();
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('增量反查：第二次只查「还没落库」的候选，不重复打 2300 个请求', async () => {
+    const { app, source } = await etfHarness({ eastmoney: true });
+    try {
+      await app.inject({ method: 'POST', url: '/api/tools/etf/feeders/refresh?full=1' });
+      expect(source.lastFeederCodes).toHaveLength(18);
+
+      const second = await app.inject({ method: 'POST', url: '/api/tools/etf/feeders/refresh' });
+      const body = await second.json();
+      expect(body.full).toBe(false);
+      expect(body.scanned).toBe(0);
+      expect(body.message).toContain('没有新增');
+      // 没有任何上游请求：候选池没有新增时连接口 I 都不碰
+      expect(source.lastFeederCodes).toHaveLength(18);
+
+      // 新成立一只联接基金 → 下一次增量只查这一只
+      source.feederCatalog = [
+        ...source.feederCatalog,
+        {
+          code: '029999',
+          name: '某某中证A500ETF联接A',
+          pinyinAbbr: null,
+          fundType: '指数型-股票',
+          pinyinFull: null,
+        },
+      ];
+      source.feederTargets.set('029999', {
+        etfCode: '510300',
+        etfName: '沪深300ETF华泰柏瑞',
+        reportDate: '2026-06-30',
+      });
+      const third = await app.inject({ method: 'POST', url: '/api/tools/etf/feeders/refresh' });
+      const thirdBody = await third.json();
+      expect(thirdBody.scanned).toBe(1);
+      expect(source.lastFeederCodes).toEqual(['029999']);
+
+      const dataset = await feedersOf(app);
+      expect(
+        dataset.funds.find((fund) => fund.code === '510300')?.feederFunds.map((fund) => fund.code),
+      ).toEqual(['006131', '022699', '022948', '029999', '460300']);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('上游没给目标 ETF 的候选下次仍会重查（不写库 = 未知，而不是「没有」）', async () => {
+    const { app, source } = await etfHarness({ eastmoney: true });
+    try {
+      // 让 000942（名称不含 ETF 的联接基金）查不到目标
+      const targets = new Map(source.feederTargets);
+      targets.delete('000942');
+      source.feederTargets = targets;
+
+      const first = await app.inject({
+        method: 'POST',
+        url: '/api/tools/etf/feeders/refresh?full=1',
+      });
+      const firstBody = await first.json();
+      expect(firstBody.empty).toBe(1);
+      expect(firstBody.mapped).toBe(17);
+
+      const second = await app.inject({ method: 'POST', url: '/api/tools/etf/feeders/refresh' });
+      const secondBody = await second.json();
+      expect(source.lastFeederCodes).toEqual(['000942']);
+      expect(secondBody.scanned).toBe(1);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('单只请求失败不影响其它行，失败的代码会在下次增量里重试', async () => {
+    const { app, source } = await etfHarness({ eastmoney: true });
+    try {
+      source.failures.add('feeder:006131');
+      const first = await app.inject({
+        method: 'POST',
+        url: '/api/tools/etf/feeders/refresh?full=1',
+      });
+      const body = await first.json();
+      expect(body.failed).toBe(1);
+      expect(body.mapped).toBe(17);
+
+      const dataset = await feedersOf(app);
+      expect(
+        dataset.funds.find((fund) => fund.code === '510300')?.feederFunds.map((fund) => fund.code),
+      ).toEqual(['022699', '022948', '460300']);
+
+      source.failures.delete('feeder:006131');
+      await app.inject({ method: 'POST', url: '/api/tools/etf/feeders/refresh' });
+      expect(source.lastFeederCodes).toEqual(['006131']);
+      const healed = await feedersOf(app);
+      expect(healed.funds.find((fund) => fund.code === '510300')?.feederFunds).toHaveLength(4);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('候选池整体不可用时 500，且**不清空**已落库的映射', async () => {
+    const { app, source } = await etfHarness({ eastmoney: true });
+    try {
+      await app.inject({ method: 'POST', url: '/api/tools/etf/feeders/refresh?full=1' });
+      source.failures.add('fundCatalog');
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/tools/etf/feeders/refresh?full=1',
+      });
+      // 上游不可用 → 503（与其它工具的 UpstreamError 一致）
+      expect(response.statusCode).toBe(503);
+
+      const dataset = await feedersOf(app);
+      expect(dataset.feeder.fundCount).toBe(18);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('全量反查结果异常少时不清扫（护栏：不能把已有映射删光）', async () => {
+    const { app, source } = await etfHarness({ eastmoney: true });
+    try {
+      await app.inject({ method: 'POST', url: '/api/tools/etf/feeders/refresh?full=1' });
+
+      // 模拟上游退化成「只回一条」：mapped 远低于 ETF_FEEDER_MIN_MAPPED
+      source.feederTargets = new Map([
+        ['460300', { etfCode: '510300', etfName: '沪深300ETF华泰柏瑞', reportDate: '2026-06-30' }],
+      ]);
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/tools/etf/feeders/refresh?full=1',
+      });
+      expect(response.statusCode).toBe(200);
+
+      const dataset = await feedersOf(app);
+      // 既有的 17 只没有被清扫掉
+      expect(dataset.feeder.fundCount).toBe(18);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('全量反查无失败时才清扫：已清盘的联接基金不会残留', async () => {
+    const { app, source } = await etfHarness({ eastmoney: true });
+    try {
+      await app.inject({ method: 'POST', url: '/api/tools/etf/feeders/refresh?full=1' });
+      let dataset = await feedersOf(app);
+      expect(dataset.feeder.fundCount).toBe(18);
+
+      // 000942 清盘：从候选池消失
+      source.feederCatalog = source.feederCatalog.filter((row) => row.code !== '000942');
+      const targets = new Map(source.feederTargets);
+      targets.delete('000942');
+      source.feederTargets = targets;
+
+      await app.inject({ method: 'POST', url: '/api/tools/etf/feeders/refresh?full=1' });
+      dataset = await feedersOf(app);
+      expect(dataset.feeder.fundCount).toBe(17);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('定时任务：首次会全量，距上次不足 6 天时直接跳过', async () => {
+    const { app, source, scheduler } = await etfHarness({ eastmoney: true });
+    try {
+      const first = await scheduler.execute('etf.feeders', 'manual');
+      expect(first?.stats).toMatchObject({ full: true, skipped: false });
+
+      const second = await scheduler.execute('etf.feeders', 'manual');
+      expect(second?.stats).toMatchObject({ skipped: true });
+      // 跳过的这一轮没有打上游
+      expect(source.calls.feeders ?? 0).toBe(1);
     } finally {
       await app.close();
     }

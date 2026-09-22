@@ -120,6 +120,7 @@ describe('runMigrations', () => {
       'etf_spot_daily',
       'etf_profile',
       'etf_detail_cache',
+      'etf_feeder_fund',
       'app_setting',
       'schema_migration',
     ]) {
@@ -145,6 +146,34 @@ describe('runMigrations', () => {
       .all<{ name: string }>('PRAGMA table_info(etf_spot_daily)')
       .map((row) => row.name);
     expect(columns).toContain('source');
+    db.close();
+  });
+
+  it('etf_feeder_fund 以 feeder_code 为主键：一只 ETF 多个份额，一只联接基金只能有一个目标', () => {
+    const db = openDb(':memory:');
+    runMigrations(db);
+
+    const insert = (feederCode: string, etfCode: string): void => {
+      db.run(
+        `INSERT INTO etf_feeder_fund (feeder_code, etf_code, feeder_name, report_date, captured_at)
+         VALUES (?, ?, '某某ETF联接A', '2026-06-30', '2026-09-22T00:00:00.000Z')`,
+        [feederCode, etfCode],
+      );
+    };
+
+    // 同一只 ETF 的多个联接份额（A/C/I/Y）：必须都留得下，这正是这张表存在的理由
+    insert('460300', '510300');
+    insert('006131', '510300');
+    // 同一只联接基金不能既挂在 510300 又挂在 159915
+    expect(() => insert('460300', '159915')).toThrow();
+
+    const codes = db
+      .all<{ feeder_code: string }>(
+        'SELECT feeder_code FROM etf_feeder_fund WHERE etf_code = ? ORDER BY feeder_code',
+        ['510300'],
+      )
+      .map((row) => row.feeder_code);
+    expect(codes).toEqual(['006131', '460300']);
     db.close();
   });
 
