@@ -66,6 +66,41 @@ export function parseCompactDate(raw: unknown): string | null {
   return `${text.slice(0, 4)}-${text.slice(4, 6)}-${text.slice(6, 8)}`;
 }
 
+/**
+ * `clist` 与 `ulist.np`（见 `etf-quotes.ts`）返回**同一套字段名**，因此共用这一份行映射：
+ * 两个接口的字段语义若哪天分叉，只需要改这里一处（并有各自的 fixture 测试兜着）。
+ */
+export function spotItemFromRow(raw: unknown): EtfSpotItem | null {
+  const item = record(raw);
+  if (!item) return null;
+  const code = str(item.f12);
+  // 代码是唯一键：没有代码的行无法参与 join，直接跳过（行级宽松）
+  if (!code) return null;
+  return {
+    code,
+    name: str(item.f14),
+    market: num(item.f13),
+    price: num(item.f2),
+    changePct: num(item.f3),
+    changeAmt: num(item.f4),
+    open: num(item.f17),
+    high: num(item.f15),
+    low: num(item.f16),
+    prevClose: num(item.f18),
+    amplitude: num(item.f7),
+    turnover: num(item.f8),
+    volumeRatio: num(item.f10),
+    volume: num(item.f5),
+    amount: num(item.f6),
+    scale: num(item.f20),
+    floatScale: num(item.f21),
+    discountRate: num(item.f402),
+    listingDate: parseCompactDate(item.f26),
+    mainInflow: num(item.f62),
+    quoteTs: num(item.f124),
+  };
+}
+
 export function parseEtfSpotPage(text: string): EtfSpotPage {
   let payload: unknown;
   try {
@@ -89,34 +124,8 @@ export function parseEtfSpotPage(text: string): EtfSpotPage {
 
   const items: EtfSpotItem[] = [];
   for (const row of array(data.diff)) {
-    const item = record(row);
-    if (!item) continue;
-    const code = str(item.f12);
-    // 代码是唯一键：没有代码的行无法参与 join，直接跳过（行级宽松）
-    if (!code) continue;
-    items.push({
-      code,
-      name: str(item.f14),
-      market: num(item.f13),
-      price: num(item.f2),
-      changePct: num(item.f3),
-      changeAmt: num(item.f4),
-      open: num(item.f17),
-      high: num(item.f15),
-      low: num(item.f16),
-      prevClose: num(item.f18),
-      amplitude: num(item.f7),
-      turnover: num(item.f8),
-      volumeRatio: num(item.f10),
-      volume: num(item.f5),
-      amount: num(item.f6),
-      scale: num(item.f20),
-      floatScale: num(item.f21),
-      discountRate: num(item.f402),
-      listingDate: parseCompactDate(item.f26),
-      mainInflow: num(item.f62),
-      quoteTs: num(item.f124),
-    });
+    const item = spotItemFromRow(row);
+    if (item !== null) items.push(item);
   }
 
   return { total, items };

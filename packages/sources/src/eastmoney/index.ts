@@ -1,4 +1,5 @@
 export * from './etf-profile.ts';
+export * from './etf-quotes.ts';
 export * from './etf-spot.ts';
 export * from './fund-detail.ts';
 export * from './fund-list.ts';

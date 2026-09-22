@@ -52,6 +52,14 @@ export const ETF_PROFILE_REPORT = 'RPT_FUND_ETFLIST';
 export const ETF_PROFILE_PAGE_SIZE = 1000;
 /** 报表规模护栏：实测 1675 行 */
 export const ETF_PROFILE_MAX_COUNT = 20_000;
+/**
+ * 取满比例下限：低于它说明只翻到了报表的一部分（上游 `count` 与分页对不上）。
+ *
+ * 目录不仅提供分类与跟踪指数，**还是东财批量报价（`ulist.np`）的代码池** ——
+ * 少拿一页就等于数据集少一批标的，因此宁可报错让上层降级，也不要交出残缺的目录。
+ * 实测：`count = 1675`、7 行没有场内行情（已成立未上市）→ 覆盖率 99.6%，0.9 有充足余量。
+ */
+const ETF_PROFILE_MIN_RATIO = 0.9;
 
 /** 上游用 0/1（可能是数字也可能是字符串）表示标志位 */
 function flag(raw: unknown): boolean {
@@ -117,6 +125,7 @@ export function parseEtfProfilePage(text: string): EtfProfilePage {
 export async function fetchEtfProfiles(client: HttpClient): Promise<RawEtfProfile[]> {
   const byCode = new Map<string, RawEtfProfile>();
   let pages = 0;
+  let count = 0;
 
   for (let page = 1; page <= 100; page += 1) {
     const params = new URLSearchParams({
@@ -136,12 +145,16 @@ export async function fetchEtfProfiles(client: HttpClient): Promise<RawEtfProfil
     for (const row of parsed.rows) byCode.set(row.code, row);
 
     pages = parsed.pages;
+    count = Math.max(count, parsed.count);
     if (parsed.rows.length === 0 || parsed.rows.length < ETF_PROFILE_PAGE_SIZE) break;
     if (pages > 0 && page >= pages) break;
   }
 
   if (byCode.size === 0) {
     throw new ParseError('ETF 目录未返回任何行，疑似报表参数变更');
+  }
+  if (count > 0 && byCode.size < count * ETF_PROFILE_MIN_RATIO) {
+    throw new ParseError(`ETF 目录只取到 ${byCode.size}/${count} 行，疑似分页被上游截断`);
   }
   return [...byCode.values()];
 }

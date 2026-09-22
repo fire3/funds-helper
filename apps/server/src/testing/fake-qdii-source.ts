@@ -290,6 +290,10 @@ export function createFakeQdiiSource(
       throw new UpstreamError('假数据源未实现 fetchEtfSpot（请使用 createFakeEtfSource）');
     },
 
+    async fetchEtfSpotByCodes(): Promise<EtfSpotItem[]> {
+      throw new UpstreamError('假数据源未实现 fetchEtfSpotByCodes（请使用 createFakeEtfSource）');
+    },
+
     async fetchEtfProfiles(): Promise<RawEtfProfile[]> {
       throw new UpstreamError('假数据源未实现 fetchEtfProfiles（请使用 createFakeEtfSource）');
     },

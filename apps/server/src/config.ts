@@ -36,11 +36,13 @@ export const AppConfigSchema = z.object({
   /**
    * ETF 行情是否**优先**走东方财富 `push2`（默认 false）。
    *
-   * 2026-09-22 实测：push2 的 `clist`（全市场列表）对本项目出口 IP 长期重置
-   * （`UND_ERR_SOCKET`，主备域名 + 多台集群全部一样），且失败要等退避重试一轮（约 8 秒）——
-   * 因此默认**只走新浪列表**（见 `docs/design/etf-data-sources.md` §7）。
-   * 代价是新浪没有折溢价率/上市日期；需要折溢价时置 `ETF_EASTMONEY_ENABLED=true`，
-   * 届时东财失败仍会自动降级到新浪（不会让数据集挂掉）。
+   * 2026-09-22 实测：`clist`（按板块翻页）被上游**按接口**重置（主备域名 + 多台集群都一样），
+   * 而同一域名的 `ulist.np`（按代码批量报价，100 只/请求）正常，字段完全一致 ——
+   * 所以打开这个开关时走的是 `ulist.np`，代码池来自目录接口 B，
+   * 只有在目录不可用时才退回 `clist`；任一步失败都会降级到新浪（见 `etf-data-sources.md` §7.4）。
+   *
+   * 代价：新浪没有折溢价率/上市日期，因此**默认**（false）看不到折溢价；
+   * 需要折溢价时置 `ETF_EASTMONEY_ENABLED=true`（实测 1675 只 / 约 6.5 秒 / 折溢价齐全）。
    */
   etfEastmoneyEnabled: envBool(false),
   /** 前端构建产物目录；存在即由本服务托管静态资源 */

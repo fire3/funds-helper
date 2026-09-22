@@ -52,9 +52,10 @@ export type EtfDataSourceInfo = z.infer<typeof EtfDataSourceInfoSchema>;
 /**
  * 渠道目录。
  *
- * **新浪是默认主源**：东财 `push2` 的 `clist` 列表接口对本机长期重置（失败还要等 8 秒退避），
+ * **新浪是默认主源**：东财 `clist`（按板块翻页）被上游按接口重置（失败还要等退避重试），
  * 不适合放在数据集的关键路径上；新浪列表自带全市场代码、17 页拿完 1676 只。
- * 东财只在 `ETF_EASTMONEY_ENABLED=true` 时作为**优先渠道**启用（它才有折溢价率）。
+ * 东财只在 `ETF_EASTMONEY_ENABLED=true` 时作为**优先渠道**启用（只有它有折溢价率）：
+ * 走 `ulist.np` 批量报价（代码池来自目录接口 B），失败自动降级回新浪。
  */
 export const ETF_SPOT_SOURCES: Record<EtfSpotSourceId, EtfDataSourceInfo> = {
   sina: {

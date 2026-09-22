@@ -23,6 +23,8 @@ export interface FakeEtfSource extends EtfDataSource {
   sinaSpot: EtfSpotItem[];
   profiles: RawEtfProfile[];
   detail: FundProfileData | null;
+  /** 最近一次批量报价收到的代码池（断言服务层确实把目录代码传下去了） */
+  lastSpotCodes: string[];
   /** 让指定接口抛错 */
   failures: Set<string>;
   calls: Record<string, number>;
@@ -257,6 +259,32 @@ export function etfProfiles(): RawEtfProfile[] {
       netAssetsYi: 120.5,
       shares: 10_000_000_000,
     }),
+    profileRow({
+      code: '513500',
+      name: '标普500ETF博时',
+      secuCode: '513500.SH',
+      indexCode: 'SPX',
+      indexName: '标普500',
+      broad: false,
+      crossBorder: true,
+      change1w: 0.5,
+      maxDrawdown1y: -9.3,
+      netAssetsYi: 120,
+      shares: 6_000_000_000,
+    }),
+    profileRow({
+      code: '512480',
+      name: '半导体ETF国联',
+      secuCode: '512480.SH',
+      indexCode: 'H30184',
+      indexName: '中证全指半导体',
+      broad: false,
+      industry: true,
+      change1w: 0.9,
+      maxDrawdown1y: -18.2,
+      netAssetsYi: 80,
+      shares: 6_153_846_153,
+    }),
     // 目录里有、没有场内行情 → 已成立未上市
     profileRow({
       code: '158000',
@@ -336,6 +364,7 @@ export function createFakeEtfSource(
     sinaSpot: options.sinaSpot ?? etfSinaSpotItems(options.spot ?? etfSpotItems()),
     profiles: options.profiles ?? etfProfiles(),
     detail: options.detail === undefined ? etfFundProfile() : options.detail,
+    lastSpotCodes: [],
     failures: new Set<string>(),
     calls: {},
 
@@ -344,6 +373,17 @@ export function createFakeEtfSource(
       if (source.failures.has('spot')) throw new UpstreamError('模拟：ETF 行情接口不可用');
       if (source.failures.has('spot:internal')) throw new Error('模拟：底层数据库错误');
       return source.spot;
+    },
+
+    /** 真实实现按 100 只/请求分片；替身只保留「按代码池过滤」这一语义 */
+    async fetchEtfSpotByCodes(codes: readonly string[]): Promise<EtfSpotItem[]> {
+      source.calls.spotByCodes = (source.calls.spotByCodes ?? 0) + 1;
+      source.lastSpotCodes = [...codes];
+      if (source.failures.has('spotByCodes'))
+        throw new UpstreamError('模拟：ETF 批量报价接口不可用');
+      if (source.failures.has('spotByCodes:internal')) throw new Error('模拟：底层数据库错误');
+      const wanted = new Set(codes);
+      return source.spot.filter((item) => wanted.has(item.code));
     },
 
     async fetchSinaEtfSpot(): Promise<EtfSpotItem[]> {

@@ -155,24 +155,37 @@ export class EtfService {
    * 取全市场行情。
    *
    * 默认**只走新浪列表**（自带全市场代码 + UTF-8 JSON，17 页拿完 1676 只）：
-   * 东财 `push2` 的 `clist` 被上游按接口重置（主备域名一样，失败前还要退避重试），
-   * 不再让它出现在关键路径上。
+   * 东财 `clist` 被上游按接口重置（主备域名一样，失败前还要退避重试），
+   * 不把它放在默认链路的关键路径上。
    *
-   * `ETF_EASTMONEY_ENABLED=true` 时优先东财（只有它给折溢价率/上市日期），
-   * 失败仍自动降级到新浪 —— 无论哪条链路，都**不会**因为单一渠道失败而让数据集挂掉。
+   * `ETF_EASTMONEY_ENABLED=true` 时优先东财（只有它给折溢价率/上市日期）：
+   * 有代码池（目录接口 B）就用 `ulist.np` 批量报价，没有代码池才退回自带代码池的 `clist`；
+   * 任一步失败仍自动降级到新浪 —— 无论哪条链路，都**不会**因为单一渠道失败而让数据集挂掉。
+   *
+   * @param codes 目录（接口 B）里的代码池；为空时东财只能走 `clist`
    */
-  private async fetchSpot(): Promise<{ items: EtfSpotItem[]; source: EtfSpotSourceId }> {
+  private async fetchSpot(
+    codes: readonly string[],
+  ): Promise<{ items: EtfSpotItem[]; source: EtfSpotSourceId }> {
     if (!this.deps.config.etfEastmoneyEnabled) {
       return { items: await this.deps.source.fetchSinaEtfSpot(), source: 'sina' };
     }
 
+    // 两个东财行情接口互补：`ulist.np` 快但要先有代码池，`clist` 自带代码池但按板块翻页
+    const useCodes = codes.length > 0;
     try {
-      return { items: await this.deps.source.fetchEtfSpot(), source: 'eastmoney' };
+      const items = useCodes
+        ? await this.deps.source.fetchEtfSpotByCodes(codes)
+        : await this.deps.source.fetchEtfSpot();
+      return { items, source: 'eastmoney' };
     } catch (error) {
       // 只有上游故障才降级；编程/数据库错误必须原样抛出，不能被伪装成「上游不可用」
       if (!(error instanceof UpstreamError) && !(error instanceof ParseError)) throw error;
       const primaryError = error instanceof Error ? error.message : String(error);
-      this.deps.logger.warn({ err: primaryError }, '东财 ETF 行情不可用，降级到新浪列表');
+      this.deps.logger.warn(
+        { err: primaryError, via: useCodes ? 'ulist.np' : 'clist' },
+        '东财 ETF 行情不可用，降级到新浪列表',
+      );
 
       try {
         const items = await this.deps.source.fetchSinaEtfSpot();
@@ -216,7 +229,7 @@ export class EtfService {
       );
     }
 
-    const { items, source } = await this.fetchSpot();
+    const { items, source } = await this.fetchSpot(profiles.map((row) => row.code));
 
     if (items.length === 0) {
       throw new ParseError('上游未返回任何 ETF 行情，疑似板块参数或接口结构变更');

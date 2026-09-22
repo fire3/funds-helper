@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { createHarness } from './testing/app-harness.ts';
 import {
   createFakeEtfSource,
+  etfProfiles,
   etfSpotItemsWithStyle,
   type FakeEtfSource,
 } from './testing/fake-etf-source.ts';
@@ -92,6 +93,40 @@ describe('GET /api/tools/etf/dataset', () => {
     }
   });
 
+  it('打开东财时把目录代码池交给批量报价（ulist.np），不再按板块翻页', async () => {
+    const { app, source } = await etfHarness({ eastmoney: true });
+    try {
+      const body = await datasetOf(app);
+
+      expect(body.dataSource).toEqual({ id: 'eastmoney', name: '东方财富行情', missing: [] });
+      expect(source.calls.spotByCodes).toBe(1);
+      // 有代码池就不该再走「按板块翻页」那条路
+      expect(source.calls.spot).toBeUndefined();
+      expect(source.lastSpotCodes).toEqual(source.profiles.map((row) => row.code));
+      // 东财有折溢价 → 同一只 ETF 不再是「未知」
+      expect(body.funds.find((fund) => fund.code === '510300')?.premiumRate).toBe(-0.06);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('目录失败（没有代码池）时退回自带代码池的 clist，而不是直接放弃东财', async () => {
+    const { app, source } = await etfHarness({ eastmoney: true });
+    try {
+      source.failures.add('profiles');
+      const body = await datasetOf(app);
+
+      expect(body.dataSource.id).toBe('eastmoney');
+      expect(source.calls.spot).toBe(1);
+      expect(source.calls.spotByCodes).toBeUndefined();
+      // clist 自带代码池 → 目录缺失不影响标的数量
+      expect(body.total).toBe(8);
+      expect(body.freshness.dataDate).toBe('2026-09-22');
+    } finally {
+      await app.close();
+    }
+  });
+
   it('分类覆盖六类（宽基/行业主题/跨境/债券/商品/货币由标志位判定）', async () => {
     const { app } = await etfHarness();
     try {
@@ -123,10 +158,13 @@ describe('GET /api/tools/etf/dataset', () => {
   });
 
   it('目录里没有的行回退名称判定（并标记 categorySource=name）', async () => {
-    const { app } = await etfHarness();
+    // 目录（接口 B）偶尔会比行情少几行：行情的行仍要能归类，靠名称判定兜底
+    const { app } = await etfHarness({
+      profiles: etfProfiles().filter((row) => row.code !== '513500' && row.code !== '512480'),
+    });
     try {
       const body = await datasetOf(app);
-      // 513500 标普500ETF博时 不在假目录里 → 名称含「标普」→ 跨境
+      // 这两只被人为从目录里摘掉 → 名称含「标普」/「半导体」→ 名称判定
       expect(body.funds.find((fund) => fund.code === '513500')).toMatchObject({
         category: '跨境',
         categorySource: 'name',
@@ -207,7 +245,7 @@ describe('GET /api/tools/etf/dataset', () => {
       expect(stats.extremes.mostActive?.code).toBe('511990');
 
       // 目录 8 条、行情 9 条 → 目录里没有行情的只有 158000（已成立未上市）
-      expect(stats.coverage).toEqual({ spot: 9, profile: 8, unlisted: 1 });
+      expect(stats.coverage).toEqual({ spot: 9, profile: 10, unlisted: 1 });
       expect(stats.totalScale).toBeGreaterThan(0);
     } finally {
       await app.close();
@@ -246,7 +284,7 @@ describe('GET /api/tools/etf/dataset', () => {
   it('打开东财后它故障 → 自动降级到新浪：行情仍可用，折溢价置空并显式标注', async () => {
     const { app, source } = await etfHarness({ eastmoney: true });
     try {
-      source.failures.add('spot');
+      source.failures.add('spotByCodes');
       const body = await datasetOf(app);
 
       expect(body.total).toBe(8);
@@ -278,7 +316,7 @@ describe('GET /api/tools/etf/dataset', () => {
   it('渠道来自数据库而不是内存：清缓存/重建响应后仍标注备用渠道', async () => {
     const { app, source } = await etfHarness({ eastmoney: true });
     try {
-      source.failures.add('spot');
+      source.failures.add('spotByCodes');
       await datasetOf(app);
 
       app.cache.clear();
@@ -321,7 +359,7 @@ describe('GET /api/tools/etf/dataset', () => {
   it('非上游错误（如数据库故障）原样冒泡为 500，不被伪装成上游不可用', async () => {
     const { app, source } = await etfHarness({ eastmoney: true });
     try {
-      source.failures.add('spot:internal');
+      source.failures.add('spotByCodes:internal');
       const response = await app.inject({ method: 'GET', url: '/api/tools/etf/dataset' });
       expect(response.statusCode).toBe(500);
     } finally {
@@ -337,7 +375,7 @@ describe('POST /api/tools/etf/refresh', () => {
       const first = await app.inject({ method: 'POST', url: '/api/tools/etf/refresh' });
       expect(first.statusCode).toBe(200);
       const firstBody = first.json() as EtfRefreshResponse;
-      expect(firstBody).toMatchObject({ ok: true, spot: 8, profile: 8, dataDate: '2026-09-22' });
+      expect(firstBody).toMatchObject({ ok: true, spot: 8, profile: 10, dataDate: '2026-09-22' });
       expect(firstBody.inserted).toBe(8);
 
       const second = await app.inject({ method: 'POST', url: '/api/tools/etf/refresh' });
@@ -366,7 +404,7 @@ describe('POST /api/tools/etf/refresh', () => {
   it('主源故障时刷新走备用渠道，并在 source 与 message 里说明缺失字段', async () => {
     const { app, source } = await etfHarness({ eastmoney: true });
     try {
-      source.failures.add('spot');
+      source.failures.add('spotByCodes');
       const response = await app.inject({ method: 'POST', url: '/api/tools/etf/refresh' });
       const body = response.json() as EtfRefreshResponse;
 

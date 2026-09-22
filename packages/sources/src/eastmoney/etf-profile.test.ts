@@ -122,10 +122,19 @@ describe('fetchEtfProfiles —— 翻页', () => {
     let calls = 0;
     const client = stubClient(() => {
       calls += 1;
-      return fixture('list.json');
+      return `{"result":{"count":2,"pages":1,"data":[${profileRow('510300')},${profileRow('159915')}]}}`;
     });
-    await fetchEtfProfiles(client);
+    const rows = await fetchEtfProfiles(client);
     expect(calls).toBe(1);
+    expect(rows).toHaveLength(2);
+  });
+
+  it('只取到报表的一部分（count 与实际行数对不上）→ ParseError', async () => {
+    // 目录同时是东财批量报价的代码池：少一页就等于少一批标的，必须让上层去降级
+    const client = stubClient(
+      () => `{"result":{"count":1675,"pages":2,"data":[${profileRow('510300')}]}}`,
+    );
+    await expect(fetchEtfProfiles(client)).rejects.toThrow(ParseError);
   });
 
   it('完全取不到行 → ParseError', async () => {

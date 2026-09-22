@@ -4,6 +4,7 @@ import {
   type FundProfileData,
   fetchEtfProfiles,
   fetchEtfSpot,
+  fetchEtfSpotBySecids,
   fetchFundDetail,
   fetchFundProfile,
   fetchHoldings,
@@ -37,8 +38,15 @@ export interface EastmoneyFundDataSource {
   fetchPeriodIncrease(code: string): Promise<PeriodIncreaseData>;
   fetchHoldings(code: string): Promise<HoldingsData>;
   fetchQuotes(codes: readonly string[]): Promise<QuoteItem[]>;
-  /** ETF 全市场场内行情（接口 A，内部翻页） */
+  /**
+   * ETF 全市场场内行情（接口 A：`clist` 按板块翻页）。
+   *
+   * **自带代码池**，因此不依赖目录接口 —— 但 2026-09-22 起该接口在本机被上游重置
+   * （见 `docs/design/etf-data-sources.md` §7.4），只在「有代码池可用时需要备胎」时调用。
+   */
   fetchEtfSpot(): Promise<EtfSpotItem[]>;
+  /** ETF 场内行情（接口 A′：`ulist.np` 按代码批量报价，内部按 100 只/请求分片） */
+  fetchEtfSpotByCodes(codes: readonly string[]): Promise<EtfSpotItem[]>;
   /** ETF 目录：跟踪指数 + 分类标志位（接口 B） */
   fetchEtfProfiles(): Promise<RawEtfProfile[]>;
   /** 单只基金的静态档案：费率 / 规模 / 管理人（接口 C）；无档案时返回 null */
@@ -56,6 +64,7 @@ export function createEastmoneyDataSource(http: HttpClient): EastmoneyFundDataSo
     fetchHoldings: (code) => fetchHoldings(http, code),
     fetchQuotes: (codes) => fetchQuotes(http, codes),
     fetchEtfSpot: () => fetchEtfSpot(http),
+    fetchEtfSpotByCodes: (codes) => fetchEtfSpotBySecids(http, codes),
     fetchEtfProfiles: () => fetchEtfProfiles(http),
     fetchFundProfile: (code) => fetchFundProfile(http, code),
   };
