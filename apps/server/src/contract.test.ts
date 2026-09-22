@@ -16,7 +16,10 @@ import {
   ETF_CATEGORIES,
   ETF_MARKETS,
   ETF_PREMIUM_LEVELS,
+  ETF_SPOT_SOURCE_ORDER,
   ETF_SPOT_SOURCES,
+  EtfConfigResponseSchema,
+  EtfConfigUpdateSchema,
   FX_INTERVALS,
   FX_RANGES,
   PURCHASE_STATUSES,
@@ -93,6 +96,23 @@ describe('core 领域模型 ↔ shared 传输契约', () => {
     // 新浪列表没有 IOPV：它成为默认主源后，「折溢价率不可用」必须能被前端读到
     expect(ETF_SPOT_SOURCES.sina.missing).toContain('折溢价率');
     expect(ETF_SPOT_SOURCES.eastmoney.missing).toEqual([]);
+  });
+
+  it('渠道展示顺序覆盖全部渠道且不重复（界面的下拉框直接用它）', () => {
+    expect([...ETF_SPOT_SOURCE_ORDER].sort()).toEqual([...ETF_SPOT_SOURCE_IDS].sort());
+    expect(new Set(ETF_SPOT_SOURCE_ORDER).size).toBe(ETF_SPOT_SOURCE_ORDER.length);
+  });
+
+  it('渠道配置契约能解析服务端的响应形状，并挡住非法渠道', () => {
+    // 前端用同一个 schema 解析响应：形状对不上会直接报错，所以这里必须锁住
+    const parsed = EtfConfigResponseSchema.safeParse({
+      spotSource: 'eastmoney',
+      envDefault: 'sina',
+      activeSource: 'sina',
+      sources: ETF_SPOT_SOURCE_ORDER.map((id) => ETF_SPOT_SOURCES[id]),
+    });
+    expect(parsed.success).toBe(true);
+    expect(EtfConfigUpdateSchema.safeParse({ spotSource: 'tencent' }).success).toBe(false);
   });
 });
 
