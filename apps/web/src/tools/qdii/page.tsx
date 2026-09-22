@@ -1,11 +1,12 @@
 import { SORT_LABELS } from '@funds-helper/core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Chart } from '../../components/Chart.tsx';
 import { FreshnessBadge } from '../../components/FreshnessBadge.tsx';
-import { Chip, EmptyState, ErrorState, Spinner } from '../../components/ui.tsx';
+import { Chip, EmptyState, ErrorState, FilterRow, Spinner } from '../../components/ui.tsx';
 import { api, apiErrorDetail } from '../../lib/api.ts';
+import { DEFAULT_CHANGE_DAYS } from './changes-filters.ts';
 import { FundDrawer } from './FundDrawer.tsx';
 import { FundTable } from './FundTable.tsx';
 import {
@@ -50,6 +51,8 @@ export default function QdiiPage() {
   const selectedCode = useSelectedCode();
   const tab = (searchParams.get('tab') ?? 'list') as TabValue;
   const filters = useMemo(() => fromSearchParams(searchParams), [searchParams]);
+  // 变更页的时间范围是「取数」参数（服务端按窗口收敛），故由页面持有；其余筛选在面板内部
+  const [changeDays, setChangeDays] = useState(DEFAULT_CHANGE_DAYS);
 
   const applyFilters = useCallback(
     (next: QdiiFilters, options: { replace?: boolean } = {}) => {
@@ -74,8 +77,8 @@ export default function QdiiPage() {
   });
 
   const changesQuery = useQuery({
-    queryKey: ['qdii', 'changes'],
-    queryFn: () => api.getQdiiChanges(30),
+    queryKey: ['qdii', 'changes', changeDays],
+    queryFn: () => api.getQdiiChanges(changeDays, 1000),
     enabled: tab === 'changes',
     staleTime: 10 * 60_000,
   });
@@ -375,19 +378,14 @@ export default function QdiiPage() {
           isPending={changesQuery.isPending}
           error={changesQuery.error}
           nameOf={fundNameLookup(datasetQuery.data.funds)}
+          selectedCode={selectedCode}
+          onSelect={openDrawer}
+          days={changeDays}
+          onDaysChange={setChangeDays}
         />
       ) : null}
 
       {selectedRecord ? <FundDrawer record={selectedRecord} onClose={closeDrawer} /> : null}
-    </div>
-  );
-}
-
-function FilterRow({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-wrap items-start gap-2">
-      <span className="w-20 shrink-0 pt-1 text-xs text-slate-500 dark:text-slate-400">{label}</span>
-      <div className="flex flex-1 flex-wrap gap-1.5">{children}</div>
     </div>
   );
 }

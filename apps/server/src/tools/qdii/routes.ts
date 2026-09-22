@@ -42,7 +42,7 @@ export function registerQdiiRoutes(
     const query = queryOf(request);
     return service.getChanges(
       clampInt(query.days, 30, 1, 365),
-      clampInt(query.limit, 200, 1, 1000),
+      clampInt(query.limit, 500, 1, 2000),
     );
   });
 

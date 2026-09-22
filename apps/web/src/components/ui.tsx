@@ -109,3 +109,13 @@ export function SectionCard({
     </section>
   );
 }
+
+/** 筛选面板的一行：左侧固定标签 + 右侧自动换行的选项 */
+export function FilterRow({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="flex flex-wrap items-start gap-2">
+      <span className="w-20 shrink-0 pt-1 text-xs text-slate-500 dark:text-slate-400">{label}</span>
+      <div className="flex flex-1 flex-wrap gap-1.5">{children}</div>
+    </div>
+  );
+}

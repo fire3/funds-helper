@@ -271,6 +271,73 @@ describe('POST /api/tools/qdii/refresh 与额度变更', () => {
     }
   });
 
+  it('同一数据日重复抓取不会重复插入同一条变更', async () => {
+    const h = await createHarness();
+    try {
+      await h.inject({ method: 'POST', url: '/api/tools/qdii/refresh' });
+
+      // 第二天：270042 从 2 元降到 1 元
+      h.source.showday = ['2026-09-15', '2026-09-14'];
+      h.source.rows = h.source.rows.map((item) =>
+        item.code === '270042' ? { ...item, dailyLimit: '1.0' } : item,
+      );
+
+      await h.inject({ method: 'POST', url: '/api/tools/qdii/refresh' });
+      // 再抓一次。基线日仍是 09-14，diff 会再次产出同一条事件 —— 必须去重
+      await h.inject({ method: 'POST', url: '/api/tools/qdii/refresh' });
+
+      const changes = (
+        await h.inject({ method: 'GET', url: '/api/tools/qdii/changes' })
+      ).json() as QdiiChangesResponse;
+
+      const limitChanges = changes.items.filter(
+        (item) => item.code === '270042' && item.field === 'daily_limit',
+      );
+      expect(limitChanges).toHaveLength(1);
+      expect(limitChanges[0]).toMatchObject({
+        oldValue: '2',
+        newValue: '1',
+        direction: 'tightened',
+        dataDate: '2026-09-15',
+      });
+    } finally {
+      await h.close();
+    }
+  });
+
+  it('同一数据日内值再次变化时覆盖原条目，而不是新增一条', async () => {
+    const h = await createHarness();
+    try {
+      await h.inject({ method: 'POST', url: '/api/tools/qdii/refresh' });
+
+      h.source.showday = ['2026-09-15', '2026-09-14'];
+      const setLimit = (value: string): void => {
+        h.source.rows = h.source.rows.map((item) =>
+          item.code === '270042' ? { ...item, dailyLimit: value } : item,
+        );
+      };
+
+      setLimit('1.0');
+      await h.inject({ method: 'POST', url: '/api/tools/qdii/refresh' });
+
+      // 当天内上游又改了口径（1 → 0.5），仍属同一天的净变化
+      setLimit('0.5');
+      await h.inject({ method: 'POST', url: '/api/tools/qdii/refresh' });
+
+      const changes = (
+        await h.inject({ method: 'GET', url: '/api/tools/qdii/changes' })
+      ).json() as QdiiChangesResponse;
+
+      const limitChanges = changes.items.filter(
+        (item) => item.code === '270042' && item.field === 'daily_limit',
+      );
+      expect(limitChanges).toHaveLength(1);
+      expect(limitChanges[0]).toMatchObject({ oldValue: '2', newValue: '0.5' });
+    } finally {
+      await h.close();
+    }
+  });
+
   it('上游失败时刷新返回 503（不能假装成功）', async () => {
     const h = await createHarness();
     try {

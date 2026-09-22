@@ -5,6 +5,7 @@ import { SQL as FX_RATE } from './0004-fx-rate.ts';
 import { SQL as ETF } from './0005-etf.ts';
 import { SQL as ETF_SPOT_SOURCE } from './0006-etf-spot-source.ts';
 import { SQL as APP_SETTING } from './0007-app-setting.ts';
+import { SQL as QDII_CHANGE_DEDUP } from './0008-qdii-change-dedup.ts';
 
 export interface Migration {
   id: string;
@@ -25,4 +26,5 @@ export const MIGRATIONS: readonly Migration[] = [
   { id: '0005-etf', sql: ETF },
   { id: '0006-etf-spot-source', sql: ETF_SPOT_SOURCE },
   { id: '0007-app-setting', sql: APP_SETTING },
+  { id: '0008-qdii-change-dedup', sql: QDII_CHANGE_DEDUP },
 ];

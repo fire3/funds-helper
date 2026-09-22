@@ -146,10 +146,18 @@ export class QdiiRepository {
 
   insertChanges(changes: readonly LimitChange[], dataDate: string, detectedAt: string): void {
     for (const change of changes) {
+      // 唯一键 (code, data_date, field) = 当日净变化。
+      // 重复抓取（基线日未推进）会命中同一行，覆盖为最新值而不是再插一条 —— 与快照 upsert 同语义。
       this.db.run(
         `INSERT INTO qdii_limit_change
            (code, data_date, detected_at, field, old_value, new_value, direction, ratio)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+         ON CONFLICT(code, data_date, field) DO UPDATE SET
+           detected_at = excluded.detected_at,
+           old_value   = excluded.old_value,
+           new_value   = excluded.new_value,
+           direction   = excluded.direction,
+           ratio       = excluded.ratio`,
         [
           change.code,
           dataDate,
