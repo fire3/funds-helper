@@ -243,14 +243,29 @@ async function main() {
     'POST /api/tools/etf/refresh 成功拉取上游（行情 + 目录）',
     etfRefreshResponse.ok && etfRefresh?.ok === true,
     etfRefreshResponse.ok
-      ? `spot=${etfRefresh?.spot} profile=${etfRefresh?.profile} ${etfRefresh?.dataDate}`
+      ? `spot=${etfRefresh?.spot} profile=${etfRefresh?.profile} ${etfRefresh?.dataDate} 渠道=${etfRefresh?.source}`
       : JSON.stringify(etfRefresh),
+  );
+  check(
+    'ETF 刷新返回行情渠道（默认新浪；东财需 ETF_EASTMONEY_ENABLED=1）',
+    ['eastmoney', 'sina'].includes(etfRefresh?.source),
+    `source=${etfRefresh?.source}`,
   );
 
   const etfDataset = await getJson('/api/tools/etf/dataset');
   check('GET /api/tools/etf/dataset 正常', etfDataset.status === 200, `HTTP ${etfDataset.status}`);
 
   const etf = etfDataset.body;
+  // 默认主源是新浪（没有折溢价），东财需 ETF_EASTMONEY_ENABLED=1——下面的断言按渠道能力分流
+  const etfPremium = !(etf?.dataSource?.missing ?? []).includes('折溢价率');
+  check(
+    '数据集带行情渠道信息（无折溢价能力的渠道必须显式声明缺失字段）',
+    ['eastmoney', 'sina'].includes(etf?.dataSource?.id) &&
+      etfPremium === ((etf?.dataSource?.missing?.length ?? 0) === 0),
+    `渠道=${etf?.dataSource?.name ?? '--'}${
+      etfPremium ? '' : `（缺 ${(etf?.dataSource?.missing ?? []).join('/')}）`
+    }`,
+  );
   check(
     '全市场 ETF 数量与实测口径一致（>= 1500）',
     (etf?.total ?? 0) >= 1500,
@@ -267,21 +282,37 @@ async function main() {
       (etf?.stats?.byCategory ?? []).some((item) => item.category === '行业主题'),
     (etf?.stats?.byCategory ?? []).map((item) => `${item.category}:${item.count}`).join(' '),
   );
-  check(
-    '折溢价分布有数据且给出最贵/最便宜',
-    (etf?.stats?.premium?.counts?.溢价 ?? 0) + (etf?.stats?.premium?.counts?.折价 ?? 0) > 0 &&
-      etf?.stats?.premium?.maxDiscount != null,
-    `最贵 ${etf?.stats?.premium?.maxPremium?.name ?? '--'} / 最便宜 ${etf?.stats?.premium?.maxDiscount?.name ?? '--'}`,
-  );
+  if (etfPremium) {
+    check(
+      '折溢价分布有数据且给出最贵/最便宜',
+      (etf?.stats?.premium?.counts?.溢价 ?? 0) + (etf?.stats?.premium?.counts?.折价 ?? 0) > 0 &&
+        etf?.stats?.premium?.maxDiscount != null,
+      `最贵 ${etf?.stats?.premium?.maxPremium?.name ?? '--'} / 最便宜 ${etf?.stats?.premium?.maxDiscount?.name ?? '--'}`,
+    );
+  } else {
+    check(
+      '无折溢价能力的渠道下折溢价必须是「未知」而不是 0（不能把缺失当平价）',
+      (etf?.stats?.premium?.counts?.溢价 ?? 0) === 0 &&
+        (etf?.stats?.premium?.counts?.折价 ?? 0) === 0 &&
+        etf?.stats?.premium?.unknown === etf?.total &&
+        etf?.funds?.every((fund) => fund.premiumRate === null && fund.premiumText === '—'),
+      `${etf?.dataSource?.name}：未知 ${etf?.stats?.premium?.unknown}/${etf?.total}`,
+    );
+  }
   check(
     '规模合计量级合理（1 万亿 ~ 20 万亿）',
     (etf?.stats?.totalScale ?? 0) > 1e12 && (etf?.stats?.totalScale ?? 0) < 2e13,
     `${((etf?.stats?.totalScale ?? 0) / 1e12).toFixed(2)} 万亿`,
   );
 
-  const etfSample = (etf?.funds ?? []).find((fund) => fund.indexName && fund.premiumRate !== null);
+  // 无折溢价能力的渠道只要求「跟踪指数 + 行情」这一半（用于后面打详情接口）
+  const etfSample = (etf?.funds ?? []).find(
+    (fund) => fund.indexName && (!etfPremium || fund.premiumRate !== null),
+  );
   check(
-    '存在同时有跟踪指数与折溢价数据的 ETF',
+    etfPremium
+      ? '存在同时有跟踪指数与折溢价数据的 ETF'
+      : '无折溢价能力的渠道下仍存在带跟踪指数的 ETF',
     Boolean(etfSample),
     etfSample ? `${etfSample.code} ${etfSample.indexName} ${etfSample.premiumText}` : '无',
   );

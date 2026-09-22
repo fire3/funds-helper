@@ -1,4 +1,5 @@
 import { ParseError } from '../errors.ts';
+import type { EtfSpotItem } from '../etf/spot.ts';
 import type { HttpClient } from '../http.ts';
 import { fetchQuoteText } from './quote.ts';
 import { array, num, record, snippet, str } from './util.ts';
@@ -14,40 +15,9 @@ import { array, num, record, snippet, str } from './util.ts';
  * - `f402 = −溢价率`（与 `quote.ts` 同口径，负值 = 溢价）。
  */
 
-export interface RawEtfSpotItem {
-  code: string;
-  name: string | null;
-  /** 1 = 沪市，0 = 深市 */
-  market: number | null;
-  price: number | null;
-  changePct: number | null;
-  changeAmt: number | null;
-  open: number | null;
-  high: number | null;
-  low: number | null;
-  prevClose: number | null;
-  amplitude: number | null;
-  turnover: number | null;
-  volumeRatio: number | null;
-  /** 成交量（手） */
-  volume: number | null;
-  /** 成交额（元） */
-  amount: number | null;
-  /** 场内规模（元，上游 `f20`） */
-  scale: number | null;
-  floatScale: number | null;
-  /** 上游原值：负值 = 溢价（`f402`） */
-  discountRate: number | null;
-  /** 上市日期（YYYY-MM-DD） */
-  listingDate: string | null;
-  mainInflow: number | null;
-  /** 行情时间戳（秒） */
-  quoteTs: number | null;
-}
-
 export interface EtfSpotPage {
   total: number;
-  items: RawEtfSpotItem[];
+  items: EtfSpotItem[];
 }
 
 /** 板块并集 = 股票型 + 货币 + 跨境 + 商品（`MK0827` 是商品全集，含 `MK0024` 的黄金） */
@@ -117,7 +87,7 @@ export function parseEtfSpotPage(text: string): EtfSpotPage {
     throw new ParseError(`ETF 行情 total 异常（${total}），疑似板块参数或接口结构变更`);
   }
 
-  const items: RawEtfSpotItem[] = [];
+  const items: EtfSpotItem[] = [];
   for (const row of array(data.diff)) {
     const item = record(row);
     if (!item) continue;
@@ -153,8 +123,8 @@ export function parseEtfSpotPage(text: string): EtfSpotPage {
 }
 
 /** 取全市场 ETF 行情：按 `pn` 翻页到 `total`，并按代码去重（`MK0024 ⊂ MK0827`） */
-export async function fetchEtfSpot(client: HttpClient): Promise<RawEtfSpotItem[]> {
-  const byCode = new Map<string, RawEtfSpotItem>();
+export async function fetchEtfSpot(client: HttpClient): Promise<EtfSpotItem[]> {
+  const byCode = new Map<string, EtfSpotItem>();
   const maxPages = Math.ceil(ETF_SPOT_MAX_TOTAL / ETF_SPOT_PAGE_SIZE);
   let total = 0;
 

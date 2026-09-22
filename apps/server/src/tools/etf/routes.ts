@@ -1,4 +1,5 @@
 import type { EtfRefreshResponse } from '@funds-helper/shared';
+import { ETF_SPOT_SOURCES } from '@funds-helper/shared';
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { ToolContext } from '../types.ts';
 import type { EtfCaptureStats, EtfService } from './service.ts';
@@ -34,16 +35,22 @@ export function registerEtfRoutes(
   app.post('/refresh', async () => {
     const result = await ctx.jobs.execute('etf.snapshot', 'manual');
     const stats = (result?.stats ?? {}) as Partial<EtfCaptureStats>;
+    // stats 理论上一定带 source；缺失时按默认渠道兜底（不要让响应少一个必填字段）
+    const source = stats.source ?? 'sina';
+    const channel = ETF_SPOT_SOURCES[source];
 
     const response: EtfRefreshResponse = {
       ok: true,
+      source,
       spot: stats.spot ?? 0,
       profile: stats.profile ?? 0,
       inserted: stats.inserted ?? 0,
       dataDate: stats.dataDate ?? null,
       durationMs: stats.durationMs ?? 0,
       message:
-        `已拉取 ${stats.spot ?? 0} 只 ETF 行情（数据日期 ${stats.dataDate ?? '未知'}）` +
+        `已通过「${channel.name}」拉取 ${stats.spot ?? 0} 只 ETF 行情` +
+        `（数据日期 ${stats.dataDate ?? '未知'}）` +
+        (channel.missing.length > 0 ? `，该渠道不含${channel.missing.join('、')}` : '') +
         `、${stats.profile ?? 0} 条目录` +
         (stats.profileError === undefined ? '' : `（目录失败：${stats.profileError}）`),
     };

@@ -1,7 +1,7 @@
 import {
+  type EtfSpotItem,
   type FundProfileData,
   type RawEtfProfile,
-  type RawEtfSpotItem,
   UpstreamError,
 } from '@funds-helper/sources';
 import type { EtfDataSource } from '../tools/etf/data-source.ts';
@@ -18,7 +18,9 @@ import { createFakeQdiiSource } from './fake-qdii-source.ts';
  */
 
 export interface FakeEtfSource extends EtfDataSource {
-  spot: RawEtfSpotItem[];
+  spot: EtfSpotItem[];
+  /** 备用渠道（新浪）的行：主源行的**子集**（没有折溢价/上市日期/量比…） */
+  sinaSpot: EtfSpotItem[];
   profiles: RawEtfProfile[];
   detail: FundProfileData | null;
   /** 让指定接口抛错 */
@@ -26,7 +28,7 @@ export interface FakeEtfSource extends EtfDataSource {
   calls: Record<string, number>;
 }
 
-function spotItem(overrides: Partial<RawEtfSpotItem> = {}): RawEtfSpotItem {
+function spotItem(overrides: Partial<EtfSpotItem> = {}): EtfSpotItem {
   return {
     code: '510300',
     name: '沪深300ETF华泰柏瑞',
@@ -78,7 +80,7 @@ function profileRow(overrides: Partial<RawEtfProfile> = {}): RawEtfProfile {
   };
 }
 
-export function etfSpotItems(): RawEtfSpotItem[] {
+export function etfSpotItems(): EtfSpotItem[] {
   return [
     spotItem(),
     spotItem({
@@ -156,6 +158,23 @@ export function etfSpotItems(): RawEtfSpotItem[] {
       listingDate: '2019-06-12',
     }),
   ];
+}
+
+/**
+ * 备用渠道（新浪列表）的行：字段是主源行的**子集** ——
+ * 没有折溢价 / 上市日期 / 量比 / 主力净流入，也没有行情时间戳（上游只给 HH:MM:SS，没有日期）。
+ * 真实响应见 `packages/sources/test/fixtures/sina/etf-spot/list-page.json`。
+ */
+export function etfSinaSpotItems(base: EtfSpotItem[] = etfSpotItems()): EtfSpotItem[] {
+  return base.map((item) => ({
+    ...item,
+    volumeRatio: null,
+    floatScale: null,
+    discountRate: null,
+    listingDate: null,
+    mainInflow: null,
+    quoteTs: null,
+  }));
 }
 
 export function etfProfiles(): RawEtfProfile[] {
@@ -259,7 +278,7 @@ export function etfProfiles(): RawEtfProfile[] {
 }
 
 /** 把「红利低波」这类风格样本也放进行情里，覆盖「风格优先于宽基」的分类路径 */
-export function etfSpotItemsWithStyle(): RawEtfSpotItem[] {
+export function etfSpotItemsWithStyle(): EtfSpotItem[] {
   return [
     ...etfSpotItems(),
     spotItem({
@@ -301,7 +320,8 @@ export function etfFundProfile(overrides: Partial<FundProfileData> = {}): FundPr
 
 export function createFakeEtfSource(
   options: {
-    spot?: RawEtfSpotItem[];
+    spot?: EtfSpotItem[];
+    sinaSpot?: EtfSpotItem[];
     profiles?: RawEtfProfile[];
     detail?: FundProfileData | null;
   } = {},
@@ -313,16 +333,24 @@ export function createFakeEtfSource(
     ...fund,
     name: 'fake-etf',
     spot: options.spot ?? etfSpotItems(),
+    sinaSpot: options.sinaSpot ?? etfSinaSpotItems(options.spot ?? etfSpotItems()),
     profiles: options.profiles ?? etfProfiles(),
     detail: options.detail === undefined ? etfFundProfile() : options.detail,
     failures: new Set<string>(),
     calls: {},
 
-    async fetchEtfSpot(): Promise<RawEtfSpotItem[]> {
+    async fetchEtfSpot(): Promise<EtfSpotItem[]> {
       source.calls.spot = (source.calls.spot ?? 0) + 1;
       if (source.failures.has('spot')) throw new UpstreamError('模拟：ETF 行情接口不可用');
       if (source.failures.has('spot:internal')) throw new Error('模拟：底层数据库错误');
       return source.spot;
+    },
+
+    async fetchSinaEtfSpot(): Promise<EtfSpotItem[]> {
+      source.calls.sinaSpot = (source.calls.sinaSpot ?? 0) + 1;
+      if (source.failures.has('sinaSpot')) throw new UpstreamError('模拟：备用行情渠道不可用');
+      if (source.failures.has('sinaSpot:internal')) throw new Error('模拟：底层数据库错误');
+      return source.sinaSpot;
     },
 
     async fetchEtfProfiles(): Promise<RawEtfProfile[]> {

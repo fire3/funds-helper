@@ -137,6 +137,16 @@ describe('runMigrations', () => {
     db.close();
   });
 
+  it('etf_spot_daily 具备 source 列（这条列由 0006 追加迁移补齐）', () => {
+    const db = openDb(':memory:');
+    runMigrations(db);
+    const columns = db
+      .all<{ name: string }>('PRAGMA table_info(etf_spot_daily)')
+      .map((row) => row.name);
+    expect(columns).toContain('source');
+    db.close();
+  });
+
   it('重复执行是幂等的（第二次不应用任何迁移）', () => {
     const db = openDb(':memory:');
     runMigrations(db);

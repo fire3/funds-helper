@@ -18,9 +18,9 @@
 
 | 决策问题 | 需要的字段 | 来源 |
 |---|---|---|
-| 这只 ETF 现在贵还是便宜？ | 折溢价率 | 接口 A `f402` |
-| 流动性够不够？ | 成交额 / 换手率 / 量比 | 接口 A `f6/f8/f10` |
-| 规模会不会太小（清盘风险）？ | 场内规模 `f20` + 份额 | 接口 A / 接口 B |
+| 这只 ETF 现在贵还是便宜？ | 折溢价率 | 接口 A `f402`（**可选**，见 §4） |
+| 流动性够不够？ | 成交额 / 换手率 / 量比 | 行情接口 `f6/f8/f10`（量比仅东财有） |
+| 规模会不会太小（清盘风险）？ | 场内规模 `f20`（新浪用 `nmc`） + 份额 | 行情接口 / 接口 B |
 | 有没有更便宜的同类？ | 跟踪指数 + 管理费/托管费 | 接口 B / 接口 C |
 | 这只 ETF 属于什么类别？ | 宽基 / 行业主题 / 风格 / 跨境 / 债券 / 商品 / 货币 | 接口 B 标志位 |
 
@@ -124,34 +124,50 @@ export function describePremium(rate: number | null):
 
 | 文件 | 内容 |
 |---|---|
-| `eastmoney/etf-spot.ts` | 接口 A：`parseEtfSpotPage(text)` + `fetchEtfSpot(client)`（内部翻页到 `total`，主备域名切换，`total > 5000` 直接 `ParseError`）|
+| `etf/spot.ts` | 渠道无关的 `EtfSpotItem`（字段可空）+ `ETF_SPOT_SOURCE_IDS`，两个行情源共用一种行结构 |
+| `sina/etf-spot.ts` | **默认主源**：`parseSinaEtfListPage` / `parseSinaEtfCount` / `fetchSinaEtfSpot`（翻页、按代码去重、≥90% 覆盖率护栏、`volume` 股→手、`nmc` 万元→元、振幅由高/低/昨收推导）|
+| `eastmoney/etf-spot.ts` | 接口 A（**可选源**，需 `ETF_EASTMONEY_ENABLED=true`）：`parseEtfSpotPage(text)` + `fetchEtfSpot(client)`（内部翻页到 `total`，主备域名切换，`total > 5000` 直接 `ParseError`）|
 | `eastmoney/etf-profile.ts` | 接口 B：`parseEtfProfilePage(text)` + `fetchEtfProfiles(client)`（pageSize 1000，翻到 `pages`）|
 | `eastmoney/fund-profile.ts` | 接口 C：`parseFundProfile(text)` + `fetchFundProfile(client, code)`；`Datas === null` → `null`（未知代码不是错误）|
 
 归一化顺序：
 
 ```
-接口 A 行 → 去重（MK0024 ⊂ MK0827）→ 与接口 B 按代码 join
-        → 分类（上游标志位，缺失则名称回退）→ 折溢价取反 → 规模（f20，缺失用 DEC_NAV×1e8）
+行情行（新浪或东财）→ 去重（东财：MK0024 ⊂ MK0827）→ 与接口 B 按代码 join
+        → 分类（上游标志位，缺失则名称回退）→ 折溢价取反（东财才有）→ 规模（f20 / nmc，缺失用 DEC_NAV×1e8）
 ```
 
-**容错**：接口 A 是主源，失败即失败（没有行情就没有这个工具）；
+**渠道与降级链**（`apps/server/src/tools/etf/service.ts` 的 `fetchSpot()`）：
+
+1. 默认**只调新浪**（`etfEastmoneyEnabled=false`）—— push2 对本项目出口 IP 长期限流（约 8 秒退避后才失败），
+   放在关键路径上会把刷新变成「先卡 8 秒再降级」；
+2. `ETF_EASTMONEY_ENABLED=true` 时先试东财（**唯一有折溢价率**的渠道），失败再降级新浪；
+3. 用了哪个渠道写进 `etf_spot_daily.source`，数据集响应里的 `dataSource` 由当日行的多数派反推
+   —— 重启 / 清缓存后判断依然正确；
+4. 渠道能力差异在 `packages/shared/src/etf.ts` 的 `ETF_SPOT_SOURCES` 里**显式声明**
+   （新浪 `missing = ['折溢价率','上市日期','主力净流入','量比']`），前端据此隐藏对应的列 / 筛选 / 榜单。
+
+**容错**：行情两个渠道都失败才算失败（没有行情就没有这个工具）；
 接口 B 是可降级源，失败时记 `logger.warn`、分类回退到名称判定、`indexName` 置空，
 数据集照常返回（`freshness` 里标注）。
 
 ---
 
-## 5. 落库（`packages/db/src/migrations/0005-etf.ts`）
+## 5. 落库（`0005-etf.ts` + `0006-etf-spot-source.ts`）
 
 | 表 | 幂等键 | 说明 |
 |---|---|---|
-| `etf_spot_daily` | `(code, data_date)` | 行情时间序列。**一张表同时服务「当前快照」与「历史」**：读最新 `data_date` 就是当前视图 |
+| `etf_spot_daily` | `(code, data_date)` | 行情时间序列。**一张表同时服务「当前快照」与「历史」**：读最新 `data_date` 就是当前视图；`source` 记录该行来自哪个渠道（迁移 0006）|
 | `etf_profile` | `code` | 接口 B 的目录行（标志位 + 跟踪指数 + 区间涨跌 + 份额）|
 | `etf_detail_cache` | `code` | 接口 C + 通用区块的聚合缓存 |
 
 - `data_date` 取**该批行情里最大的 `f124` 换算到 `Asia/Shanghai` 的日期**，
   而不是「本地今天」—— 周末/节假日刷新时不会写出一个没有行情的数据日期，
   重复刷新同一交易日是幂等的（`ON CONFLICT DO UPDATE`）。
+  **例外**：新浪不返回行情时间戳，降级到它时只能取本地今天（周一早上的「今天」合理，
+  节假日刷新则会写出一个没有行情的日期）—— 这是换源的已知代价，东财路径不受影响。
+- `source` 用来判断「当前数据集是哪个渠道采的」（按当日行的多数派取），
+  比在内存里记状态更可靠 —— 进程重启 / 换缓存后依然能正确提示缺失字段。
 - 分类**不落库**：只存标志位，读取时由 `core` 算 —— 分类口径升级后历史数据自动跟着变。
 
 ---
@@ -160,20 +176,27 @@ export function describePremium(rate: number | null):
 
 | 路径 | 说明 |
 |---|---|
-| `GET /dataset` | 全量 ETF（1623 只）+ 统计 + 分类分布 + 覆盖率，**一次返回、前端本地筛选** |
+| `GET /dataset` | 全量 ETF（新浪口径 1676 只）+ 统计 + 分类分布 + 覆盖率 + `dataSource`，**一次返回、前端本地筛选** |
 | `GET /funds/:code` | 详情：行情记录 + 接口 C（费率/规模/管理人）+ 通用区块；未知代码 404 |
-| `POST /refresh` | 手动触发一次抓取（走调度器，留 `job_run`） |
+| `POST /refresh` | 手动触发一次抓取（走调度器，留 `job_run`），返回实际使用的 `source` |
 
 响应要点（`packages/shared/src/etf.ts`）：`EtfRecord` 里同时给**原始数值**与
 **渲染好的文案**（`premiumText` / `premiumNote`），避免前端各写一套口径。
+`dataSource`（`{ id, name, missing[] }`）告诉前端**这个渠道缺哪些字段**。
 读路径与其它工具一致：内存缓存 → SQLite → 上游；上游故障返回陈旧快照并标 `stale`。
 
-**回归护栏**：`ETF_MIN_EXPECTED = 800`（实测 1623）。跌破说明板块 `fs` 或分页行为变了；
-为 0 直接抛 `ParseError`。
+**回归护栏**：`ETF_MIN_EXPECTED = 800`（实测 1676）。跌破说明板块 `fs` / 列表节点或分页行为变了；
+为 0 直接抛 `ParseError`。新浪源另有一条护栏：解析出的行数不足 `count` 的 90% 时抛错
+（列表页被截断或字段改名都会被挡住）。
 
 ---
 
 ## 7. 前端（`/tools/etf`）
+
+**渠道感知**：页头显示「行情：渠道名」与一句渠道说明；`dataSource.missing` 里含 `折溢价率` 时，
+折溢价相关的**筛选行、分布面板、两张折溢价榜单、表格列**整体隐藏（而不是渲染一排 `—`），
+已有的 `?premiums=…` 链接也会被忽略 —— 避免「筛选条件还在、结果却空」。
+缺 `上市日期` 时表格同样不渲染该列。
 
 - **汇总面板**（本工具的主命题，置顶）：总数 / 总规模 / 总成交额；分类分布（数量 + 规模，
   可点击直接筛选）；折溢价分布（高溢价 / 溢价 / 平价 / 折价 / 高折价）；
@@ -201,12 +224,12 @@ export function describePremium(rate: number | null):
 | 层 | 覆盖 |
 |---|---|
 | `core` | 分类（标志位优先级、互斥性、名称回退、`IS_FGETF` 叠加）、折溢价（符号取反、五档、文案）、聚合（分布/极值/覆盖率）、排序 |
-| `sources` | `parseEtfSpotPage`（字段映射、`f402` 语义、脏行、`data:null`、`total` 护栏）、`parseEtfProfilePage`（标志位、`null` 数值）、`parseFundProfile`（`--` 归一化、`Datas:null`）|
-| `db` | 迁移建出 3 张 `etf_*` 表 |
-| `server` | join 与分类（上游标志位 / 名称回退）、统计与覆盖率、折溢价文案、`data_date` 取最大行情时间、幂等刷新、陈旧降级、详情（接口 C + 通用区块）、400/404 |
-| `web` | 分类/交易所维内 OR、维度间 AND、折溢价方向、规模/成交额档位、URL 双向同步 |
-| 一致性 | `ETF_CATEGORIES`（core ↔ shared）逐字一致 + 顺序一致；注册表 4 个工具 |
-| 端到端 | `pnpm smoke` 增加 ETF 检查（清单、refresh、dataset 数量与分类、折溢价、详情）|
+| `sources` | 东财：`parseEtfSpotPage`（字段映射、`f402` 语义、脏行、`data:null`、`total` 护栏）；新浪：`parseSinaEtfListPage`（单位换算 股→手 / 万元→元、振幅推导、脏行）、`parseSinaEtfCount`（`"1676"` 字符串、上限护栏）；`parseEtfProfilePage`（标志位、`null` 数值）、`parseFundProfile`（`--` 归一化、`Datas:null`）|
+| `db` | 迁移建出 3 张 `etf_*` 表（含 `etf_spot_daily.source`）|
+| `server` | 两个渠道各自取数、东财失败降级新浪、`dataSource` 从数据库多数派反推、缺折溢价时 `premiumRate=null` 且 `unknown === total`、join 与分类、统计与覆盖率、`data_date`、幂等刷新、详情（接口 C + 通用区块）、400/404 |
+| `web` | 分类/交易所维内 OR、维度间 AND、折溢价方向、规模/成交额档位、URL 双向同步、无折溢价渠道下隐藏折溢价视图 |
+| 一致性 | `ETF_CATEGORIES`（core ↔ shared）逐字一致 + 顺序一致；`ETF_SPOT_SOURCES` 与 shared 渠道枚举一一对应；注册表 4 个工具 |
+| 端到端 | `pnpm smoke` 增加 ETF 检查（清单、refresh、dataset 数量与分类、渠道与缺失字段、折溢价按渠道分流断言、详情）|
 
 ---
 
@@ -214,8 +237,14 @@ export function describePremium(rate: number | null):
 
 - `IS_*ETF` 标志位语义是**逆向推断**（缩写 + 样本核对），无官方文档；
   解析层保留布尔原值、分类优先级集中在 `core`，一旦上游改口径只改一处 + 改一个测试。
-- `push2` 主域名高频访问会重置 TLS（实测）；备用域名 `push2delay` 缺跨境/商品板块。
-  缓解：主备切换 + 只在交易时段采集 + 内存缓存 30 分钟。若长期被限流，
-  可退化为「按板块分页、每次只刷新一部分」。
+- **行情渠道的可用性是本工具最大的外部风险**：东财 `clist`（全市场列表）在本机被上游重置，
+  主备域名同生共死、代理换 IP 也无效，因此它被降级为**可选**源，默认走新浪。
+  代价是默认没有折溢价 —— 界面已显式标注缺失字段，但「贵不贵」这个问题在默认配置下**答不了**。
+  腾讯 `qt.gtimg.cn`（4 次请求拿全市场）是还没接的第三渠道，同样没有折溢价。
+- **优先要做的下一步：用 `ulist.np/get` 把折溢价拿回来**（见 `etf-data-sources.md` §7.4）。
+  封禁是**按接口**的：`clist` 被重置，但 `ulist.np/get` 正常且字段完全相同（含 `f402`），
+  批量 100 只/请求。改成「目录接口 B 出代码池（2 请求）+ `ulist` 分批报价（17 请求）」后
+  请求数不变（仍是 19），却能在**默认配置**下拿回折溢价/上市日/量比 ——
+  待验证：接口 B 的 1675 行是否覆盖新浪看到的 1676 只已上市 ETF（需逐码比对）。
 - 未做「同跟踪指数的多只 ETF 横向对比」——接口 B 已提供 `INDEX_CODE`，
   后续可在详情抽屉里加「同指数 ETF 费率/规模对比」（纯前端，零新增上游成本）。

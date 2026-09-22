@@ -1,4 +1,5 @@
 import {
+  type EtfSpotItem,
   type FundDetailData,
   type FundProfileData,
   type HoldingsData,
@@ -7,7 +8,6 @@ import {
   type PurchaseSnapshotRow,
   type QuoteItem,
   type RawEtfProfile,
-  type RawEtfSpotItem,
   type RawNotice,
   UpstreamError,
 } from '@funds-helper/sources';
@@ -286,7 +286,7 @@ export function createFakeQdiiSource(
     // ETF 专有接口：默认显式失败，避免「忘了替换假数据源」被静默当成空数据。
     // ETF 工具的服务端测试用 `testing/fake-etf-source.ts`（它包了这份假数据源）。
     // ---------------------------------------------------------------------
-    async fetchEtfSpot(): Promise<RawEtfSpotItem[]> {
+    async fetchEtfSpot(): Promise<EtfSpotItem[]> {
       throw new UpstreamError('假数据源未实现 fetchEtfSpot（请使用 createFakeEtfSource）');
     },
 

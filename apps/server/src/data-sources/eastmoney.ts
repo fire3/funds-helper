@@ -1,4 +1,5 @@
 import {
+  type EtfSpotItem,
   type FundDetailData,
   type FundProfileData,
   fetchEtfProfiles,
@@ -17,7 +18,6 @@ import {
   type PurchaseSnapshot,
   type QuoteItem,
   type RawEtfProfile,
-  type RawEtfSpotItem,
   type RawNotice,
 } from '@funds-helper/sources';
 
@@ -38,7 +38,7 @@ export interface EastmoneyFundDataSource {
   fetchHoldings(code: string): Promise<HoldingsData>;
   fetchQuotes(codes: readonly string[]): Promise<QuoteItem[]>;
   /** ETF 全市场场内行情（接口 A，内部翻页） */
-  fetchEtfSpot(): Promise<RawEtfSpotItem[]>;
+  fetchEtfSpot(): Promise<EtfSpotItem[]>;
   /** ETF 目录：跟踪指数 + 分类标志位（接口 B） */
   fetchEtfProfiles(): Promise<RawEtfProfile[]>;
   /** 单只基金的静态档案：费率 / 规模 / 管理人（接口 C）；无档案时返回 null */

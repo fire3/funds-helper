@@ -1,8 +1,7 @@
 import { TOOL_CATALOG } from '@funds-helper/shared';
 import type { FastifyInstance } from 'fastify';
-import { createEastmoneyDataSource } from '../../data-sources/eastmoney.ts';
 import type { JobDefinition, ServerTool, ToolContext } from '../types.ts';
-import type { EtfDataSource } from './data-source.ts';
+import { createEtfDataSource, type EtfDataSource } from './data-source.ts';
 import { etfJobs } from './jobs.ts';
 import { EtfRepository } from './repository.ts';
 import { registerEtfRoutes } from './routes.ts';
@@ -30,7 +29,7 @@ export function createEtfTool(options: CreateEtfToolOptions = {}): ServerTool {
     const service = new EtfService({
       db: ctx.db,
       repo: new EtfRepository(ctx.db),
-      source: options.source ?? createEastmoneyDataSource(ctx.http),
+      source: options.source ?? createEtfDataSource(ctx.http),
       cache: ctx.cache,
       config: ctx.config,
       logger: ctx.logger,

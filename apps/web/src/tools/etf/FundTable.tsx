@@ -37,6 +37,11 @@ export function FundTable({
   selectedCode: string | null;
   onSelect: (code: string) => void;
 }) {
+  // 渠道能力不同（新浪列表没有 IOPV 与上市日期）：整列都是空的时候直接隐藏，
+  // 否则一屏 1600 行 '--' 只会让人以为「数据坏了」
+  const hasPremium = funds.some((fund) => fund.premiumRate !== null);
+  const hasListingDate = funds.some((fund) => fund.listingDate !== null);
+
   return (
     <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
       <table className="w-full min-w-[1080px] border-collapse text-sm">
@@ -48,11 +53,11 @@ export function FundTable({
             <th className="px-3 py-2 font-medium">跟踪指数</th>
             <th className="px-3 py-2 text-right font-medium">最新价</th>
             <th className="px-3 py-2 text-right font-medium">涨跌幅</th>
-            <th className="px-3 py-2 text-right font-medium">折溢价</th>
+            {hasPremium ? <th className="px-3 py-2 text-right font-medium">折溢价</th> : null}
             <th className="px-3 py-2 text-right font-medium">成交额</th>
             <th className="px-3 py-2 text-right font-medium">换手</th>
             <th className="px-3 py-2 text-right font-medium">规模</th>
-            <th className="px-3 py-2 text-right font-medium">上市日</th>
+            {hasListingDate ? <th className="px-3 py-2 text-right font-medium">上市日</th> : null}
           </tr>
         </thead>
         <tbody>
@@ -86,12 +91,14 @@ export function FundTable({
               <td className={`tabular px-3 py-2 text-right ${trendClass(fund.changePct)}`}>
                 {formatPercent(fund.changePct)}
               </td>
-              <td
-                className={`tabular px-3 py-2 text-right ${PREMIUM_TONE[fund.premiumLevel] ?? ''}`}
-                {...(fund.premiumNote ? { title: fund.premiumNote } : {})}
-              >
-                {fund.premiumText}
-              </td>
+              {hasPremium ? (
+                <td
+                  className={`tabular px-3 py-2 text-right ${PREMIUM_TONE[fund.premiumLevel] ?? ''}`}
+                  {...(fund.premiumNote ? { title: fund.premiumNote } : {})}
+                >
+                  {fund.premiumText}
+                </td>
+              ) : null}
               <td className="tabular px-3 py-2 text-right text-slate-600 dark:text-slate-300">
                 {formatYuan(fund.amount)}
               </td>
@@ -101,9 +108,11 @@ export function FundTable({
               <td className="tabular px-3 py-2 text-right text-slate-600 dark:text-slate-300">
                 {formatYuan(fund.scale)}
               </td>
-              <td className="tabular px-3 py-2 text-right text-slate-500 dark:text-slate-400">
-                {fund.listingDate ?? '--'}
-              </td>
+              {hasListingDate ? (
+                <td className="tabular px-3 py-2 text-right text-slate-500 dark:text-slate-400">
+                  {fund.listingDate ?? '--'}
+                </td>
+              ) : null}
             </tr>
           ))}
         </tbody>

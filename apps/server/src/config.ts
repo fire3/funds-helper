@@ -33,6 +33,16 @@ export const AppConfigSchema = z.object({
   upstreamMinIntervalMs: z.coerce.number().int().min(0).default(300),
   memoryCacheTtlSec: z.coerce.number().int().positive().default(1800),
   staleWindowSec: z.coerce.number().int().positive().default(21_600),
+  /**
+   * ETF 行情是否**优先**走东方财富 `push2`（默认 false）。
+   *
+   * 2026-09-22 实测：push2 的 `clist`（全市场列表）对本项目出口 IP 长期重置
+   * （`UND_ERR_SOCKET`，主备域名 + 多台集群全部一样），且失败要等退避重试一轮（约 8 秒）——
+   * 因此默认**只走新浪列表**（见 `docs/design/etf-data-sources.md` §7）。
+   * 代价是新浪没有折溢价率/上市日期；需要折溢价时置 `ETF_EASTMONEY_ENABLED=true`，
+   * 届时东财失败仍会自动降级到新浪（不会让数据集挂掉）。
+   */
+  etfEastmoneyEnabled: envBool(false),
   /** 前端构建产物目录；存在即由本服务托管静态资源 */
   webDistPath: z.string().default(''),
   /**
@@ -64,6 +74,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
       upstreamMinIntervalMs: env.UPSTREAM_MIN_INTERVAL_MS,
       memoryCacheTtlSec: env.MEMORY_CACHE_TTL_SEC,
       staleWindowSec: env.STALE_WINDOW_SEC,
+      etfEastmoneyEnabled: env.ETF_EASTMONEY_ENABLED,
       // 默认指向 apps/web/dist —— 生产环境下由本服务同时托管 API 与前端
       webDistPath: env.WEB_DIST_PATH ?? new URL('../../web/dist', import.meta.url).pathname,
       serveStatic: env.SERVE_STATIC,

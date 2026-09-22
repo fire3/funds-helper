@@ -76,7 +76,14 @@ export default function EtfPage() {
   }, []);
 
   const funds = datasetQuery.data?.funds ?? [];
-  const visible = useMemo(() => refine(funds, filters), [funds, filters]);
+  // 渠道能力：新浪列表没有 IOPV，折溢价相关的 UI 整体隐藏（见 dataSource.missing）
+  const premiumAvailable = !(datasetQuery.data?.dataSource.missing ?? []).includes('折溢价率');
+  // 折溢价不可用时忽略 URL 里的折溢价条件：否则一个带 ?premium=premium 的旧链接会筛出空列表
+  const effectiveFilters = useMemo(
+    () => (premiumAvailable ? filters : { ...filters, premiums: [] }),
+    [filters, premiumAvailable],
+  );
+  const visible = useMemo(() => refine(funds, effectiveFilters), [funds, effectiveFilters]);
   const categoryCounts = useMemo(() => facetCounts(funds, filters, 'category'), [funds, filters]);
   const marketCounts = useMemo(() => facetCounts(funds, filters, 'market'), [funds, filters]);
   const selectedRecord = useMemo(
@@ -108,6 +115,9 @@ export default function EtfPage() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs text-slate-400 dark:text-slate-500">
+            行情：{datasetQuery.data?.dataSource.name ?? '—'}
+          </span>
           <FreshnessBadge freshness={datasetQuery.data?.freshness} />
           <button
             type="button"
@@ -125,6 +135,14 @@ export default function EtfPage() {
         <strong>场内价高于净值</strong>（此刻买入等于多付），跨境 ETF 盘中溢价常见。
         行情为延时/快照数据，仅供筛选参考。
       </p>
+
+      {premiumAvailable ? null : (
+        <p className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300">
+          行情渠道：<strong>{datasetQuery.data?.dataSource.name ?? '—'}</strong>
+          ，该渠道不含{datasetQuery.data?.dataSource.missing.join('、')}
+          —— 折溢价与上市日期相关的列、分布、榜单与筛选已隐藏。
+        </p>
+      )}
 
       {refreshMutation.data ? (
         <p className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300">
@@ -192,7 +210,7 @@ export default function EtfPage() {
               ))}
             </FilterRow>
 
-            <FilterRow label="折溢价">
+            <FilterRow label="折溢价" hidden={!premiumAvailable}>
               {PREMIUM_FILTERS.map((item) => (
                 <Chip
                   key={item.value}
@@ -310,7 +328,17 @@ export default function EtfPage() {
   );
 }
 
-function FilterRow({ label, children }: { label: string; children: React.ReactNode }) {
+function FilterRow({
+  label,
+  children,
+  hidden = false,
+}: {
+  label: string;
+  children: React.ReactNode;
+  /** 渠道不提供该维度时整行不渲染（而不是渲染一组永远筛不出结果的按钮） */
+  hidden?: boolean;
+}) {
+  if (hidden) return null;
   return (
     <div className="flex flex-wrap items-start gap-2">
       <span className="w-20 shrink-0 pt-1 text-xs text-slate-500 dark:text-slate-400">{label}</span>

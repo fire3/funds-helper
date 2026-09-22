@@ -16,6 +16,7 @@ import {
   ETF_CATEGORIES,
   ETF_MARKETS,
   ETF_PREMIUM_LEVELS,
+  ETF_SPOT_SOURCES,
   FX_INTERVALS,
   FX_RANGES,
   PURCHASE_STATUSES,
@@ -24,6 +25,7 @@ import {
   USD_KINDS as SHARED_USD_KINDS,
   TOOL_CATALOG,
 } from '@funds-helper/shared';
+import { ETF_SPOT_SOURCE_IDS } from '@funds-helper/sources';
 import { describe, expect, it } from 'vitest';
 import { createServerTools } from './tools/registry.ts';
 
@@ -80,6 +82,17 @@ describe('core 领域模型 ↔ shared 传输契约', () => {
 
   it('ETF 排序键都有中文标签（前端下拉直接用）', () => {
     expect(new Set(ETF_SORT_KEYS).size).toBe(ETF_SORT_KEYS.length);
+  });
+
+  it('ETF 行情渠道与 shared 的能力描述一一对应（缺字段的渠道必须显式声明）', () => {
+    expect(Object.keys(ETF_SPOT_SOURCES)).toEqual([...ETF_SPOT_SOURCE_IDS]);
+    for (const [id, info] of Object.entries(ETF_SPOT_SOURCES)) {
+      expect(info.id).toBe(id);
+      expect(info.name.length).toBeGreaterThan(0);
+    }
+    // 新浪列表没有 IOPV：它成为默认主源后，「折溢价率不可用」必须能被前端读到
+    expect(ETF_SPOT_SOURCES.sina.missing).toContain('折溢价率');
+    expect(ETF_SPOT_SOURCES.eastmoney.missing).toEqual([]);
   });
 });
 

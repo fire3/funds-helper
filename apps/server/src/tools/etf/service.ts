@@ -13,6 +13,8 @@ import {
 import type { Db } from '@funds-helper/db';
 import {
   ETF_DISCLAIMER,
+  ETF_SPOT_SOURCES,
+  type EtfDataSourceInfo,
   type EtfDatasetResponse,
   type EtfFundDetailResponse,
   type EtfFundProfile,
@@ -20,10 +22,11 @@ import {
   type EtfStats,
 } from '@funds-helper/shared';
 import {
+  type EtfSpotItem,
+  type EtfSpotSourceId,
   type FundProfileData,
   ParseError,
   type RawEtfProfile,
-  type RawEtfSpotItem,
   UpstreamError,
 } from '@funds-helper/sources';
 import type { FastifyBaseLogger } from 'fastify';
@@ -44,8 +47,9 @@ import type {
 /**
  * ETF 工具的服务层：唯一编排 IO 的地方（缓存 → 数据库 → 上游）。
  *
- * 两个上游角色不同：
- * - **接口 A（行情）是主源** —— 没有行情就没有这个工具，失败即失败；
+ * 上游角色不同：
+ * - **接口 A（行情）是主源** —— 没有行情就没有这个工具；东财整族不可用时
+ *   降级到备用源（新浪列表，见 `fetchSpot`），代价是**没有折溢价/上市日期**；
  * - **接口 B（目录/跟踪指数）是增强源** —— 失败只降级：分类回退名称判定、跟踪指数留空，
  *   数据集照常返回并记一条 warn。
  */
@@ -61,6 +65,8 @@ export interface EtfCaptureStats {
   inserted: number;
   dataDate: string;
   durationMs: number;
+  /** 本次行情实际来自哪个渠道（主源失败时会降级到备用源） */
+  source: EtfSpotSourceId;
   /** 接口 B 失败时的原因（数据集仍可用，只是分类走了名称回退） */
   profileError?: string;
 }
@@ -78,6 +84,11 @@ export interface EtfServiceDeps {
 /** 上游 `f13`：1 = 沪市、0 = 深市 */
 function marketLabel(market: number | null): EtfMarket {
   return market === 1 ? ETF_MARKETS.Sh : ETF_MARKETS.Sz;
+}
+
+/** 渠道标识 → 可下发的能力描述；未知值（历史数据源列为 NULL）按主源处理 */
+function dataSourceInfo(id: string | null): EtfDataSourceInfo {
+  return ETF_SPOT_SOURCES[id === 'sina' ? 'sina' : 'eastmoney'];
 }
 
 /** 秒级时间戳 → ISO8601（上游时间戳是 UTC 秒，展示层按 Asia/Shanghai 理解） */
@@ -98,7 +109,7 @@ function shanghaiDateOf(seconds: number | null): string | null {
  * 不能用「本地今天」：周末/节假日刷新时行情时间仍是上一交易日，
  * 用本地日期会写出一行没有行情的「假日期」，破坏 `(code, data_date)` 的幂等语义。
  */
-export function spotDataDate(items: readonly RawEtfSpotItem[], now: number): string {
+export function spotDataDate(items: readonly EtfSpotItem[], now: number): string {
   let latest: number | null = null;
   for (const item of items) {
     if (item.quoteTs === null) continue;
@@ -136,12 +147,51 @@ export class EtfService {
     this.now = deps.now ?? Date.now;
   }
 
-  private get sourceName(): string {
-    return this.deps.source.name;
-  }
-
   private profileMap(): Map<string, EtfProfileRow> {
     return new Map(this.deps.repo.loadProfiles().map((row) => [row.code, row]));
+  }
+
+  /**
+   * 取全市场行情。
+   *
+   * 默认**只走新浪列表**（自带全市场代码 + UTF-8 JSON，17 页拿完 1676 只）：
+   * 东财 `push2` 的 `clist` 被上游按接口重置（主备域名一样，失败前还要退避重试），
+   * 不再让它出现在关键路径上。
+   *
+   * `ETF_EASTMONEY_ENABLED=true` 时优先东财（只有它给折溢价率/上市日期），
+   * 失败仍自动降级到新浪 —— 无论哪条链路，都**不会**因为单一渠道失败而让数据集挂掉。
+   */
+  private async fetchSpot(): Promise<{ items: EtfSpotItem[]; source: EtfSpotSourceId }> {
+    if (!this.deps.config.etfEastmoneyEnabled) {
+      return { items: await this.deps.source.fetchSinaEtfSpot(), source: 'sina' };
+    }
+
+    try {
+      return { items: await this.deps.source.fetchEtfSpot(), source: 'eastmoney' };
+    } catch (error) {
+      // 只有上游故障才降级；编程/数据库错误必须原样抛出，不能被伪装成「上游不可用」
+      if (!(error instanceof UpstreamError) && !(error instanceof ParseError)) throw error;
+      const primaryError = error instanceof Error ? error.message : String(error);
+      this.deps.logger.warn({ err: primaryError }, '东财 ETF 行情不可用，降级到新浪列表');
+
+      try {
+        const items = await this.deps.source.fetchSinaEtfSpot();
+        this.deps.logger.warn(
+          { count: items.length },
+          '已降级到新浪行情：本次快照不含折溢价/上市日期',
+        );
+        return { items, source: 'sina' };
+      } catch (backupError) {
+        if (!(backupError instanceof UpstreamError) && !(backupError instanceof ParseError)) {
+          throw backupError;
+        }
+        this.deps.logger.error(
+          { primary: primaryError, backup: backupError.message },
+          '主源与备用源的 ETF 行情都不可用',
+        );
+        throw error;
+      }
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -150,7 +200,23 @@ export class EtfService {
 
   async captureSnapshot(): Promise<EtfCaptureStats> {
     const startedAt = this.now();
-    const items = await this.deps.source.fetchEtfSpot();
+
+    // 目录（接口 B）先跑：它既是分类/跟踪指数的来源，**也是备用行情源的代码池**
+    // （新浪列表自带全市场代码，所以降级不依赖本地是否有历史快照）
+    let profiles: RawEtfProfile[] = [];
+    let profileError: string | undefined;
+    try {
+      profiles = await this.deps.source.fetchEtfProfiles();
+    } catch (error) {
+      if (!(error instanceof UpstreamError) && !(error instanceof ParseError)) throw error;
+      profileError = error instanceof Error ? error.message : String(error);
+      this.deps.logger.warn(
+        { err: profileError },
+        'ETF 目录（跟踪指数）拉取失败，分类回退名称判定',
+      );
+    }
+
+    const { items, source } = await this.fetchSpot();
 
     if (items.length === 0) {
       throw new ParseError('上游未返回任何 ETF 行情，疑似板块参数或接口结构变更');
@@ -169,6 +235,7 @@ export class EtfService {
       code: item.code,
       name: item.name ?? item.code,
       market: marketLabel(item.market),
+      source,
       price: item.price,
       changePct: item.changePct,
       changeAmt: item.changeAmt,
@@ -189,20 +256,6 @@ export class EtfService {
       mainInflow: item.mainInflow,
       quoteAt: isoTimestamp(item.quoteTs),
     }));
-
-    // 接口 B 是增强源：失败只降级，不阻塞行情落库
-    let profiles: RawEtfProfile[] = [];
-    let profileError: string | undefined;
-    try {
-      profiles = await this.deps.source.fetchEtfProfiles();
-    } catch (error) {
-      if (!(error instanceof UpstreamError) && !(error instanceof ParseError)) throw error;
-      profileError = error instanceof Error ? error.message : String(error);
-      this.deps.logger.warn(
-        { err: profileError },
-        'ETF 目录（跟踪指数）拉取失败，分类回退名称判定',
-      );
-    }
 
     const profileInputs: EtfProfileInput[] = profiles.map((row) => ({
       code: row.code,
@@ -242,6 +295,7 @@ export class EtfService {
       inserted,
       dataDate,
       durationMs: this.now() - startedAt,
+      source,
       ...(profileError === undefined ? {} : { profileError }),
     };
     this.deps.logger.info({ ...stats }, 'ETF 行情快照已更新');
@@ -302,14 +356,19 @@ export class EtfService {
       .loadLatestSpot()
       .map((row) => this.toRecord(row, profiles.get(row.code), dataDate, snapshotCapturedAt));
 
+    // 渠道来自**数据本身**（0006 的 source 列）而不是配置：进程重启、缓存过期之后
+    // 「这批行情是不是备用渠道来的」依然可判（否则一排 null 折溢价无从解释）
+    const dataSource = dataSourceInfo(this.deps.repo.dominantSpotSource(dataDate));
+
     return {
       freshness: {
         dataDate,
         fetchedAt: snapshotCapturedAt,
         stale,
         ...(staleReason === undefined ? {} : { staleReason }),
-        source: this.sourceName,
+        source: dataSource.id,
       },
+      dataSource,
       total: records.length,
       stats: this.buildStats(records, profiles),
       funds: records,

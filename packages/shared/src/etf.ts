@@ -29,7 +29,41 @@ export const EtfPremiumLevelSchema = z.enum(ETF_PREMIUM_LEVELS);
 export type EtfPremiumLevel = z.infer<typeof EtfPremiumLevelSchema>;
 
 export const ETF_DISCLAIMER =
-  'ETF 行情与折溢价来自东方财富公开接口（延时/快照数据），仅供参考；规模为场内市值估算，实际以基金定期报告为准';
+  'ETF 行情来自新浪财经 / 东方财富公开接口（延时/快照数据），仅供参考；规模为场内市值估算，实际以基金定期报告为准';
+
+/**
+ * 行情渠道：各渠道的**能力差异**。
+ *
+ * 渠道**必须显式列出不提供哪些字段** —— 否则前端只能看到一排 `null`，
+ * 很容易被误读成「这只 ETF 平价」或「没有上市日期」。
+ */
+export const EtfSpotSourceIdSchema = z.enum(['eastmoney', 'sina']);
+export type EtfSpotSourceId = z.infer<typeof EtfSpotSourceIdSchema>;
+
+export const EtfDataSourceInfoSchema = z.object({
+  id: EtfSpotSourceIdSchema,
+  /** 可直接展示的渠道名 */
+  name: z.string(),
+  /** 该渠道**不提供**的字段（可直接展示）；空数组 = 字段全量 */
+  missing: z.array(z.string()),
+});
+export type EtfDataSourceInfo = z.infer<typeof EtfDataSourceInfoSchema>;
+
+/**
+ * 渠道目录。
+ *
+ * **新浪是默认主源**：东财 `push2` 的 `clist` 列表接口对本机长期重置（失败还要等 8 秒退避），
+ * 不适合放在数据集的关键路径上；新浪列表自带全市场代码、17 页拿完 1676 只。
+ * 东财只在 `ETF_EASTMONEY_ENABLED=true` 时作为**优先渠道**启用（它才有折溢价率）。
+ */
+export const ETF_SPOT_SOURCES: Record<EtfSpotSourceId, EtfDataSourceInfo> = {
+  sina: {
+    id: 'sina',
+    name: '新浪财经',
+    missing: ['折溢价率', '上市日期', '主力净流入', '量比'],
+  },
+  eastmoney: { id: 'eastmoney', name: '东方财富行情', missing: [] },
+};
 
 // ---------------------------------------------------------------------------
 // 数据集
@@ -130,6 +164,8 @@ export type EtfStats = z.infer<typeof EtfStatsSchema>;
 
 export const EtfDatasetResponseSchema = z.object({
   freshness: FreshnessSchema,
+  /** 本次快照的行情渠道（主源失败时会降级，前端据此提示缺失字段） */
+  dataSource: EtfDataSourceInfoSchema,
   total: z.number(),
   stats: EtfStatsSchema,
   funds: z.array(EtfRecordSchema),
@@ -183,6 +219,8 @@ export type EtfFundDetailResponse = z.infer<typeof EtfFundDetailResponseSchema>;
 
 export const EtfRefreshResponseSchema = z.object({
   ok: z.boolean(),
+  /** 本次快照实际使用的行情渠道 */
+  source: EtfSpotSourceIdSchema,
   /** 行情行数（有场内行情的 ETF） */
   spot: z.number(),
   /** 目录行数（接口 B；失败时为 0） */

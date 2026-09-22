@@ -11,6 +11,8 @@ export interface EtfSpotRow {
   code: string;
   data_date: string;
   captured_at: string;
+  /** 行情渠道（'eastmoney' | 'sina'，0006 追加列；更早的数据为 NULL） */
+  source: string | null;
   name: string;
   market: string;
   price: number | null;
@@ -37,6 +39,8 @@ export interface EtfSpotInput {
   code: string;
   name: string;
   market: string;
+  /** 行情渠道：写进快照，用于判断「当前数据集是哪个渠道采的」 */
+  source: string;
   price: number | null;
   changePct: number | null;
   changeAmt: number | null;
@@ -117,12 +121,13 @@ export class EtfRepository {
     for (const row of rows) {
       this.db.run(
         `INSERT INTO etf_spot_daily (
-           code, data_date, captured_at, name, market, price, change_pct, change_amt,
+           code, data_date, captured_at, source, name, market, price, change_pct, change_amt,
            open, high, low, prev_close, amplitude, turnover, volume_ratio, volume, amount,
            scale, float_scale, premium_rate, listing_date, main_inflow, quote_at
-         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          ON CONFLICT(code, data_date) DO UPDATE SET
            captured_at = excluded.captured_at,
+           source = excluded.source,
            name = excluded.name,
            market = excluded.market,
            price = excluded.price,
@@ -147,6 +152,7 @@ export class EtfRepository {
           row.code,
           dataDate,
           capturedAt,
+          row.source,
           row.name,
           row.market,
           row.price,
@@ -198,6 +204,26 @@ export class EtfRepository {
       `SELECT * FROM etf_spot_daily
        WHERE data_date = (SELECT MAX(data_date) FROM etf_spot_daily)
        ORDER BY code`,
+    );
+  }
+
+  /**
+   * 该数据日期的行情主要来自哪个渠道。
+   *
+   * 同一天可能先落东财、后落备用源的行（盘中降级），因此按行数取**多数派** ——
+   * 只要主体是备用源，前端就该提示「本次快照不含折溢价」。
+   */
+  dominantSpotSource(dataDate: string | null): string | null {
+    if (dataDate === null) return null;
+    return (
+      this.db.get<{ source: string | null }>(
+        `SELECT source FROM etf_spot_daily
+         WHERE data_date = ? AND source IS NOT NULL
+         GROUP BY source
+         ORDER BY COUNT(*) DESC
+         LIMIT 1`,
+        [dataDate],
+      )?.source ?? null
     );
   }
 
