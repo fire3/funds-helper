@@ -1,5 +1,5 @@
 import { ParseError, UpstreamError } from '../errors.ts';
-import type { HttpClient } from '../http.ts';
+import type { HttpClient, RequestOptions } from '../http.ts';
 import { array, num, record, snippet, str } from './util.ts';
 
 /**
@@ -25,6 +25,35 @@ export const QUOTE_HOSTS = ['push2.eastmoney.com', 'push2delay.eastmoney.com'] a
 
 /** 单次请求最多的证券数（与实测可用行为一致） */
 export const QUOTE_BATCH_SIZE = 100;
+
+/**
+ * 依次尝试主备行情域名，全部失败时抛出最后一个错误。
+ *
+ * 主域名 `push2.eastmoney.com` 在高频访问后会被**静默重置 TLS**
+ * （实测 `SSL_read: unexpected eof`），备用域名 `push2delay.eastmoney.com` 是延时行情、
+ * 板块覆盖更少 —— 因此主备切换是「降级可用」而不是「等价冗余」。
+ */
+export async function fetchQuoteText(
+  client: HttpClient,
+  path: string,
+  options: RequestOptions = {},
+): Promise<string> {
+  let lastError: unknown;
+  for (const host of QUOTE_HOSTS) {
+    try {
+      return await client.getText(`https://${host}${path}`, {
+        ...options,
+        headers: { Referer: 'https://quote.eastmoney.com/', ...options.headers },
+      });
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError instanceof Error
+    ? lastError
+    : new UpstreamError('行情接口不可用（主备域名均失败）');
+}
 
 /** 上交所 `1.`，深交所 `0.`（实测以 5 开头的为沪市） */
 export function toSecId(code: string): string {
@@ -72,25 +101,10 @@ async function fetchBatch(client: HttpClient, secids: string): Promise<QuoteItem
     secids,
   });
 
-  let lastError: unknown;
-  for (const host of QUOTE_HOSTS) {
-    try {
-      const text = await client.getText(
-        `https://${host}/api/qt/ulist.np/get?${params.toString()}`,
-        {
-          headers: { Referer: 'https://quote.eastmoney.com/' },
-          timeoutMs: 20_000,
-        },
-      );
-      return parseQuotes(text);
-    } catch (error) {
-      lastError = error;
-    }
-  }
-
-  throw lastError instanceof Error
-    ? lastError
-    : new UpstreamError('行情接口不可用（主备域名均失败）');
+  const text = await fetchQuoteText(client, `/api/qt/ulist.np/get?${params.toString()}`, {
+    timeoutMs: 20_000,
+  });
+  return parseQuotes(text);
 }
 
 export async function fetchQuotes(

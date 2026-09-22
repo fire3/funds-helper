@@ -27,6 +27,19 @@ export function formatScale(value: number | null | undefined): string {
   return `${value.toFixed(2)} 亿`;
 }
 
+/**
+ * 金额（元）→ 中文量级：`1.09 万亿` / `948.72 亿` / `3.53 亿` / `1200 万`。
+ * ETF 的规模与成交额都是「元」为单位的原始值，展示时必须按量级换单位。
+ */
+export function formatYuan(value: number | null | undefined): string {
+  if (value === null || value === undefined || !Number.isFinite(value)) return '--';
+  const abs = Math.abs(value);
+  if (abs >= 1e12) return `${(value / 1e12).toFixed(2)} 万亿`;
+  if (abs >= 1e8) return `${(value / 1e8).toFixed(2)} 亿`;
+  if (abs >= 1e4) return `${(value / 1e4).toFixed(0)} 万`;
+  return value.toFixed(0);
+}
+
 const RELATIVE_UNITS: [limit: number, divisor: number, suffix: string][] = [
   [60, 1, '秒'],
   [3600, 60, '分钟'],

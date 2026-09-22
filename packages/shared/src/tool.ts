@@ -59,10 +59,23 @@ const FX: ToolDescriptor = {
   tags: ['汇率', '美元', '人民币', 'USDCNY'],
 };
 
+const ETF: ToolDescriptor = {
+  id: 'etf',
+  name: 'ETF 汇总',
+  summary: '全市场规模 · 折溢价 · 跟踪指数',
+  question: '全市场 ETF 现在什么价、有多大、贵不贵（折溢价）、跟踪的是什么指数？',
+  status: 'ready',
+  version: '0.1.0',
+  // 场内行情盘中变化：交易时段每 30 分钟刷新一次快照
+  dataFreshness: 'realtime',
+  tags: ['ETF', '折溢价', '规模', '跟踪指数', '场内'],
+};
+
 export const TOOL_CATALOG = {
   qdii: QDII,
   usd: USD,
   fx: FX,
+  etf: ETF,
 } as const;
 
 export const TOOL_DESCRIPTORS: readonly ToolDescriptor[] = Object.values(TOOL_CATALOG);

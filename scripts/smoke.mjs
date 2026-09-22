@@ -84,6 +84,7 @@ async function main() {
   check('health 状态为 ok', health.body?.status === 'ok', `status=${health.body?.status}`);
   check('工具清单包含 qdii', health.body?.tools?.some((tool) => tool.id === 'qdii') === true);
   check('工具清单包含 usd', health.body?.tools?.some((tool) => tool.id === 'usd') === true);
+  check('工具清单包含 etf', health.body?.tools?.some((tool) => tool.id === 'etf') === true);
 
   const tools = await getJson('/api/tools');
   check('GET /api/tools 正常', tools.status === 200, `HTTP ${tools.status}`);
@@ -235,6 +236,71 @@ async function main() {
     `USD/CNY=${fxLatest} CNY/USD=${fxInverse}`,
   );
 
+  // ---- ETF 汇总 ----
+  const etfRefreshResponse = await fetch(`${BASE}/api/tools/etf/refresh`, { method: 'POST' });
+  const etfRefresh = await etfRefreshResponse.json().catch(() => null);
+  check(
+    'POST /api/tools/etf/refresh 成功拉取上游（行情 + 目录）',
+    etfRefreshResponse.ok && etfRefresh?.ok === true,
+    etfRefreshResponse.ok
+      ? `spot=${etfRefresh?.spot} profile=${etfRefresh?.profile} ${etfRefresh?.dataDate}`
+      : JSON.stringify(etfRefresh),
+  );
+
+  const etfDataset = await getJson('/api/tools/etf/dataset');
+  check('GET /api/tools/etf/dataset 正常', etfDataset.status === 200, `HTTP ${etfDataset.status}`);
+
+  const etf = etfDataset.body;
+  check(
+    '全市场 ETF 数量与实测口径一致（>= 1500）',
+    (etf?.total ?? 0) >= 1500,
+    `total=${etf?.total}`,
+  );
+  check(
+    '目录（跟踪指数）已 join（覆盖率 > 90%）',
+    (etf?.stats?.coverage?.profile ?? 0) >= (etf?.total ?? 0) * 0.9,
+    `profile=${etf?.stats?.coverage?.profile} spot=${etf?.stats?.coverage?.spot} unlisted=${etf?.stats?.coverage?.unlisted}`,
+  );
+  check(
+    '分类分布覆盖宽基与行业主题（标志位解析正确）',
+    (etf?.stats?.byCategory ?? []).some((item) => item.category === '宽基') &&
+      (etf?.stats?.byCategory ?? []).some((item) => item.category === '行业主题'),
+    (etf?.stats?.byCategory ?? []).map((item) => `${item.category}:${item.count}`).join(' '),
+  );
+  check(
+    '折溢价分布有数据且给出最贵/最便宜',
+    (etf?.stats?.premium?.counts?.溢价 ?? 0) + (etf?.stats?.premium?.counts?.折价 ?? 0) > 0 &&
+      etf?.stats?.premium?.maxDiscount != null,
+    `最贵 ${etf?.stats?.premium?.maxPremium?.name ?? '--'} / 最便宜 ${etf?.stats?.premium?.maxDiscount?.name ?? '--'}`,
+  );
+  check(
+    '规模合计量级合理（1 万亿 ~ 20 万亿）',
+    (etf?.stats?.totalScale ?? 0) > 1e12 && (etf?.stats?.totalScale ?? 0) < 2e13,
+    `${((etf?.stats?.totalScale ?? 0) / 1e12).toFixed(2)} 万亿`,
+  );
+
+  const etfSample = (etf?.funds ?? []).find((fund) => fund.indexName && fund.premiumRate !== null);
+  check(
+    '存在同时有跟踪指数与折溢价数据的 ETF',
+    Boolean(etfSample),
+    etfSample ? `${etfSample.code} ${etfSample.indexName} ${etfSample.premiumText}` : '无',
+  );
+
+  if (etfSample?.code) {
+    const etfDetailResponse = await fetch(`${BASE}/api/tools/etf/funds/${etfSample.code}`);
+    const etfDetail = await etfDetailResponse.json().catch(() => null);
+    check(
+      'GET /api/tools/etf/funds/:code 正常（含费率与通用区块）',
+      etfDetailResponse.ok &&
+        etfDetail?.code === etfSample.code &&
+        Boolean(etfDetail?.profile?.managementFee) &&
+        (etfDetail?.navTrend?.length ?? 0) > 0,
+      etfDetailResponse.ok
+        ? `管理费 ${etfDetail?.profile?.managementFee} 净值点 ${etfDetail?.navTrend?.length}`
+        : JSON.stringify(etfDetail),
+    );
+  }
+
   // ---- 错误处理 ----
   const badCode = await fetch(`${BASE}/api/tools/qdii/funds/abc`);
   check('非法基金代码返回 400', badCode.status === 400, `HTTP ${badCode.status}`);
@@ -269,6 +335,14 @@ async function main() {
     '汇率重复抓取幂等（inserted = 0）',
     fxSecond?.inserted === 0,
     `inserted=${fxSecond?.inserted}`,
+  );
+
+  const etfAgain = await fetch(`${BASE}/api/tools/etf/refresh`, { method: 'POST' });
+  const etfSecond = await etfAgain.json().catch(() => null);
+  check(
+    'ETF 同日重复抓取幂等（inserted = 0）',
+    etfSecond?.inserted === 0,
+    `inserted=${etfSecond?.inserted}`,
   );
 
   rmSync(dataDir, { recursive: true, force: true });

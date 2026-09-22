@@ -1,7 +1,11 @@
 import {
+  ETF_CATEGORIES as CORE_ETF_CATEGORIES,
+  ETF_MARKETS as CORE_ETF_MARKETS,
+  ETF_PREMIUM_LEVELS as CORE_ETF_PREMIUM_LEVELS,
   FX_DIRECTIONS as CORE_FX_DIRECTIONS,
   USD_KINDS as CORE_USD_KINDS,
   CURRENCY_VALUES,
+  ETF_SORT_KEYS,
   FX_INTERVAL_KEYS,
   FX_RANGE_KEYS,
   PurchaseStatus,
@@ -9,6 +13,9 @@ import {
 } from '@funds-helper/core';
 import {
   CURRENCIES,
+  ETF_CATEGORIES,
+  ETF_MARKETS,
+  ETF_PREMIUM_LEVELS,
   FX_INTERVALS,
   FX_RANGES,
   PURCHASE_STATUSES,
@@ -58,6 +65,22 @@ describe('core 领域模型 ↔ shared 传输契约', () => {
   it('汇率统计区间取值完全一致（含顺序）', () => {
     expect([...FX_INTERVAL_KEYS]).toEqual([...FX_INTERVALS]);
   });
+
+  it('ETF 分类取值完全一致（含顺序 —— 顺序决定统计面板与筛选器的展示顺序）', () => {
+    expect([...CORE_ETF_CATEGORIES]).toEqual([...ETF_CATEGORIES]);
+  });
+
+  it('ETF 交易所取值完全一致', () => {
+    expect(Object.values(CORE_ETF_MARKETS)).toEqual([...ETF_MARKETS]);
+  });
+
+  it('ETF 折溢价档位取值完全一致', () => {
+    expect(Object.values(CORE_ETF_PREMIUM_LEVELS)).toEqual([...ETF_PREMIUM_LEVELS]);
+  });
+
+  it('ETF 排序键都有中文标签（前端下拉直接用）', () => {
+    expect(new Set(ETF_SORT_KEYS).size).toBe(ETF_SORT_KEYS.length);
+  });
 });
 
 describe('工具注册表与 shared 目录', () => {
@@ -70,10 +93,11 @@ describe('工具注册表与 shared 目录', () => {
 
   it('注册表里的描述符与 shared 目录指向同一个对象（服务端启动时的一致性断言）', () => {
     const tools = createServerTools();
-    expect(tools).toHaveLength(3);
+    expect(tools).toHaveLength(4);
     expect(tools[0]?.descriptor).toBe(TOOL_CATALOG.qdii);
     expect(tools[1]?.descriptor).toBe(TOOL_CATALOG.usd);
     expect(tools[2]?.descriptor).toBe(TOOL_CATALOG.fx);
+    expect(tools[3]?.descriptor).toBe(TOOL_CATALOG.etf);
   });
 
   it('每个工具都声明了 5 段式 cron 的定时任务', () => {
@@ -81,13 +105,20 @@ describe('工具注册表与 shared 目录', () => {
     const qdiiJobs = tools[0]?.jobs?.({} as never) ?? [];
     const usdJobs = tools[1]?.jobs?.({} as never) ?? [];
     const fxJobs = tools[2]?.jobs?.({} as never) ?? [];
+    const etfJobs = tools[3]?.jobs?.({} as never) ?? [];
 
     expect(qdiiJobs.map((job) => job.name)).toEqual(['qdii.snapshot', 'qdii.premium']);
     expect(usdJobs.map((job) => job.name)).toEqual(['usd.snapshot']);
     expect(fxJobs.map((job) => job.name)).toEqual(['fx.daily']);
+    expect(etfJobs.map((job) => job.name)).toEqual(['etf.snapshot']);
 
-    for (const job of [...qdiiJobs, ...usdJobs, ...fxJobs]) {
+    for (const job of [...qdiiJobs, ...usdJobs, ...fxJobs, ...etfJobs]) {
       expect(job.cron.split(' ')).toHaveLength(5);
     }
+  });
+
+  it('ETF 快照只在交易时段跑（场内行情收盘后不再变化）', () => {
+    const etfJobs = createServerTools()[3]?.jobs?.({} as never) ?? [];
+    expect(etfJobs[0]?.cron).toBe('*/30 9-15 * * 1-5');
   });
 });

@@ -1,3 +1,4 @@
+import { type CreateEtfToolOptions, createEtfTool } from './etf/index.ts';
 import { type CreateFxToolOptions, createFxTool } from './fx/index.ts';
 import { type CreateQdiiToolOptions, createQdiiTool } from './qdii/index.ts';
 import type { ServerTool } from './types.ts';
@@ -14,11 +15,13 @@ export function createServerTools(
     qdii?: CreateQdiiToolOptions;
     usd?: CreateUsdToolOptions;
     fx?: CreateFxToolOptions;
+    etf?: CreateEtfToolOptions;
   } = {},
 ): ServerTool[] {
   return [
     createQdiiTool(options.qdii ?? {}),
     createUsdTool(options.usd ?? {}),
     createFxTool(options.fx ?? {}),
+    createEtfTool(options.etf ?? {}),
   ];
 }

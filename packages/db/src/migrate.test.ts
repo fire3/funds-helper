@@ -117,6 +117,9 @@ describe('runMigrations', () => {
       'usd_sibling',
       'usd_detail_cache',
       'fx_rate_daily',
+      'etf_spot_daily',
+      'etf_profile',
+      'etf_detail_cache',
       'schema_migration',
     ]) {
       expect(tables).toContain(expected);

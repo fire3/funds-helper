@@ -1,5 +1,11 @@
 import {
   type ApiErrorBody,
+  type EtfDatasetResponse,
+  EtfDatasetResponseSchema,
+  type EtfFundDetailResponse,
+  EtfFundDetailResponseSchema,
+  type EtfRefreshResponse,
+  EtfRefreshResponseSchema,
   type FxDatasetResponse,
   FxDatasetResponseSchema,
   type FxDirection,
@@ -148,4 +154,16 @@ export const api = {
 
   refreshFx: (): Promise<FxRefreshResponse> =>
     request('/api/tools/fx/refresh', FxRefreshResponseSchema, { method: 'POST' }),
+
+  getEtfDataset: (refresh = false): Promise<EtfDatasetResponse> =>
+    request(`/api/tools/etf/dataset${refresh ? '?refresh=1' : ''}`, EtfDatasetResponseSchema),
+
+  getEtfFund: (code: string, refresh = false): Promise<EtfFundDetailResponse> =>
+    request(
+      `/api/tools/etf/funds/${code}${refresh ? '?refresh=1' : ''}`,
+      EtfFundDetailResponseSchema,
+    ),
+
+  refreshEtf: (): Promise<EtfRefreshResponse> =>
+    request('/api/tools/etf/refresh', EtfRefreshResponseSchema, { method: 'POST' }),
 };

@@ -1,4 +1,5 @@
 export * from './envelope.ts';
+export * from './etf.ts';
 export * from './fund.ts';
 export * from './fund-detail.ts';
 export * from './fx.ts';
