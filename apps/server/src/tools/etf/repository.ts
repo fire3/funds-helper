@@ -118,6 +118,20 @@ export class EtfRepository {
   // ---------------------------------------------------------------------------
 
   upsertSpot(rows: readonly EtfSpotInput[], dataDate: string, capturedAt: string): void {
+    // 一次快照只来自一个渠道：先把「同一数据日期上其它渠道的行」清掉。
+    // 否则在界面上切渠道后，数据集会混着两个渠道的标的（新浪有的代码东财没有，
+    // 反之亦然）—— 降级时还会出现「这一行没有折溢价」这种无法解释的空值。
+    // 生产时序上两种渠道的 data_date 可能不同（新浪没有行情时间戳，节假日只取本地今天），
+    // 因此用 `>=` 把「比这批更新的旧渠道行」一并清掉，让最新视图始终等于最后一次抓取。
+    const source = rows[0]?.source;
+    if (source !== undefined) {
+      this.db.run(
+        `DELETE FROM etf_spot_daily
+         WHERE source IS NOT NULL AND source <> ? AND data_date >= ?`,
+        [source, dataDate],
+      );
+    }
+
     for (const row of rows) {
       this.db.run(
         `INSERT INTO etf_spot_daily (

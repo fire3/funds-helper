@@ -16,8 +16,8 @@ export function testConfig(overrides: Partial<AppConfig> = {}): AppConfig {
     upstreamMinIntervalMs: 0,
     memoryCacheTtlSec: 1800,
     staleWindowSec: 21_600,
-    // 测试默认与产品默认一致：ETF 行情只走新浪（东财需显式打开）
-    etfEastmoneyEnabled: false,
+    // 测试默认与产品默认一致：ETF 行情优先东财（个股测试可用 overrides 改成新浪）
+    etfEastmoneyEnabled: true,
     webDistPath: '/nonexistent-web-dist',
     serveStatic: false,
     ...overrides,

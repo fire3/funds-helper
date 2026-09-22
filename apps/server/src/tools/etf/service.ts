@@ -10,10 +10,12 @@ import {
   isFundCode,
   premiumRateFromDiscount,
 } from '@funds-helper/core';
-import type { Db } from '@funds-helper/db';
+import type { Db, SettingRepository } from '@funds-helper/db';
 import {
   ETF_DISCLAIMER,
+  ETF_SPOT_SOURCE_ORDER,
   ETF_SPOT_SOURCES,
+  type EtfConfigResponse,
   type EtfDataSourceInfo,
   type EtfDatasetResponse,
   type EtfFundDetailResponse,
@@ -22,6 +24,7 @@ import {
   type EtfStats,
 } from '@funds-helper/shared';
 import {
+  ETF_SPOT_SOURCE_IDS,
   type EtfSpotItem,
   type EtfSpotSourceId,
   type FundProfileData,
@@ -74,6 +77,8 @@ export interface EtfCaptureStats {
 export interface EtfServiceDeps {
   db: Db;
   repo: EtfRepository;
+  /** 运行时配置（当前只放行情渠道偏好） */
+  settings: SettingRepository;
   source: EtfDataSource;
   cache: TtlCache;
   config: AppConfig;
@@ -89,6 +94,21 @@ function marketLabel(market: number | null): EtfMarket {
 /** 渠道标识 → 可下发的能力描述；未知值（历史数据源列为 NULL）按主源处理 */
 function dataSourceInfo(id: string | null): EtfDataSourceInfo {
   return ETF_SPOT_SOURCES[id === 'sina' ? 'sina' : 'eastmoney'];
+}
+
+/** 运行时配置里行情渠道偏好的键名 */
+export const ETF_SPOT_SOURCE_SETTING_KEY = 'etf.spotSource';
+
+/** 环境变量给的默认偏好（没有运行时配置时使用） */
+function envDefaultSource(config: AppConfig): EtfSpotSourceId {
+  return config.etfEastmoneyEnabled ? 'eastmoney' : 'sina';
+}
+
+/** 运行时配置里的值可能是脏的（人工改库/旧版本写入），读出来必须校验 */
+function parseSpotSource(value: string | null): EtfSpotSourceId | null {
+  return value !== null && (ETF_SPOT_SOURCE_IDS as readonly string[]).includes(value)
+    ? (value as EtfSpotSourceId)
+    : null;
 }
 
 /** 秒级时间戳 → ISO8601（上游时间戳是 UTC 秒，展示层按 Asia/Shanghai 理解） */
@@ -151,23 +171,57 @@ export class EtfService {
     return new Map(this.deps.repo.loadProfiles().map((row) => [row.code, row]));
   }
 
+  // ---------------------------------------------------------------------------
+  // 运行时配置（行情渠道）
+  // ---------------------------------------------------------------------------
+
+  /** 当前行情渠道偏好：运行时配置优先，其次环境变量默认值 */
+  spotSourcePreference(): EtfSpotSourceId {
+    return (
+      parseSpotSource(this.deps.settings.get(ETF_SPOT_SOURCE_SETTING_KEY)) ??
+      envDefaultSource(this.deps.config)
+    );
+  }
+
+  /**
+   * 切换行情渠道。只写配置，**不**在这里抓取 —— 由调用方决定什么时候重新采数
+   * （路由层在切换后立刻抓一次，见 `routes.ts`），这样抓取的失败处理只有一套。
+   */
+  setSpotSourcePreference(source: EtfSpotSourceId): void {
+    this.deps.settings.set(ETF_SPOT_SOURCE_SETTING_KEY, source);
+    // 数据集缓存的响应里带 `dataSource`：切换后必须让它重新构建
+    this.deps.cache.delete(DATASET_CACHE_KEY);
+  }
+
+  /** 渠道配置（界面上的下拉框 + 能力说明）；只读本地，不打上游 */
+  getConfig(): EtfConfigResponse {
+    const dataDate = this.deps.repo.latestSpotDate();
+    return {
+      spotSource: this.spotSourcePreference(),
+      envDefault: envDefaultSource(this.deps.config),
+      activeSource: dataSourceInfo(this.deps.repo.dominantSpotSource(dataDate)).id,
+      sources: ETF_SPOT_SOURCE_ORDER.map((id) => ETF_SPOT_SOURCES[id]),
+    };
+  }
+
   /**
    * 取全市场行情。
    *
-   * 默认**只走新浪列表**（自带全市场代码 + UTF-8 JSON，17 页拿完 1676 只）：
-   * 东财 `clist` 被上游按接口重置（主备域名一样，失败前还要退避重试），
-   * 不把它放在默认链路的关键路径上。
+   * 渠道由**运行时配置**决定（界面上可切，见 `spotSourcePreference`）：
+   * - `sina`：只走新浪列表（自带全市场代码 + UTF-8 JSON，17 页拿完 1676 只）；
+   * - `eastmoney`（默认）：优先东财（只有它给折溢价率/上市日期）——
+   *   有代码池（目录接口 B）就用 `ulist.np` 批量报价，没有代码池才退回自带代码池的 `clist`；
+   *   任一步失败都自动降级到新浪。
    *
-   * `ETF_EASTMONEY_ENABLED=true` 时优先东财（只有它给折溢价率/上市日期）：
-   * 有代码池（目录接口 B）就用 `ulist.np` 批量报价，没有代码池才退回自带代码池的 `clist`；
-   * 任一步失败仍自动降级到新浪 —— 无论哪条链路，都**不会**因为单一渠道失败而让数据集挂掉。
+   * 无论哪条链路，都**不会**因为单一渠道失败而让数据集挂掉；真正用了哪个渠道
+   * 会写进 `etf_spot_daily.source`，并在数据集响应里回给前端。
    *
    * @param codes 目录（接口 B）里的代码池；为空时东财只能走 `clist`
    */
   private async fetchSpot(
     codes: readonly string[],
   ): Promise<{ items: EtfSpotItem[]; source: EtfSpotSourceId }> {
-    if (!this.deps.config.etfEastmoneyEnabled) {
+    if (this.spotSourcePreference() === 'sina') {
       return { items: await this.deps.source.fetchSinaEtfSpot(), source: 'sina' };
     }
 

@@ -1,3 +1,8 @@
+import {
+  ETF_SPOT_SOURCE_ORDER,
+  ETF_SPOT_SOURCES,
+  type EtfSpotSourceId,
+} from '@funds-helper/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
@@ -61,6 +66,22 @@ export default function EtfPage() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['etf'] }),
   });
 
+  // 行情渠道偏好：存在服务端（跟着数据库走），因此换设备/重启后仍然生效
+  const configQuery = useQuery({
+    queryKey: ['etf', 'config'],
+    queryFn: () => api.getEtfConfig(),
+    staleTime: 5 * 60_000,
+  });
+  // 配置还没回来时先用 shared 的渠道目录渲染下拉框（避免出现空白选项）
+  const sourceOptions =
+    configQuery.data?.sources ?? ETF_SPOT_SOURCE_ORDER.map((id) => ETF_SPOT_SOURCES[id]);
+
+  const switchSourceMutation = useMutation({
+    mutationFn: (spotSource: EtfSpotSourceId) => api.updateEtfConfig(spotSource),
+    // 切换后服务端已经重抓过，这里只要让数据集/配置重新拉一次
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['etf'] }),
+  });
+
   // 「/」聚焦搜索框（与其它工具一致）
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent): void => {
@@ -76,6 +97,11 @@ export default function EtfPage() {
   }, []);
 
   const funds = datasetQuery.data?.funds ?? [];
+  // 偏好渠道与实际渠道不一致 = 本次发生了降级（界面要显式说明，否则「切了东财却还有缺口」会很迷惑）
+  const degraded =
+    configQuery.data !== undefined &&
+    datasetQuery.data !== undefined &&
+    configQuery.data.spotSource !== datasetQuery.data.dataSource.id;
   // 渠道能力：新浪列表没有 IOPV，折溢价相关的 UI 整体隐藏（见 dataSource.missing）
   const premiumAvailable = !(datasetQuery.data?.dataSource.missing ?? []).includes('折溢价率');
   // 折溢价不可用时忽略 URL 里的折溢价条件：否则一个带 ?premium=premium 的旧链接会筛出空列表
@@ -115,9 +141,35 @@ export default function EtfPage() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-slate-400 dark:text-slate-500">
-            行情：{datasetQuery.data?.dataSource.name ?? '—'}
-          </span>
+          <label className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
+            行情渠道
+            <select
+              value={configQuery.data?.spotSource ?? sourceOptions[0]?.id}
+              disabled={configQuery.isPending || switchSourceMutation.isPending}
+              onChange={(event) =>
+                switchSourceMutation.mutate(event.target.value as EtfSpotSourceId)
+              }
+              className="rounded-md border border-slate-300 bg-white px-2 py-1 text-xs disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950"
+            >
+              {sourceOptions.map((source) => (
+                <option key={source.id} value={source.id}>
+                  {source.name}
+                  {source.missing.length === 0 ? '（含折溢价）' : '（无折溢价）'}
+                </option>
+              ))}
+            </select>
+          </label>
+          {switchSourceMutation.isPending ? (
+            <span className="text-xs text-slate-400 dark:text-slate-500">切换并重新抓取中…</span>
+          ) : null}
+          {degraded ? (
+            <span
+              className="text-xs text-amber-600 dark:text-amber-400"
+              title="偏好渠道本次不可用，已自动降级"
+            >
+              实际：{datasetQuery.data?.dataSource.name}
+            </span>
+          ) : null}
           <FreshnessBadge freshness={datasetQuery.data?.freshness} />
           <button
             type="button"
@@ -151,6 +203,17 @@ export default function EtfPage() {
       ) : null}
       {refreshMutation.isError ? (
         <ErrorState message="重新抓取失败" detail={apiErrorDetail(refreshMutation.error)} />
+      ) : null}
+      {switchSourceMutation.data ? (
+        <p className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300">
+          已切换行情渠道 —— {switchSourceMutation.data.refresh.message}
+        </p>
+      ) : null}
+      {switchSourceMutation.isError ? (
+        <ErrorState
+          message="切换行情渠道失败（渠道偏好已保存，可再点「重新抓取上游」重试）"
+          detail={apiErrorDetail(switchSourceMutation.error)}
+        />
       ) : null}
 
       {datasetQuery.isPending ? <Spinner label="加载全市场 ETF 数据集…" /> : null}

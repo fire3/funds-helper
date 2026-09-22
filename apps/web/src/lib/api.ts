@@ -1,11 +1,16 @@
 import {
   type ApiErrorBody,
+  type EtfConfigResponse,
+  EtfConfigResponseSchema,
+  type EtfConfigUpdateResponse,
+  EtfConfigUpdateResponseSchema,
   type EtfDatasetResponse,
   EtfDatasetResponseSchema,
   type EtfFundDetailResponse,
   EtfFundDetailResponseSchema,
   type EtfRefreshResponse,
   EtfRefreshResponseSchema,
+  type EtfSpotSourceId,
   type FxDatasetResponse,
   FxDatasetResponseSchema,
   type FxDirection,
@@ -124,8 +129,8 @@ export const api = {
   getQdiiPremium: (refresh = false): Promise<QdiiPremiumResponse> =>
     request(`/api/tools/qdii/premium${refresh ? '?refresh=1' : ''}`, QdiiPremiumResponseSchema),
 
-  getQdiiChanges: (days = 30): Promise<QdiiChangesResponse> =>
-    request(`/api/tools/qdii/changes?days=${days}`, QdiiChangesResponseSchema),
+  getQdiiChanges: (days = 30, limit = 1000): Promise<QdiiChangesResponse> =>
+    request(`/api/tools/qdii/changes?days=${days}&limit=${limit}`, QdiiChangesResponseSchema),
 
   refreshQdii: (): Promise<QdiiRefreshResponse> =>
     request('/api/tools/qdii/refresh', QdiiRefreshResponseSchema, { method: 'POST' }),
@@ -166,4 +171,15 @@ export const api = {
 
   refreshEtf: (): Promise<EtfRefreshResponse> =>
     request('/api/tools/etf/refresh', EtfRefreshResponseSchema, { method: 'POST' }),
+
+  getEtfConfig: (): Promise<EtfConfigResponse> =>
+    request('/api/tools/etf/config', EtfConfigResponseSchema),
+
+  /** 切换行情渠道：服务端会顺手重抓一次（响应里带新的配置与抓取结果） */
+  updateEtfConfig: (spotSource: EtfSpotSourceId): Promise<EtfConfigUpdateResponse> =>
+    request('/api/tools/etf/config', EtfConfigUpdateResponseSchema, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ spotSource }),
+    }),
 };

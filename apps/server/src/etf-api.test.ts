@@ -1,4 +1,7 @@
+import { SettingRepository } from '@funds-helper/db';
 import type {
+  EtfConfigResponse,
+  EtfConfigUpdateResponse,
   EtfDatasetResponse,
   EtfFundDetailResponse,
   EtfRefreshResponse,
@@ -8,6 +11,7 @@ import { createHarness } from './testing/app-harness.ts';
 import {
   createFakeEtfSource,
   etfProfiles,
+  etfSinaSpotItems,
   etfSpotItemsWithStyle,
   type FakeEtfSource,
 } from './testing/fake-etf-source.ts';
@@ -16,13 +20,14 @@ import { createEtfTool } from './tools/etf/index.ts';
 type App = Awaited<ReturnType<typeof createHarness>>;
 
 type EtfHarnessOptions = Parameters<typeof createFakeEtfSource>[0] & {
-  /** 打开东财 `push2` 优先（产品默认关闭：只走新浪，见 config.etfEastmoneyEnabled） */
+  /** `ETF_EASTMONEY_ENABLED` 的值（只作为「没有运行时偏好」时的默认，见 config.ts） */
   eastmoney?: boolean;
 };
 
 interface EtfHarness {
   app: App;
   source: FakeEtfSource;
+  db: Awaited<ReturnType<typeof createHarness>>['db'];
 }
 
 async function etfHarness(options: EtfHarnessOptions = {}): Promise<EtfHarness> {
@@ -32,7 +37,7 @@ async function etfHarness(options: EtfHarnessOptions = {}): Promise<EtfHarness> 
     config: { etfEastmoneyEnabled: eastmoney },
     buildTools: ({ now }) => [createEtfTool({ source, now })],
   });
-  return { app, source };
+  return { app, source, db: app.db };
 }
 
 async function datasetOf(app: App): Promise<EtfDatasetResponse> {
@@ -501,6 +506,167 @@ describe('GET /api/tools/etf/funds/:code', () => {
       // 158000 在目录里但没有场内行情 → 明确 404 而不是半成品
       const unlisted = await app.inject({ method: 'GET', url: '/api/tools/etf/funds/158000' });
       expect(unlisted.statusCode).toBe(404);
+    } finally {
+      await app.close();
+    }
+  });
+});
+
+describe('行情渠道配置（/api/tools/etf/config）', () => {
+  async function configOf(app: App): Promise<EtfConfigResponse> {
+    const response = await app.inject({ method: 'GET', url: '/api/tools/etf/config' });
+    expect(response.statusCode).toBe(200);
+    return response.json() as EtfConfigResponse;
+  }
+
+  it('默认值来自环境变量，并列出各渠道的能力差异', async () => {
+    const { app } = await etfHarness({ eastmoney: true });
+    try {
+      const config = await configOf(app);
+      expect(config.spotSource).toBe('eastmoney');
+      expect(config.envDefault).toBe('eastmoney');
+      // 还没有数据时「实际渠道」按主源报
+      expect(config.activeSource).toBe('eastmoney');
+      expect(config.sources.map((source) => source.id)).toEqual(['eastmoney', 'sina']);
+      expect(config.sources.find((source) => source.id === 'sina')?.missing).toContain('折溢价率');
+      expect(config.sources.find((source) => source.id === 'eastmoney')?.missing).toEqual([]);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('没有运行时偏好时跟随环境变量：ETF_EASTMONEY_ENABLED=false → 只走新浪', async () => {
+    const { app, source } = await etfHarness({ eastmoney: false });
+    try {
+      const config = await configOf(app);
+      expect(config.spotSource).toBe('sina');
+      expect(config.envDefault).toBe('sina');
+
+      await datasetOf(app);
+      // 偏好是新浪 → 连东财都不该碰
+      expect(source.calls.spotByCodes).toBeUndefined();
+      expect(source.calls.spot).toBeUndefined();
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('PUT 切换渠道：落库 + 立刻重抓，数据与配置一起变成新渠道', async () => {
+    const { app, source, db } = await etfHarness({ eastmoney: true });
+    try {
+      // 先把时钟拨到行情时间戳所在的交易日，让两个渠道落在同一个 data_date 上
+      app.setNow(Date.parse('2026-09-22T10:00:00.000Z'));
+      expect((await datasetOf(app)).dataSource.id).toBe('eastmoney');
+
+      const response = await app.inject({
+        method: 'PUT',
+        url: '/api/tools/etf/config',
+        payload: { spotSource: 'sina' },
+      });
+      expect(response.statusCode).toBe(200);
+      const body = response.json() as EtfConfigUpdateResponse;
+      expect(body.config.spotSource).toBe('sina');
+      expect(body.refresh.source).toBe('sina');
+      expect(body.refresh.message).toContain('新浪财经');
+      expect(body.refresh.message).toContain('该渠道不含折溢价率');
+      // 偏好确实写进了 app_setting（不是只改了内存）
+      expect(new SettingRepository(db).get('etf.spotSource')).toBe('sina');
+
+      const dataset = await datasetOf(app);
+      expect(dataset.dataSource).toEqual({
+        id: 'sina',
+        name: '新浪财经',
+        missing: ['折溢价率', '上市日期', '主力净流入', '量比'],
+      });
+      expect(dataset.funds.every((fund) => fund.premiumRate === null)).toBe(true);
+      expect(dataset.stats.premium.unknown).toBe(dataset.total);
+      expect(source.calls.sinaSpot).toBe(1);
+
+      // 切回东财：折溢价回来（source 列被同一天的行覆盖）
+      const back = await app.inject({
+        method: 'PUT',
+        url: '/api/tools/etf/config',
+        payload: { spotSource: 'eastmoney' },
+      });
+      expect((back.json() as EtfConfigUpdateResponse).refresh.source).toBe('eastmoney');
+      app.cache.clear();
+      const restored = await datasetOf(app);
+      expect(restored.dataSource.id).toBe('eastmoney');
+      expect(restored.funds.find((fund) => fund.code === '510300')?.premiumRate).toBe(-0.06);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('非法渠道 → 400，且不改动已有配置', async () => {
+    const { app, db } = await etfHarness({ eastmoney: true });
+    try {
+      const response = await app.inject({
+        method: 'PUT',
+        url: '/api/tools/etf/config',
+        payload: { spotSource: 'tencent' },
+      });
+      expect(response.statusCode).toBe(400);
+      expect(new SettingRepository(db).get('etf.spotSource')).toBeNull();
+      expect((await configOf(app)).spotSource).toBe('eastmoney');
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('切换后即使清缓存也保持（偏好来自数据库而不是进程内存）', async () => {
+    const { app } = await etfHarness({ eastmoney: true });
+    try {
+      await app.inject({
+        method: 'PUT',
+        url: '/api/tools/etf/config',
+        payload: { spotSource: 'sina' },
+      });
+      app.cache.clear();
+      expect((await configOf(app)).spotSource).toBe('sina');
+    } finally {
+      await app.close();
+    }
+  });
+});
+
+describe('切换行情渠道时的数据一致性', () => {
+  it('新的渠道会顶掉同一天里其它渠道的行（数据集不会混着两个渠道的标的）', async () => {
+    // 东财有、新浪没有的一只（真实场景：新浪列表里已退市/停牌的代码两边对不齐）
+    const eastmoneyOnly = { ...etfSpotItemsWithStyle()[0]!, code: '588000', name: '科创50ETF华夏' };
+    const sinaOnly = { ...etfSinaSpotItems()[0]!, code: '512390', name: '已退市ETF' };
+    const { app } = await etfHarness({
+      eastmoney: true,
+      spot: [...etfSpotItemsWithStyle(), eastmoneyOnly],
+      sinaSpot: [...etfSinaSpotItems(etfSpotItemsWithStyle()), sinaOnly],
+      profiles: [
+        ...etfProfiles(),
+        { ...etfProfiles()[0]!, code: '588000', name: '科创50ETF华夏', indexName: '科创50' },
+      ],
+    });
+    try {
+      const start = await datasetOf(app);
+      expect(start.dataSource.id).toBe('eastmoney');
+      expect(start.funds.map((fund) => fund.code)).toContain('588000');
+      expect(start.funds.map((fund) => fund.code)).not.toContain('512390');
+
+      await app.inject({
+        method: 'PUT',
+        url: '/api/tools/etf/config',
+        payload: { spotSource: 'sina' },
+      });
+
+      app.cache.clear();
+      const switched = await datasetOf(app);
+      const codes = switched.funds.map((fund) => fund.code);
+      expect(switched.dataSource.id).toBe('sina');
+      // 新浪的代码进来了，东财独有的那只被清掉 —— 不会两个渠道各留一半
+      expect(codes).toContain('512390');
+      expect(codes).not.toContain('588000');
+      // 新浪的 10 只（withStyle 的 9 只 + 新浪独有的 1 只），东财那只已被顶掉
+      expect(switched.total).toBe(10);
+      // 同一个数据日期上只剩一个渠道
+      expect(switched.funds.every((fund) => fund.premiumRate === null)).toBe(true);
     } finally {
       await app.close();
     }

@@ -11,3 +11,4 @@ export * from './client.ts';
 export * from './migrate.ts';
 export * from './migrations/index.ts';
 export * from './repositories/job-run.ts';
+export * from './repositories/setting.ts';

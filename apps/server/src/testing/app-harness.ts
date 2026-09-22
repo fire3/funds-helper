@@ -1,3 +1,4 @@
+import type { Db } from '@funds-helper/db';
 import type { PurchaseSnapshotRow } from '@funds-helper/sources';
 import { buildApp } from '../app.ts';
 import type { AppConfig } from '../config.ts';
@@ -9,6 +10,8 @@ import { testConfig, testDb } from './harness.ts';
 export interface Harness {
   source: FakeQdiiSource;
   config: AppConfig;
+  /** 内存库句柄：断言「配置真的落库了」这类事情时需要直接查表 */
+  db: Db;
   /** 可推进的「当前时间」，用于测试数据陈旧与变更检测 */
   setNow(ms: number): void;
   advance(ms: number): void;
@@ -50,6 +53,7 @@ export async function createHarness(options: HarnessOptions = {}): Promise<Harne
   return {
     source,
     config,
+    db: built.db,
     setNow: (ms: number) => {
       now = ms;
     },

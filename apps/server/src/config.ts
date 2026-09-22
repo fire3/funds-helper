@@ -34,17 +34,19 @@ export const AppConfigSchema = z.object({
   memoryCacheTtlSec: z.coerce.number().int().positive().default(1800),
   staleWindowSec: z.coerce.number().int().positive().default(21_600),
   /**
-   * ETF 行情是否**优先**走东方财富 `push2`（默认 false）。
+   * ETF 行情是否**优先**走东方财富（默认 true）。
    *
    * 2026-09-22 实测：`clist`（按板块翻页）被上游**按接口**重置（主备域名 + 多台集群都一样），
    * 而同一域名的 `ulist.np`（按代码批量报价，100 只/请求）正常，字段完全一致 ——
-   * 所以打开这个开关时走的是 `ulist.np`，代码池来自目录接口 B，
+   * 所以优先东财时走的是 `ulist.np`，代码池来自目录接口 B，
    * 只有在目录不可用时才退回 `clist`；任一步失败都会降级到新浪（见 `etf-data-sources.md` §7.4）。
    *
-   * 代价：新浪没有折溢价率/上市日期，因此**默认**（false）看不到折溢价；
-   * 需要折溢价时置 `ETF_EASTMONEY_ENABLED=true`（实测 1675 只 / 约 6.5 秒 / 折溢价齐全）。
+   * 实测（东财）：1675 只 / 约 6 秒 / 折溢价齐全；降级到新浪则没有折溢价率/上市日期。
+   *
+   * **这个变量只是默认值**：界面上可以随时切换（存 `app_setting` 表），
+   * 运行时配置优先于它（见 `tools/etf/service.ts` 的 `spotSourcePreference`）。
    */
-  etfEastmoneyEnabled: envBool(false),
+  etfEastmoneyEnabled: envBool(true),
   /** 前端构建产物目录；存在即由本服务托管静态资源 */
   webDistPath: z.string().default(''),
   /**

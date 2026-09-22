@@ -247,7 +247,7 @@ async function main() {
       : JSON.stringify(etfRefresh),
   );
   check(
-    'ETF 刷新返回行情渠道（默认新浪；东财需 ETF_EASTMONEY_ENABLED=1）',
+    'ETF 刷新返回行情渠道（默认优先东财；ETF_EASTMONEY_ENABLED=0 只走新浪）',
     ['eastmoney', 'sina'].includes(etfRefresh?.source),
     `source=${etfRefresh?.source}`,
   );
@@ -256,7 +256,7 @@ async function main() {
   check('GET /api/tools/etf/dataset 正常', etfDataset.status === 200, `HTTP ${etfDataset.status}`);
 
   const etf = etfDataset.body;
-  // 默认主源是新浪（没有折溢价），东财需 ETF_EASTMONEY_ENABLED=1——下面的断言按渠道能力分流
+  // 渠道能力不同（东财有折溢价，新浪没有）：下面的断言按**实际**渠道分流
   const etfPremium = !(etf?.dataSource?.missing ?? []).includes('折溢价率');
   check(
     '数据集带行情渠道信息（无折溢价能力的渠道必须显式声明缺失字段）',
@@ -299,6 +299,17 @@ async function main() {
       `${etf?.dataSource?.name}：未知 ${etf?.stats?.premium?.unknown}/${etf?.total}`,
     );
   }
+
+  const etfConfig = await getJson('/api/tools/etf/config');
+  check(
+    'GET /api/tools/etf/config 提供可切换的行情渠道（且「实际渠道」与数据集一致）',
+    etfConfig.status === 200 &&
+      ['eastmoney', 'sina'].includes(etfConfig.body?.spotSource) &&
+      (etfConfig.body?.sources ?? []).length === 2 &&
+      etfConfig.body?.activeSource === etf?.dataSource?.id,
+    `偏好=${etfConfig.body?.spotSource} 实际=${etfConfig.body?.activeSource} 数据集=${etf?.dataSource?.id}`,
+  );
+
   check(
     '规模合计量级合理（1 万亿 ~ 20 万亿）',
     (etf?.stats?.totalScale ?? 0) > 1e12 && (etf?.stats?.totalScale ?? 0) < 2e13,

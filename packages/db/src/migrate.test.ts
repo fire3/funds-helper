@@ -120,6 +120,7 @@ describe('runMigrations', () => {
       'etf_spot_daily',
       'etf_profile',
       'etf_detail_cache',
+      'app_setting',
       'schema_migration',
     ]) {
       expect(tables).toContain(expected);

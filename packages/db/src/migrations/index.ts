@@ -4,6 +4,7 @@ import { SQL as USD_CHANNEL_NOT_SOLD } from './0003-usd-channel-not-sold.ts';
 import { SQL as FX_RATE } from './0004-fx-rate.ts';
 import { SQL as ETF } from './0005-etf.ts';
 import { SQL as ETF_SPOT_SOURCE } from './0006-etf-spot-source.ts';
+import { SQL as APP_SETTING } from './0007-app-setting.ts';
 
 export interface Migration {
   id: string;
@@ -23,4 +24,5 @@ export const MIGRATIONS: readonly Migration[] = [
   { id: '0004-fx-rate', sql: FX_RATE },
   { id: '0005-etf', sql: ETF },
   { id: '0006-etf-spot-source', sql: ETF_SPOT_SOURCE },
+  { id: '0007-app-setting', sql: APP_SETTING },
 ];

@@ -140,11 +140,11 @@ export function describePremium(rate: number | null):
 
 **渠道与降级链**（`apps/server/src/tools/etf/service.ts` 的 `fetchSpot()`）：
 
-1. 默认**只调新浪**（`etfEastmoneyEnabled=false`）—— 东财 `clist` 被上游按接口重置
-   （主备域名一样，失败前还要退避重试），放在关键路径上会把刷新变成「先卡几秒再降级」；
-2. `ETF_EASTMONEY_ENABLED=true` 时先试东财（**唯一有折溢价率**的渠道）：
+1. **默认优先东财**（`eastmoney`）—— 它**唯一有折溢价率**：
    **有代码池就用接口 A′**（`ulist.np` 批量报价，代码池 = 目录 B 的代码），
    没有代码池才退回自带代码池的接口 A（`clist`）；任一步失败再降级新浪；
+2. 渠道偏好来自 `app_setting`（界面可切，见 §6 的 `PUT /config`）：偏好是 `sina` 时
+   **只调新浪**、不碰东财；没有偏好时才用 `ETF_EASTMONEY_ENABLED` 的默认值；
 3. 用了哪个渠道写进 `etf_spot_daily.source`，数据集响应里的 `dataSource` 由当日行的多数派反推
    —— 重启 / 清缓存后判断依然正确；
 4. 渠道能力差异在 `packages/shared/src/etf.ts` 的 `ETF_SPOT_SOURCES` 里**显式声明**
@@ -155,18 +155,19 @@ export function describePremium(rate: number | null):
 数据集照常返回（`freshness` 里标注）。
 
 **已知耦合**：走东财时数据集的口径就是目录 B 的代码池（目录里没有代码就没有行情可查）；
-默认的新浪链路不受影响（它自带全市场代码池）。端到端实测（开启东财）：1675 只、6.5 秒、
+切到新浪时不受影响（它自带全市场代码池）。端到端实测（东财）：1675 只、约 6 秒、
 折溢价/上市日/量比/主力净流入齐全，数据日期取自 `f124`。
 
 ---
 
-## 5. 落库（`0005-etf.ts` + `0006-etf-spot-source.ts`）
+## 5. 落库（`0005-etf.ts` + `0006-etf-spot-source.ts` + `0007-app-setting.ts`）
 
 | 表 | 幂等键 | 说明 |
 |---|---|---|
 | `etf_spot_daily` | `(code, data_date)` | 行情时间序列。**一张表同时服务「当前快照」与「历史」**：读最新 `data_date` 就是当前视图；`source` 记录该行来自哪个渠道（迁移 0006）|
 | `etf_profile` | `code` | 接口 B 的目录行（标志位 + 跟踪指数 + 区间涨跌 + 份额）|
 | `etf_detail_cache` | `code` | 接口 C + 通用区块的聚合缓存 |
+| `app_setting` | `key` | **框架级**运行时配置（迁移 0007）：ETF 用它存行情渠道偏好 `etf.spotSource`；值按 TEXT 存，合法性由工具层校验 |
 
 - `data_date` 取**该批行情里最大的 `f124` 换算到 `Asia/Shanghai` 的日期**，
   而不是「本地今天」—— 周末/节假日刷新时不会写出一个没有行情的数据日期，
@@ -176,6 +177,12 @@ export function describePremium(rate: number | null):
 - `source` 用来判断「当前数据集是哪个渠道采的」（按当日行的多数派取），
   比在内存里记状态更可靠 —— 进程重启 / 换缓存后依然能正确提示缺失字段。
 - 分类**不落库**：只存标志位，读取时由 `core` 算 —— 分类口径升级后历史数据自动跟着变。
+- 渠道偏好落 `app_setting` 而不是环境变量：**改了不用重启**，界面上切换立刻生效；
+  `ETF_EASTMONEY_ENABLED` 退化为「没有运行时配置时的默认值」。
+- **一次抓取只留一个渠道**：写入新快照前先删掉「同一数据日期及之后、其它渠道」的行
+  （`DELETE ... WHERE source <> ? AND data_date >= ?`）。否则切渠道后数据集会混着两个渠道的标的
+  （两边代码并不完全对齐），出现「东财渠道下有一行没有折溢价」这种无法解释的空值。
+  用 `>=` 是因为两个渠道的数据日期可能不同（新浪没有行情时间戳，节假日只取本地今天）。
 
 ---
 
@@ -183,9 +190,11 @@ export function describePremium(rate: number | null):
 
 | 路径 | 说明 |
 |---|---|
-| `GET /dataset` | 全量 ETF（新浪口径 1676 只）+ 统计 + 分类分布 + 覆盖率 + `dataSource`，**一次返回、前端本地筛选** |
+| `GET /dataset` | 全量 ETF（东财口径 1675 只 / 新浪 1676 只）+ 统计 + 分类分布 + 覆盖率 + `dataSource`，**一次返回、前端本地筛选** |
 | `GET /funds/:code` | 详情：行情记录 + 接口 C（费率/规模/管理人）+ 通用区块；未知代码 404 |
 | `POST /refresh` | 手动触发一次抓取（走调度器，留 `job_run`），返回实际使用的 `source` |
+| `GET /config` | 行情渠道配置：当前偏好、环境变量默认值、**实际渠道**、各渠道能力差异（只读本地，不打上游）|
+| `PUT /config` | 切换行情渠道（`{ spotSource: 'eastmoney' \| 'sina' }`）：落库后**立刻重抓一次**，返回 `{ config, refresh }` |
 
 响应要点（`packages/shared/src/etf.ts`）：`EtfRecord` 里同时给**原始数值**与
 **渲染好的文案**（`premiumText` / `premiumNote`），避免前端各写一套口径。
@@ -200,7 +209,10 @@ export function describePremium(rate: number | null):
 
 ## 7. 前端（`/tools/etf`）
 
-**渠道感知**：页头显示「行情：渠道名」与一句渠道说明；`dataSource.missing` 里含 `折溢价率` 时，
+**渠道切换**：页头有一个下拉框（东方财富 / 新浪财经），切换即写库并重新抓取（按钮变「切换并重新抓取中…」）；
+偏好与实际渠道不一致时旁边显示「实际：X」——说明本次发生了降级。
+
+**渠道感知**：页头与说明条显示实际渠道；`dataSource.missing` 里含 `折溢价率` 时，
 折溢价相关的**筛选行、分布面板、两张折溢价榜单、表格列**整体隐藏（而不是渲染一排 `—`），
 已有的 `?premiums=…` 链接也会被忽略 —— 避免「筛选条件还在、结果却空」。
 缺 `上市日期` 时表格同样不渲染该列。
@@ -233,7 +245,7 @@ export function describePremium(rate: number | null):
 | `core` | 分类（标志位优先级、互斥性、名称回退、`IS_FGETF` 叠加）、折溢价（符号取反、五档、文案）、聚合（分布/极值/覆盖率）、排序 |
 | `sources` | 东财：`parseEtfSpotPage`（字段映射、`f402` 语义、脏行、`data:null`、`total` 护栏）、`parseEtfQuoteResponse` + `fetchEtfSpotBySecids`（分片 100 只/请求、去重、非场内代码过滤、覆盖率护栏、真实响应 fixture）；新浪：`parseSinaEtfListPage`（单位换算 股→手 / 万元→元、振幅推导、脏行）、`parseSinaEtfCount`（`"1676"` 字符串、上限护栏）；`parseEtfProfilePage`（标志位、`null` 数值）+ `fetchEtfProfiles` 的截断护栏；`parseFundProfile`（`--` 归一化、`Datas:null`）|
 | `db` | 迁移建出 3 张 `etf_*` 表（含 `etf_spot_daily.source`）|
-| `server` | 默认只走新浪（不碰东财）、开启东财后**把目录代码池交给批量报价**、目录缺失时退回 `clist`、东财失败降级新浪、`dataSource` 从数据库多数派反推、缺折溢价时 `premiumRate=null` 且 `unknown === total`、join 与分类、统计与覆盖率、`data_date`、幂等刷新、详情（接口 C + 通用区块）、400/404 |
+| `server` | 偏好多东财时**把目录代码池交给批量报价**、偏好新浪时完全不碰东财、目录缺失时退回 `clist`、东财失败降级新浪、`PUT /config` 落库 + 立刻重抓（切回东财折溢价恢复）、非法渠道 400、`dataSource` 从数据库多数派反推、缺折溢价时 `premiumRate=null` 且 `unknown === total`、join 与分类、统计与覆盖率、`data_date`、幂等刷新、详情（接口 C + 通用区块）、400/404 |
 | `web` | 分类/交易所维内 OR、维度间 AND、折溢价方向、规模/成交额档位、URL 双向同步、无折溢价渠道下隐藏折溢价视图 |
 | 一致性 | `ETF_CATEGORIES`（core ↔ shared）逐字一致 + 顺序一致；`ETF_SPOT_SOURCES` 与 shared 渠道枚举一一对应；注册表 4 个工具 |
 | 端到端 | `pnpm smoke` 增加 ETF 检查（清单、refresh、dataset 数量与分类、渠道与缺失字段、折溢价按渠道分流断言、详情）|
@@ -248,9 +260,8 @@ export function describePremium(rate: number | null):
   主备域名同生共死、代理换 IP 也无效，因此它被降级为**可选**源，默认走新浪。
   代价是默认没有折溢价 —— 界面已显式标注缺失字段，但「贵不贵」这个问题在默认配置下**答不了**。
   腾讯 `qt.gtimg.cn`（4 次请求拿全市场）是还没接的第三渠道，同样没有折溢价。
-- **默认配置仍然看不到折溢价**：折溢价只在 `ETF_EASTMONEY_ENABLED=true` 时才有
-  （东财 `ulist.np` 已经实测可用：1675 只 / 6.5 秒 / 折溢价齐全，见 `etf-data-sources.md` §7.4）。
-  如果希望「贵不贵」默认就有答案，把 `etfEastmoneyEnabled` 默认改成 `true` 即可 ——
-  新浪仍在同一条降级链上兜底；代价是多一层「目录 B 必须可用」的耦合（§4 已知耦合）。
+- **默认链路多了一层耦合**：默认优先东财，因此数据集的口径 = 目录 B 的代码池（§4 已知耦合）。
+  目录若被上游截断会被护栏拦住并降级到新浪（结果仍有数据，只是没有折溢价）；
+  界面上切到新浪即可完全绕开这个耦合。
 - 未做「同跟踪指数的多只 ETF 横向对比」——接口 B 已提供 `INDEX_CODE`，
   后续可在详情抽屉里加「同指数 ETF 费率/规模对比」（纯前端，零新增上游成本）。

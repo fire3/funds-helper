@@ -52,10 +52,9 @@ export type EtfDataSourceInfo = z.infer<typeof EtfDataSourceInfoSchema>;
 /**
  * 渠道目录。
  *
- * **新浪是默认主源**：东财 `clist`（按板块翻页）被上游按接口重置（失败还要等退避重试），
- * 不适合放在数据集的关键路径上；新浪列表自带全市场代码、17 页拿完 1676 只。
- * 东财只在 `ETF_EASTMONEY_ENABLED=true` 时作为**优先渠道**启用（只有它有折溢价率）：
- * 走 `ulist.np` 批量报价（代码池来自目录接口 B），失败自动降级回新浪。
+ * **默认优先东财**（只有它有折溢价率）：走 `ulist.np` 批量报价（代码池来自目录接口 B），
+ * 失败自动降级回新浪；用户在界面上可以把渠道切成**只走新浪**（见 `EtfConfigResponse`），
+ * 环境变量 `ETF_EASTMONEY_ENABLED` 只提供「没有运行时配置时」的默认值。
  */
 export const ETF_SPOT_SOURCES: Record<EtfSpotSourceId, EtfDataSourceInfo> = {
   sina: {
@@ -65,6 +64,30 @@ export const ETF_SPOT_SOURCES: Record<EtfSpotSourceId, EtfDataSourceInfo> = {
   },
   eastmoney: { id: 'eastmoney', name: '东方财富行情', missing: [] },
 };
+
+/** 行情渠道的展示顺序（界面上的下拉框按它排） */
+export const ETF_SPOT_SOURCE_ORDER: readonly EtfSpotSourceId[] = ['eastmoney', 'sina'];
+
+// ---------------------------------------------------------------------------
+// 运行时配置（可在界面上切换行情渠道）
+// ---------------------------------------------------------------------------
+
+export const EtfConfigResponseSchema = z.object({
+  /** 当前偏好：'eastmoney' = 优先东财（失败降级新浪）；'sina' = 只走新浪 */
+  spotSource: EtfSpotSourceIdSchema,
+  /** 没有运行时配置时使用的默认值（来自 `ETF_EASTMONEY_ENABLED`），仅用于提示 */
+  envDefault: EtfSpotSourceIdSchema,
+  /** 当前数据集**实际**来自哪个渠道（偏好 ≠ 实际说明发生了降级） */
+  activeSource: EtfSpotSourceIdSchema,
+  /** 可选渠道及其能力差异（界面据此渲染说明文案） */
+  sources: z.array(EtfDataSourceInfoSchema),
+});
+export type EtfConfigResponse = z.infer<typeof EtfConfigResponseSchema>;
+
+export const EtfConfigUpdateSchema = z.object({
+  spotSource: EtfSpotSourceIdSchema,
+});
+export type EtfConfigUpdate = z.infer<typeof EtfConfigUpdateSchema>;
 
 // ---------------------------------------------------------------------------
 // 数据集
@@ -232,3 +255,15 @@ export const EtfRefreshResponseSchema = z.object({
   message: z.string(),
 });
 export type EtfRefreshResponse = z.infer<typeof EtfRefreshResponseSchema>;
+
+/**
+ * 切换行情渠道的响应：**新的配置 + 切换后立刻重抓的结果**。
+ *
+ * 两者一起回，前端才知道「偏好已生效、数据也已经是新渠道的」；
+ * 如果抓取失败，请求会整体报错，但偏好已经落库 —— 下次抓取就按新渠道来。
+ */
+export const EtfConfigUpdateResponseSchema = z.object({
+  config: EtfConfigResponseSchema,
+  refresh: EtfRefreshResponseSchema,
+});
+export type EtfConfigUpdateResponse = z.infer<typeof EtfConfigUpdateResponseSchema>;

@@ -1,3 +1,4 @@
+import { SettingRepository } from '@funds-helper/db';
 import { TOOL_CATALOG } from '@funds-helper/shared';
 import type { FastifyInstance } from 'fastify';
 import type { JobDefinition, ServerTool, ToolContext } from '../types.ts';
@@ -29,6 +30,7 @@ export function createEtfTool(options: CreateEtfToolOptions = {}): ServerTool {
     const service = new EtfService({
       db: ctx.db,
       repo: new EtfRepository(ctx.db),
+      settings: new SettingRepository(ctx.db),
       source: options.source ?? createEtfDataSource(ctx.http),
       cache: ctx.cache,
       config: ctx.config,
