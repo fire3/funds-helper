@@ -33,6 +33,8 @@ export interface EtfSpotRow {
   listing_date: string | null;
   main_inflow: number | null;
   quote_at: string | null;
+  /** 总份额（份；0011 起随快照积累，来自目录接口 B；目录失败的快照日为 NULL） */
+  shares: number | null;
 }
 
 export interface EtfSpotInput {
@@ -61,6 +63,8 @@ export interface EtfSpotInput {
   mainInflow: number | null;
   /** 行情时间戳（ISO8601） */
   quoteAt: string | null;
+  /** 当日总份额（份）：来自目录（接口 B），缺失时为 null */
+  shares: number | null;
 }
 
 export interface EtfProfileRow {
@@ -153,8 +157,8 @@ export class EtfRepository {
         `INSERT INTO etf_spot_daily (
            code, data_date, captured_at, source, name, market, price, change_pct, change_amt,
            open, high, low, prev_close, amplitude, turnover, volume_ratio, volume, amount,
-           scale, float_scale, premium_rate, listing_date, main_inflow, quote_at
-         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+           scale, float_scale, premium_rate, listing_date, main_inflow, quote_at, shares
+         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          ON CONFLICT(code, data_date) DO UPDATE SET
            captured_at = excluded.captured_at,
            source = excluded.source,
@@ -177,7 +181,8 @@ export class EtfRepository {
            premium_rate = excluded.premium_rate,
            listing_date = excluded.listing_date,
            main_inflow = excluded.main_inflow,
-           quote_at = excluded.quote_at`,
+           quote_at = excluded.quote_at,
+           shares = excluded.shares`,
         [
           row.code,
           dataDate,
@@ -203,6 +208,7 @@ export class EtfRepository {
           row.listingDate,
           row.mainInflow,
           row.quoteAt,
+          row.shares,
         ],
       );
     }
@@ -429,4 +435,92 @@ export class EtfRepository {
   clearFeederFunds(): void {
     this.db.run('DELETE FROM etf_feeder_fund');
   }
+
+  // ---------------------------------------------------------------------------
+  // 区间涨幅（0011，接口 H）与份额序列
+  // ---------------------------------------------------------------------------
+
+  /**
+   * 写入/更新一批区间涨幅（按 `code` upsert）。
+   *
+   * 只写**本轮抓成功**的代码：失败的保留旧行（`captured_at` 不前进，下轮继续重试），
+   * 因此这里绝不做「先清空再插入」。
+   */
+  upsertPeriodReturns(rows: readonly EtfPeriodReturnInput[], capturedAt: string): void {
+    this.db.transaction(() => {
+      for (const row of rows) {
+        this.db.run(
+          `INSERT INTO etf_period_return (
+             code, data_date, captured_at, ret_6m, ret_1y, ret_3y, bench_1y, bench_3y
+           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+           ON CONFLICT(code) DO UPDATE SET
+             data_date = excluded.data_date,
+             captured_at = excluded.captured_at,
+             ret_6m = excluded.ret_6m,
+             ret_1y = excluded.ret_1y,
+             ret_3y = excluded.ret_3y,
+             bench_1y = excluded.bench_1y,
+             bench_3y = excluded.bench_3y`,
+          [
+            row.code,
+            row.dataDate,
+            capturedAt,
+            row.ret6m,
+            row.ret1y,
+            row.ret3y,
+            row.bench1y,
+            row.bench3y,
+          ],
+        );
+      }
+    });
+  }
+
+  loadPeriodReturns(): EtfPeriodReturnRow[] {
+    return this.db.all<EtfPeriodReturnRow>('SELECT * FROM etf_period_return ORDER BY code');
+  }
+
+  /**
+   * 每只 ETF 的**份额积累起点**：首个 shares 非空的快照行（日期 + 数值）。
+   *
+   * 起点即「份额变化率」的分母 —— 0011 之前的日期没有 shares，属于结构性缺口，
+   * 只能从启用日起算（界面要标注，见设计文档 §9）。
+   */
+  sharesFirst(): Map<string, { date: string; shares: number }> {
+    const rows = this.db.all<{ code: string; data_date: string; shares: number }>(
+      `SELECT s.code, s.data_date, s.shares
+       FROM etf_spot_daily s
+       JOIN (
+         SELECT code, MIN(data_date) AS d
+         FROM etf_spot_daily
+         WHERE shares IS NOT NULL
+         GROUP BY code
+       ) f ON s.code = f.code AND s.data_date = f.d
+       WHERE s.shares IS NOT NULL`,
+    );
+    return new Map(rows.map((row) => [row.code, { date: row.data_date, shares: row.shares }]));
+  }
+}
+
+/** 接口 H 的一行区间涨幅（落库输入） */
+export interface EtfPeriodReturnInput {
+  code: string;
+  /** 上游 `Expansion.TIME`（收益数据日期，T-1）；上游没给则 null */
+  dataDate: string | null;
+  ret6m: number | null;
+  ret1y: number | null;
+  ret3y: number | null;
+  bench1y: number | null;
+  bench3y: number | null;
+}
+
+export interface EtfPeriodReturnRow {
+  code: string;
+  data_date: string | null;
+  captured_at: string;
+  ret_6m: number | null;
+  ret_1y: number | null;
+  ret_3y: number | null;
+  bench_1y: number | null;
+  bench_3y: number | null;
 }

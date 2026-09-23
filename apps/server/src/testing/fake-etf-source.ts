@@ -5,7 +5,9 @@ import {
   type FundCatalogEntry,
   type FundProfileData,
   fetchFeederTargets,
+  fetchPeriodIncrements,
   type HttpClient,
+  type PeriodIncreaseData,
   type RawEtfProfile,
   UpstreamError,
 } from '@funds-helper/sources';
@@ -32,10 +34,14 @@ export interface FakeEtfSource extends EtfDataSource {
   feederCatalog: FundCatalogEntry[];
   /** feederCode → 目标 ETF（接口 I 的替身结果） */
   feederTargets: Map<string, FeederTarget>;
+  /** code → 区间涨幅（接口 H 的替身结果；不在表里的代码返回通用样本） */
+  periods: Map<string, PeriodIncreaseData>;
   /** 最近一次批量报价收到的代码池（断言服务层确实把目录代码传下去了） */
   lastSpotCodes: string[];
   /** 最近一次反查收到的候选代码（断言增量刷新只补了新的） */
   lastFeederCodes: string[];
+  /** 最近一次区间涨幅批量抓取收到的候选代码 */
+  lastPeriodCodes: string[];
   /** 让指定接口抛错 */
   failures: Set<string>;
   calls: Record<string, number>;
@@ -138,6 +144,25 @@ const neverClient = {
     throw new Error('替身不应发起真实 HTTP 请求');
   },
 } as unknown as HttpClient;
+
+/**
+ * 接口 H 的通用样本（真实 510300 响应的形状，数值可区分）：
+ * `6Y/1N/3N` + `hs300` 基准 + `TIME` —— 热点研究只消费这几个字段。
+ */
+function etfPeriodIncreaseSample(overrides: Partial<PeriodIncreaseData> = {}): PeriodIncreaseData {
+  return {
+    periods: [
+      { title: 'Z', ret: '1.50', avg: '1.10', bench: '0.80', rank: '100', total: '5000' },
+      { title: '6Y', ret: '6.00', avg: '3.00', bench: '2.00', rank: '200', total: '4900' },
+      { title: '1N', ret: '12.00', avg: '8.00', bench: '5.00', rank: '300', total: '4800' },
+      { title: '3N', ret: '36.00', avg: '20.00', bench: '15.00', rank: '400', total: '4500' },
+      { title: 'JN', ret: '7.00', avg: '4.00', bench: '3.00', rank: '150', total: '4950' },
+    ],
+    estabDate: '2012-05-04',
+    time: '2026-09-22',
+    ...overrides,
+  };
+}
 
 function spotItem(overrides: Partial<EtfSpotItem> = {}): EtfSpotItem {
   return {
@@ -463,6 +488,7 @@ export function createFakeEtfSource(
     detail?: FundProfileData | null;
     feederCatalog?: FundCatalogEntry[];
     feederTargets?: Map<string, FeederTarget>;
+    periods?: Map<string, PeriodIncreaseData>;
   } = {},
 ): FakeEtfSource {
   // 通用区块（净值/收益/持仓/公告）复用 QDII 的假数据源
@@ -477,8 +503,10 @@ export function createFakeEtfSource(
     detail: options.detail === undefined ? etfFundProfile() : options.detail,
     feederCatalog: options.feederCatalog ?? etfFeederCatalog(),
     feederTargets: options.feederTargets ?? etfFeederTargets(),
+    periods: options.periods ?? new Map<string, PeriodIncreaseData>(),
     lastSpotCodes: [],
     lastFeederCodes: [],
+    lastPeriodCodes: [],
     failures: new Set<string>(),
     calls: {},
 
@@ -548,6 +576,29 @@ export function createFakeEtfSource(
       if (source.failures.has('fundProfile')) throw new UpstreamError('模拟：基金概况接口不可用');
       if (source.detail === null) return null;
       return { ...source.detail, code };
+    },
+
+    /**
+     * 区间涨幅批量抓取的替身：复用**真实编排**（`fetchPeriodIncrements`），
+     * 单只查询换成查表 —— 并发/失败分流由 sources 的单测保证，这里只保证数据形状。
+     */
+    async fetchPeriodIncreaseBatch(
+      codes: readonly string[],
+      options?: { onProgress?: (done: number, total: number) => void },
+    ) {
+      source.calls.periods = (source.calls.periods ?? 0) + 1;
+      source.lastPeriodCodes = [...codes];
+      if (source.failures.has('periods')) throw new UpstreamError('模拟：区间涨幅接口不可用');
+      return fetchPeriodIncrements(neverClient, codes, {
+        concurrency: 4,
+        fetchOne: async (code) => {
+          if (source.failures.has(`period:${code}`)) {
+            throw new UpstreamError(`模拟：${code} 区间涨幅抓取失败`);
+          }
+          return source.periods.get(code) ?? etfPeriodIncreaseSample();
+        },
+        ...(options?.onProgress === undefined ? {} : { onProgress: options.onProgress }),
+      });
     },
   };
 

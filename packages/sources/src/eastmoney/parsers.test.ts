@@ -210,6 +210,16 @@ describe('parsePeriodIncrease —— 接口 H', () => {
     expect(sinceInception?.avg).toBeNull();
     expect(sinceInception?.rank).toBeNull();
   });
+
+  it('场内 ETF（510300）同样可用：6Y/1N/3N 与数据日期齐备（热点研究的取数前提）', () => {
+    const data = parsePeriodIncrease(fixture('period-increase/510300.json'));
+    expect(data.periods).toHaveLength(10);
+    expect(data.time).toBe('2026-09-22');
+    const pick = (title: string) => data.periods.find((period) => period.title === title);
+    expect(pick('6Y')).toMatchObject({ ret: '0.90', bench: '2.25' });
+    expect(pick('1N')).toMatchObject({ ret: '2.53', bench: '-0.06' });
+    expect(pick('3N')).toMatchObject({ ret: '29.78', bench: '20.82' });
+  });
 });
 
 describe('parseHoldings —— 接口 I', () => {

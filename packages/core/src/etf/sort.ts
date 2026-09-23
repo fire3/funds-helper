@@ -8,6 +8,9 @@ export const ETF_SORT_KEYS = [
   'premium',
   'discount',
   'changePct',
+  'ret6m',
+  'ret1y',
+  'ret3y',
   'turnover',
   'listingDate',
   'category',
@@ -21,6 +24,9 @@ export const ETF_SORT_LABELS: Record<EtfSortKey, string> = {
   premium: '溢价最高',
   discount: '折价最深',
   changePct: '涨幅从高到低',
+  ret6m: '近6月涨幅从高到低',
+  ret1y: '近1年涨幅从高到低',
+  ret3y: '近3年涨幅从高到低',
   turnover: '换手率从高到低',
   listingDate: '最新上市',
   category: '按分类',
@@ -39,6 +45,9 @@ export interface EtfSortable {
   amount: number | null;
   premiumRate: number | null;
   changePct: number | null;
+  ret6m: number | null;
+  ret1y: number | null;
+  ret3y: number | null;
   turnover: number | null;
   listingDate: string | null;
 }
@@ -52,7 +61,9 @@ function byCode(a: EtfSortable, b: EtfSortable): number {
 }
 
 /** 数值降序，null 恒排最后 */
-function desc(key: 'scale' | 'amount' | 'premiumRate' | 'changePct' | 'turnover') {
+function desc(
+  key: 'scale' | 'amount' | 'premiumRate' | 'changePct' | 'ret6m' | 'ret1y' | 'ret3y' | 'turnover',
+) {
   return (a: EtfSortable, b: EtfSortable): number => {
     const left = a[key];
     const right = b[key];
@@ -81,6 +92,9 @@ const COMPARATORS: Record<EtfSortKey, (a: EtfSortable, b: EtfSortable) => number
   premium: desc('premiumRate'),
   discount: asc('premiumRate'),
   changePct: desc('changePct'),
+  ret6m: desc('ret6m'),
+  ret1y: desc('ret1y'),
+  ret3y: desc('ret3y'),
   turnover: desc('turnover'),
   listingDate: (a, b) => {
     if (a.listingDate === null && b.listingDate === null) return byCode(a, b);

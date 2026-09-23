@@ -371,3 +371,11 @@ CREATE INDEX idx_etf_feeder_fund_etf ON etf_feeder_fund(etf_code)
 - **报告期滞后**：`report_date` 是定期报告口径，新成立的联接基金在首份报告前查不到目标 ETF；
 - **不做「场外 → 场内」的报价**：联接基金的净值/申赎费率属于接口 C 的范畴，
   本次不下载，抽屉里只给代码 + 外链（点进去看最新净值与限购）。
+
+---
+
+## 12. 热点研究（第二视图）
+
+列表之外的「热点研究」tab（主题聚合 + 榜单反查、7 窗口涨幅、份额流量、轮动信号）单独成文：
+见 [`etf-hotspot.md`](./etf-hotspot.md)。落库增量为迁移 `0011-etf-hotspot.ts`，
+定时任务增量为 `etf.periods`（每周一 04:00）。

@@ -43,6 +43,9 @@ export function FundTable({
   const hasListingDate = funds.some((fund) => fund.listingDate !== null);
   // 场外联接基金是**独立的反查快照**：没反查过时整个表都是空数组，此时不该多出一列 '--'
   const hasFeeder = funds.some((fund) => fund.feederFunds.length > 0);
+  // 区间涨幅（接口 H）同样是独立慢链路：没抓过时不显示列（排序下拉里也应被忽略，null 恒排最后）
+  const hasRet1y = funds.some((fund) => fund.ret1y !== null);
+  const hasRet3y = funds.some((fund) => fund.ret3y !== null);
 
   return (
     <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
@@ -67,6 +70,22 @@ export function FundTable({
             <th className="px-3 py-2 text-right font-medium">成交额</th>
             <th className="px-3 py-2 text-right font-medium">换手</th>
             <th className="px-3 py-2 text-right font-medium">规模</th>
+            {hasRet1y ? (
+              <th
+                className="px-3 py-2 text-right font-medium"
+                title="区间涨幅来自接口 H（每周刷新），次新 ETF 可能为空"
+              >
+                近1年
+              </th>
+            ) : null}
+            {hasRet3y ? (
+              <th
+                className="px-3 py-2 text-right font-medium"
+                title="区间涨幅来自接口 H（每周刷新），成立不足 3 年的为空"
+              >
+                近3年
+              </th>
+            ) : null}
             {hasListingDate ? <th className="px-3 py-2 text-right font-medium">上市日</th> : null}
           </tr>
         </thead>
@@ -123,6 +142,16 @@ export function FundTable({
               <td className="tabular px-3 py-2 text-right text-slate-600 dark:text-slate-300">
                 {formatYuan(fund.scale)}
               </td>
+              {hasRet1y ? (
+                <td className={`tabular px-3 py-2 text-right ${trendClass(fund.ret1y)}`}>
+                  {formatPercent(fund.ret1y)}
+                </td>
+              ) : null}
+              {hasRet3y ? (
+                <td className={`tabular px-3 py-2 text-right ${trendClass(fund.ret3y)}`}>
+                  {formatPercent(fund.ret3y)}
+                </td>
+              ) : null}
               {hasListingDate ? (
                 <td className="tabular px-3 py-2 text-right text-slate-500 dark:text-slate-400">
                   {fund.listingDate ?? '--'}

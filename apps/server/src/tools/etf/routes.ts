@@ -97,4 +97,15 @@ export function registerEtfRoutes(
   app.post('/feeders/refresh', async (request) =>
     service.refreshFeederFundsResponse({ full: flag(queryOf(request).full) }),
   );
+
+  /**
+   * 手动触发一次「区间涨幅」抓取（接口 H 的 6月/1年/3年，热点研究的长窗口）。
+   *
+   * 默认只抓「缺失或超过 7 天」的行；`?full=1` 忽略新鲜度强制全抓。
+   * 与 feeders 一样是**慢链路**（约 1500 个请求 / 3 分钟，首次建库时），
+   * 界面上要有等待提示；不走调度器 —— 手动触发没有 cron 语义，留 job_run 反而难读。
+   */
+  app.post('/periods/refresh', async (request) =>
+    service.refreshPeriodReturnsResponse({ full: flag(queryOf(request).full) }),
+  );
 }

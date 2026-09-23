@@ -143,7 +143,7 @@ describe('工具注册表与 shared 目录', () => {
     expect(qdiiJobs.map((job) => job.name)).toEqual(['qdii.snapshot', 'qdii.premium']);
     expect(usdJobs.map((job) => job.name)).toEqual(['usd.snapshot']);
     expect(fxJobs.map((job) => job.name)).toEqual(['fx.daily']);
-    expect(etfJobs.map((job) => job.name)).toEqual(['etf.snapshot', 'etf.feeders']);
+    expect(etfJobs.map((job) => job.name)).toEqual(['etf.snapshot', 'etf.feeders', 'etf.periods']);
 
     for (const job of [...qdiiJobs, ...usdJobs, ...fxJobs, ...etfJobs]) {
       expect(job.cron.split(' ')).toHaveLength(5);
@@ -160,5 +160,12 @@ describe('工具注册表与 shared 目录', () => {
     const feederJob = etfJobs.find((job) => job.name === 'etf.feeders');
     expect(feederJob?.cron).toBe('0 3 * * 1');
     expect(feederJob?.runOnBoot).toBe(true);
+  });
+
+  it('区间涨幅每周只跑一次，且错开联接反查的时段（约 1500 个请求）', () => {
+    const etfJobs = createServerTools()[3]?.jobs?.({} as never) ?? [];
+    const periodsJob = etfJobs.find((job) => job.name === 'etf.periods');
+    expect(periodsJob?.cron).toBe('0 4 * * 1');
+    expect(periodsJob?.runOnBoot).toBe(true);
   });
 });

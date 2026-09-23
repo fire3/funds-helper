@@ -17,6 +17,8 @@ import type { EtfService } from './service.ts';
  * - 首次建库是全量（约 2300 个请求 / 4 分钟），之后都是**增量**（只查新增候选，几十个请求）；
  * - 启动补跑带「距上次 ≥6 天」的门槛，避免开发时反复重启把上游打穿。
  * 详见 docs/design/etf-tool.md §11。
+ *
+ * 第三个任务 `etf.periods`（区间涨幅，接口 H）见下方注释与 docs/design/etf-hotspot.md §7。
  */
 export function etfJobs(service: EtfService): JobDefinition[] {
   return [
@@ -37,6 +39,21 @@ export function etfJobs(service: EtfService): JobDefinition[] {
         const plan = service.feederScanPlan();
         if (!plan.due) return { stats: { skipped: true, reason: '距上次反查不足 6 天' } };
         const stats = await service.refreshFeederFunds({ full: plan.full });
+        return { stats: { ...stats } };
+      },
+    },
+    {
+      // 第三个任务 `etf.periods`：**区间涨幅**（接口 H 的 6月/1年/3年，热点研究的长窗口）。
+      // 每周一次（周一 04:00，错开 03:00 的联接反查），约 1500 个请求 / 3 分钟 ——
+      // 长窗口本身一周才变一点，没有理由天天打；行级 7 天新鲜度由服务层判定，
+      // 启动补跑带「距上次 ≥6 天」门槛（理由同 etf.feeders）。
+      name: 'etf.periods',
+      cron: '0 4 * * 1',
+      runOnBoot: true,
+      handler: async () => {
+        const plan = service.periodsScanPlan();
+        if (!plan.due) return { stats: { skipped: true, reason: '距上次抓取不足 6 天' } };
+        const stats = await service.refreshPeriodReturns();
         return { stats: { ...stats } };
       },
     },

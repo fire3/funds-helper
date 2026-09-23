@@ -11,6 +11,9 @@ function item(overrides: Partial<EtfSortable> = {}): EtfSortable {
     amount: 100,
     premiumRate: 0.1,
     changePct: 1,
+    ret6m: null,
+    ret1y: null,
+    ret3y: null,
     turnover: 2,
     listingDate: '2012-05-28',
     ...overrides,
@@ -66,6 +69,18 @@ describe('sortEtfs', () => {
     const before = SAMPLE.map((x) => x.code);
     sortEtfs(SAMPLE, 'scale');
     expect(SAMPLE.map((x) => x.code)).toEqual(before);
+  });
+
+  it('区间涨幅排序（近1年/近3年），null 恒排最后', () => {
+    const rows = [
+      item({ code: 'A', ret1y: 5, ret3y: 10, ret6m: 3 }),
+      item({ code: 'B', ret1y: 20, ret3y: null, ret6m: 1 }),
+      item({ code: 'C', ret1y: null, ret3y: 50, ret6m: null }),
+    ];
+    expect(sortEtfs(rows, 'ret1y').map((x) => x.code)).toEqual(['B', 'A', 'C']);
+    expect(sortEtfs(rows, 'ret3y').map((x) => x.code)).toEqual(['C', 'A', 'B']);
+    expect(sortEtfs(rows, 'ret6m').map((x) => x.code)).toEqual(['A', 'B', 'C']);
+    expect(sortEtfs(rows, 'ret1y').at(-1)?.ret1y).toBeNull();
   });
 
   it('每个排序键都有中文标签', () => {

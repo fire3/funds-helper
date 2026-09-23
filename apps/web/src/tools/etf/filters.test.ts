@@ -31,8 +31,11 @@ function fund(overrides: Partial<EtfRecord> = {}): EtfRecord {
     volumeRatio: 0.96,
     volume: 6_445_874,
     amount: 2_987_237_086,
+    mainInflow: -22_936_530,
     scale: 109_391_241_858,
     shares: 23_713_687_700,
+    sharesChangePct: null,
+    sharesSince: null,
     premiumRate: -0.06,
     premiumLevel: '平价',
     premiumText: '平价 0.06%',
@@ -43,6 +46,11 @@ function fund(overrides: Partial<EtfRecord> = {}): EtfRecord {
     change3m: 5.2,
     ytdChange: 8.4,
     maxDrawdown1y: -11.17,
+    ret6m: null,
+    ret1y: null,
+    ret3y: null,
+    bench1y: null,
+    bench3y: null,
     quoteAt: '2026-09-22T08:11:33.000Z',
     dataDate: '2026-09-22',
     capturedAt: '2026-09-22T08:20:00.000Z',
@@ -283,5 +291,31 @@ describe('场外联接基金筛选', () => {
     expect(toSearchParams(DEFAULT_FILTERS).get('feeder')).toBeNull();
     // 手改链接里的脏值不能让页面空掉
     expect(fromSearchParams(new URLSearchParams({ feeder: 'nope' })).feeder).toBe('any');
+  });
+});
+
+describe('区间涨幅排序键（近6月/近1年/近3年）', () => {
+  it('新排序键进 URL 白名单，未知值回落默认', () => {
+    for (const key of ['ret6m', 'ret1y', 'ret3y'] as const) {
+      const params = toSearchParams({ ...DEFAULT_FILTERS, sort: key });
+      expect(params.get('sort')).toBe(key);
+      expect(fromSearchParams(params).sort).toBe(key);
+    }
+    expect(fromSearchParams(new URLSearchParams({ sort: 'ret4y' })).sort).toBe(
+      DEFAULT_FILTERS.sort,
+    );
+  });
+
+  it('refine 按近1年降序，null 恒排最后（没抓过区间涨幅的不冒充 0）', () => {
+    const rows = [
+      fund({ code: 'A', ret1y: 5 }),
+      fund({ code: 'B', ret1y: null }),
+      fund({ code: 'C', ret1y: 20 }),
+    ];
+    expect(refine(rows, { ...DEFAULT_FILTERS, sort: 'ret1y' }).map((item) => item.code)).toEqual([
+      'C',
+      'A',
+      'B',
+    ]);
   });
 });

@@ -10,6 +10,8 @@ import {
   EtfFeederRefreshResponseSchema,
   type EtfFundDetailResponse,
   EtfFundDetailResponseSchema,
+  type EtfPeriodRefreshResponse,
+  EtfPeriodRefreshResponseSchema,
   type EtfRefreshResponse,
   EtfRefreshResponseSchema,
   type EtfSpotSourceId,
@@ -185,6 +187,17 @@ export const api = {
       {
         method: 'POST',
       },
+    ),
+
+  /**
+   * 抓取区间涨幅（近6月/近1年/近3年，接口 H）。默认只抓「缺失或超过 7 天」的行；
+   * `full` = 忽略新鲜度强制全抓，服务端要打约 1500 个请求（3 分钟），只在首次建库时用。
+   */
+  refreshEtfPeriods: (full = false): Promise<EtfPeriodRefreshResponse> =>
+    request(
+      `/api/tools/etf/periods/refresh${full ? '?full=1' : ''}`,
+      EtfPeriodRefreshResponseSchema,
+      { method: 'POST' },
     ),
 
   getEtfConfig: (): Promise<EtfConfigResponse> =>

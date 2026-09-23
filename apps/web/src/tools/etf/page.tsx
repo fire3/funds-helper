@@ -4,7 +4,7 @@ import {
   type EtfSpotSourceId,
 } from '@funds-helper/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { FreshnessBadge } from '../../components/FreshnessBadge.tsx';
 import { Chip, EmptyState, ErrorState, Spinner } from '../../components/ui.tsx';
@@ -28,7 +28,15 @@ import {
   toggleValue,
   toSearchParams,
 } from './filters.ts';
+import { HotspotPanel } from './HotspotPanel.tsx';
 import { EtfSummaryPanel } from './panels.tsx';
+
+const TABS = [
+  { value: 'list', label: 'ETF 列表' },
+  { value: 'hotspot', label: '热点研究' },
+] as const;
+
+type TabValue = (typeof TABS)[number]['value'];
 
 /** 详情抽屉的 URL 就是列表 URL 的子路径，`/tools/etf/*` 单路由因此不会重挂载 */
 function useSelectedCode(): string | null {
@@ -47,13 +55,26 @@ export default function EtfPage() {
   const searchRef = useRef<HTMLInputElement | null>(null);
 
   const selectedCode = useSelectedCode();
+  const tab = ((searchParams.get('tab') ?? 'list') as TabValue) === 'hotspot' ? 'hotspot' : 'list';
   const filters = useMemo(() => fromSearchParams(searchParams), [searchParams]);
+
+  // 搜索框与地址栏解耦：输入过程只改本地 `draft`，按回车才写 URL 并触发筛选。
+  // 实时写 URL 会让中文输入法组词中途就刷新受控值，React 把拼音提前「提交」，
+  // 表现为中文输不进去（组词被打断，框里只剩字母）。
+  const [draft, setDraft] = useState(filters.keyword);
+  const composingRef = useRef(false);
+  useEffect(() => {
+    setDraft(filters.keyword);
+  }, [filters.keyword]);
 
   const applyFilters = useCallback(
     (next: EtfFilters, options: { replace?: boolean } = {}) => {
-      setSearchParams(toSearchParams(next), { replace: options.replace ?? false });
+      const params = toSearchParams(next);
+      // 列表 tab 的筛选变化不携带热点视图的参数（mode/w 等），但 tab 本身要保住
+      if (tab !== 'list') params.set('tab', tab);
+      setSearchParams(params, { replace: options.replace ?? false });
     },
-    [setSearchParams],
+    [setSearchParams, tab],
   );
 
   const datasetQuery = useQuery({
@@ -197,6 +218,30 @@ export default function EtfPage() {
         行情为延时/快照数据，仅供筛选参考。
       </p>
 
+      <nav className="flex gap-1 border-b border-slate-200 dark:border-slate-800">
+        {TABS.map((item) => (
+          <button
+            key={item.value}
+            type="button"
+            onClick={() => {
+              // 保留当前全部查询参数（列表筛选、热点窗口等），只切换 tab
+              const params = new URLSearchParams(searchParams);
+              if (item.value === 'list') params.delete('tab');
+              else params.set('tab', item.value);
+              setSearchParams(params);
+            }}
+            className={
+              'border-b-2 px-3 py-2 text-sm ' +
+              (tab === item.value
+                ? 'border-sky-600 font-medium text-sky-700 dark:text-sky-400'
+                : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200')
+            }
+          >
+            {item.label}
+          </button>
+        ))}
+      </nav>
+
       {premiumAvailable ? null : (
         <p className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300">
           行情渠道：<strong>{datasetQuery.data?.dataSource.name ?? '—'}</strong>
@@ -248,7 +293,15 @@ export default function EtfPage() {
         />
       ) : null}
 
-      {datasetQuery.data ? (
+      {datasetQuery.data && tab === 'hotspot' ? (
+        <HotspotPanel
+          records={funds}
+          periodReturns={datasetQuery.data.periodReturns}
+          onSelect={openDrawer}
+        />
+      ) : null}
+
+      {datasetQuery.data && tab === 'list' ? (
         <>
           <EtfSummaryPanel
             stats={datasetQuery.data.stats}
@@ -353,11 +406,25 @@ export default function EtfPage() {
             <div className="flex flex-wrap items-center gap-3 border-t border-slate-100 pt-3 dark:border-slate-800">
               <input
                 ref={searchRef}
-                value={filters.keyword}
-                onChange={(event) =>
-                  applyFilters({ ...filters, keyword: event.target.value }, { replace: true })
-                }
-                placeholder="搜索代码 / 名称 / 跟踪指数（按 / 聚焦）"
+                value={draft}
+                onChange={(event) => setDraft(event.target.value)}
+                onCompositionStart={() => {
+                  composingRef.current = true;
+                }}
+                onCompositionEnd={() => {
+                  composingRef.current = false;
+                }}
+                onKeyDown={(event) => {
+                  // 中文输入法里回车是「选词」，不能当成确认搜索（此刻组词还没结束）
+                  if (
+                    event.key === 'Enter' &&
+                    !composingRef.current &&
+                    !event.nativeEvent.isComposing
+                  ) {
+                    applyFilters({ ...filters, keyword: draft }, { replace: true });
+                  }
+                }}
+                placeholder="搜索代码 / 名称 / 跟踪指数（回车搜索，按 / 聚焦）"
                 className="min-w-64 flex-1 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm outline-none focus:border-sky-500 dark:border-slate-700 dark:bg-slate-950"
               />
               <label className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">

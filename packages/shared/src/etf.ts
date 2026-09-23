@@ -117,6 +117,24 @@ export const EtfFeederInfoSchema = z.object({
 });
 export type EtfFeederInfo = z.infer<typeof EtfFeederInfoSchema>;
 
+/**
+ * 区间涨幅（接口 H）的覆盖度与新鲜度。
+ *
+ * 与 `feeder` 同一模式：这是独立的慢链路（每周约 1500 个请求），
+ * 与行情快照分开计时；`total = 已落库的行数`，`covered* = 该窗口有数据的只数
+ * （次新 ETF 缺 3 年数据属正常，界面给覆盖率而不是静默剔除）。
+ */
+export const EtfPeriodInfoSchema = z.object({
+  /** 上次**成功**抓取的时刻（ISO8601）；null = 还没抓过（界面显示空态 + 抓取按钮） */
+  updatedAt: z.string().nullable(),
+  /** 收益数据日期（上游 `Expansion.TIME`，T-1） */
+  dataDate: z.string().nullable(),
+  total: z.number(),
+  covered1y: z.number(),
+  covered3y: z.number(),
+});
+export type EtfPeriodInfo = z.infer<typeof EtfPeriodInfoSchema>;
+
 export const EtfRecordSchema = z.object({
   code: z.string(),
   name: z.string(),
@@ -144,11 +162,20 @@ export const EtfRecordSchema = z.object({
   /** 成交量（手）/ 成交额（元） */
   volume: z.number().nullable(),
   amount: z.number().nullable(),
+  /** 主力净流入（元，东财渠道独有；新浪渠道为 null，见 dataSource.missing） */
+  mainInflow: z.number().nullable(),
 
   /** 场内规模（元）：优先取行情的总市值，缺失时用目录里的规模估算 */
   scale: z.number().nullable(),
   /** 份额（份） */
   shares: z.number().nullable(),
+  /**
+   * 份额变化率 %（净申购代理）：最新份额相对**积累起点**（该 ETF 首个有份额的快照日）。
+   * 积累不足两天为 null —— 不能把「刚起步」显示成「0% 没变化」。
+   */
+  sharesChangePct: z.number().nullable(),
+  /** 积累起点（YYYY-MM-DD）：界面据此标注「自 X 日起积累」；null = 还没有起点 */
+  sharesSince: z.string().nullable(),
 
   /** 折溢价率（%）：**正 = 溢价**（上游 f402 已取反） */
   premiumRate: z.number().nullable(),
@@ -168,6 +195,17 @@ export const EtfRecordSchema = z.object({
   ytdChange: z.number().nullable(),
   /** 近一年最大回撤（%，负值） */
   maxDrawdown1y: z.number().nullable(),
+
+  /**
+   * 区间涨幅（接口 H，%）：近6月 / 近1年 / 近3年。
+   * 每周任务抓取（见 docs/design/etf-hotspot.md §5）；还没抓过 / 次新 ETF 为 null。
+   */
+  ret6m: z.number().nullable(),
+  ret1y: z.number().nullable(),
+  ret3y: z.number().nullable(),
+  /** 沪深300 同期涨幅（接口 H 的 `hs300`，%）—— 主题/榜单表头的基准对照 */
+  bench1y: z.number().nullable(),
+  bench3y: z.number().nullable(),
 
   /** 场外联接基金（A/C/E 各份额）；空数组 = 未查到（见 EtfFeederFundSchema） */
   feederFunds: z.array(EtfFeederFundSchema),
@@ -222,6 +260,8 @@ export const EtfDatasetResponseSchema = z.object({
   funds: z.array(EtfRecordSchema),
   /** 场外联接基金的覆盖度与新鲜度（反查是独立的慢链路，与行情快照分开计时） */
   feeder: EtfFeederInfoSchema,
+  /** 区间涨幅（接口 H）的覆盖度与新鲜度（热点研究 tab 据此显示空态/覆盖率） */
+  periodReturns: EtfPeriodInfoSchema,
   disclaimer: z.string(),
 });
 export type EtfDatasetResponse = z.infer<typeof EtfDatasetResponseSchema>;
@@ -323,3 +363,26 @@ export const EtfConfigUpdateResponseSchema = z.object({
   refresh: EtfRefreshResponseSchema,
 });
 export type EtfConfigUpdateResponse = z.infer<typeof EtfConfigUpdateResponseSchema>;
+
+/**
+ * 区间涨幅抓取的响应。
+ *
+ * 慢链路（首次约 1500 个请求 / 3 分钟）：成功/失败分开计数 ——
+ * 「查了 1500 只、20 只失败」与「全挂」是两件事，失败的下轮自动重试。
+ */
+export const EtfPeriodRefreshResponseSchema = z.object({
+  ok: z.boolean(),
+  /** 是否忽略 7 天新鲜度强制全抓 */
+  full: z.boolean(),
+  /** 本轮实际发起请求的只数（新鲜的直接跳过） */
+  scanned: z.number(),
+  /** 落库的只数 */
+  updated: z.number(),
+  /** 请求失败的只数（保留旧行，下轮重试） */
+  failed: z.number(),
+  /** 距上次抓取不足 7 天且非 full → 未打任何上游 */
+  skipped: z.boolean(),
+  durationMs: z.number(),
+  message: z.string(),
+});
+export type EtfPeriodRefreshResponse = z.infer<typeof EtfPeriodRefreshResponseSchema>;

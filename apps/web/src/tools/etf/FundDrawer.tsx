@@ -219,6 +219,41 @@ export function FundDrawer({ record, onClose }: { record: EtfRecord; onClose: ()
               }
             />
             <InfoRow
+              label="近 6 月"
+              value={
+                <span className={`tabular ${trendClass(record.ret6m)}`}>
+                  {formatPercent(record.ret6m)}
+                </span>
+              }
+            />
+            <InfoRow
+              label="近 1 年"
+              value={
+                <span className={`tabular ${trendClass(record.ret1y)}`}>
+                  {formatPercent(record.ret1y)}
+                  {record.bench1y !== null ? `（沪深300 ${formatPercent(record.bench1y)}）` : ''}
+                </span>
+              }
+            />
+            <InfoRow
+              label="近 3 年"
+              value={
+                <span className={`tabular ${trendClass(record.ret3y)}`}>
+                  {formatPercent(record.ret3y)}
+                  {record.bench3y !== null ? `（沪深300 ${formatPercent(record.bench3y)}）` : ''}
+                </span>
+              }
+            />
+            <InfoRow
+              label="份额变化"
+              value={
+                <span className={`tabular ${trendClass(record.sharesChangePct)}`}>
+                  {formatPercent(record.sharesChangePct)}
+                  {record.sharesSince ? `（自 ${record.sharesSince} 起积累）` : ''}
+                </span>
+              }
+            />
+            <InfoRow
               label="近一年最大回撤"
               value={
                 <span className="tabular text-emerald-600 dark:text-emerald-400">
@@ -229,6 +264,7 @@ export function FundDrawer({ record, onClose }: { record: EtfRecord; onClose: ()
           </div>
           <p className="mt-2 text-xs text-slate-400">
             数据日期 {record.dataDate ?? '未知'}；次新 ETF 的部分区间为空属正常。
+            近6月/1年/3年为每周抓取的区间涨幅；份额变化是一级市场净申购代理，从启用日起积累。
           </p>
         </Section>
 

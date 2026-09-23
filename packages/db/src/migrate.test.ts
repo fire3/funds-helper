@@ -121,11 +121,50 @@ describe('runMigrations', () => {
       'etf_profile',
       'etf_detail_cache',
       'etf_feeder_fund',
+      'etf_period_return',
       'app_setting',
       'schema_migration',
     ]) {
       expect(tables).toContain(expected);
     }
+    db.close();
+  });
+
+  it('etf_spot_daily 具备 shares 列（0011 起随快照积累份额，净申购代理）', () => {
+    const db = openDb(':memory:');
+    runMigrations(db);
+    const columns = db
+      .all<{ name: string }>('PRAGMA table_info(etf_spot_daily)')
+      .map((row) => row.name);
+    expect(columns).toContain('shares');
+    db.close();
+  });
+
+  it('etf_period_return 以 code 为主键（每周重抓覆盖同一行，幂等）', () => {
+    const db = openDb(':memory:');
+    runMigrations(db);
+
+    const insert = db.run(
+      `INSERT INTO etf_period_return (code, data_date, captured_at, ret_6m, ret_1y, ret_3y, bench_1y, bench_3y)
+       VALUES ('510300', '2026-09-22', '2026-09-23T00:00:00.000Z', 6, 12, 36, 5, 15)`,
+    );
+    expect(insert.changes).toBe(1);
+    // 同一只 ETF 再抓一次 → 覆盖而不是报唯一键冲突
+    expect(() =>
+      db.run(
+        `INSERT INTO etf_period_return (code, data_date, captured_at, ret_6m, ret_1y, ret_3y, bench_1y, bench_3y)
+         VALUES ('510300', '2026-09-30', '2026-10-01T00:00:00.000Z', 7, 13, 37, 6, 16)
+         ON CONFLICT(code) DO UPDATE SET
+           data_date = excluded.data_date, captured_at = excluded.captured_at,
+           ret_6m = excluded.ret_6m, ret_1y = excluded.ret_1y, ret_3y = excluded.ret_3y,
+           bench_1y = excluded.bench_1y, bench_3y = excluded.bench_3y`,
+      ),
+    ).not.toThrow();
+    const row = db.get<{ ret_1y: number; data_date: string }>(
+      'SELECT ret_1y, data_date FROM etf_period_return WHERE code = ?',
+      ['510300'],
+    );
+    expect(row).toEqual({ ret_1y: 13, data_date: '2026-09-30' });
     db.close();
   });
 
@@ -187,9 +226,11 @@ describe('runMigrations', () => {
 
   it('0010 把 0009 旧结构（联合主键）收敛到 feeder_code 单列主键', () => {
     const db = openDb(':memory:');
-    // 模拟 0009 定稿前建的库：迁移已记账、表却是 (etf_code, feeder_code) 联合主键
+    // 模拟 0009 定稿前建的库：迁移已记账、表却是 (etf_code, feeder_code) 联合主键。
+    // 只跑到 0010 —— 之后的迁移（如 0011 的 ALTER）依赖其它已建表，不属于本用例的场景。
+    const upTo0010 = MIGRATIONS.filter((m) => m.id <= '0010-etf-feeder-fund-pk');
     db.exec(`CREATE TABLE schema_migration (id TEXT PRIMARY KEY, applied_at TEXT NOT NULL)`);
-    for (const migration of MIGRATIONS.filter((m) => m.id < '0010')) {
+    for (const migration of upTo0010.filter((m) => m.id < '0010')) {
       db.run('INSERT INTO schema_migration (id, applied_at) VALUES (?, ?)', [
         migration.id,
         '2026-09-22T00:00:00.000Z',
@@ -211,7 +252,7 @@ describe('runMigrations', () => {
         ('510300', '006131', '某某ETF联接C', NULL,        '2026-09-01T00:00:00.000Z');
     `);
 
-    expect(runMigrations(db)).toEqual(['0010-etf-feeder-fund-pk']);
+    expect(runMigrations(db, upTo0010)).toEqual(['0010-etf-feeder-fund-pk']);
 
     // 冲突键有落点了：换目标 ETF 走 UPDATE 而不是抛错
     expect(() =>

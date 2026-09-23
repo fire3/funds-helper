@@ -165,6 +165,7 @@ packages/db      SQLite 持久化（node:sqlite + 版本化迁移）
 | [`fx-tool.md`](docs/design/fx-tool.md) | 汇率工具详细设计 —— 领域模型、方向换算、区间/年度统计口径、缓存分层 |
 | [`fx-data-sources.md`](docs/design/fx-data-sources.md) | 汇率上游调研 —— 新浪财经外汇日线的字段序逆向与历史事件交叉验证 |
 | [`etf-tool.md`](docs/design/etf-tool.md) | ETF 工具详细设计 —— 分类判定优先级、折溢价口径、汇总统计、落库与请求预算 |
+| [`etf-hotspot.md`](docs/design/etf-hotspot.md) | ETF 热点研究详细设计 —— 筛选维度矩阵、热点主题规则、聚合/反查双路径、轮动信号、份额流量积累 |
 | [`etf-data-sources.md`](docs/design/etf-data-sources.md) | ETF 上游调研 —— 板块取值、`pz` 上限 100、`IS_*ETF` 标志位语义、折溢价字段与限流实测 |
 
 数据源调研与领域规则（QDII 口径、限额哨兵值、币种判定、双维度归类）来源于

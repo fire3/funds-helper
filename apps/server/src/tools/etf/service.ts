@@ -24,6 +24,8 @@ import {
   type EtfFeederRefreshResponse,
   type EtfFundDetailResponse,
   type EtfFundProfile,
+  type EtfPeriodInfo,
+  type EtfPeriodRefreshResponse,
   type EtfRecord,
   type EtfStats,
 } from '@funds-helper/shared';
@@ -34,6 +36,7 @@ import {
   type FeederScanResult,
   type FundProfileData,
   ParseError,
+  type PeriodIncreaseData,
   type RawEtfProfile,
   UpstreamError,
 } from '@funds-helper/sources';
@@ -46,6 +49,8 @@ import { todayInShanghai } from '../../time.ts';
 import type { EtfDataSource } from './data-source.ts';
 import type {
   EtfFeederInput,
+  EtfPeriodReturnInput,
+  EtfPeriodReturnRow,
   EtfProfileInput,
   EtfProfileRow,
   EtfRepository,
@@ -89,6 +94,16 @@ export const ETF_FEEDER_SCANNED_AT_KEY = 'etf.feederScannedAt';
  */
 export const ETF_FEEDER_REFRESH_AFTER_MS = 6 * 24 * 3_600_000;
 
+/**
+ * 区间涨幅（接口 H）的两个时间门槛（见 docs/design/etf-hotspot.md §7）。
+ *
+ * - **行过期** `7 天`：单行 `captured_at` 超过它就进入下一轮抓取名单；
+ * - **启动补跑** `6 天`：距全库最新抓取不足 6 天直接跳过 —— 取 6 不取 7 的理由
+ *   与 `ETF_FEEDER_REFRESH_AFTER_MS` 相同（恰好 7 天时 cron 与重启的时间抖动会白等一周）。
+ */
+export const ETF_PERIOD_ROW_STALE_MS = 7 * 24 * 3_600_000;
+export const ETF_PERIOD_DUE_AFTER_MS = 6 * 24 * 3_600_000;
+
 const DATASET_CACHE_KEY = 'etf.dataset';
 
 export interface EtfCaptureStats {
@@ -130,6 +145,22 @@ export interface EtfFeederScanPlan {
   full: boolean;
 }
 
+/** 区间涨幅抓取的启动补跑计划 */
+export interface EtfPeriodScanPlan {
+  /** 是否该跑（距全库最新抓取超过阈值，或还没抓过） */
+  due: boolean;
+}
+
+/** 区间涨幅抓取结果（手动刷新响应与 job_run 共用） */
+export interface EtfPeriodRefreshStats {
+  full: boolean;
+  scanned: number;
+  updated: number;
+  failed: number;
+  skipped: boolean;
+  durationMs: number;
+}
+
 export interface EtfServiceDeps {
   db: Db;
   repo: EtfRepository;
@@ -154,6 +185,52 @@ function dataSourceInfo(id: string | null): EtfDataSourceInfo {
 
 /** 运行时配置里行情渠道偏好的键名 */
 export const ETF_SPOT_SOURCE_SETTING_KEY = 'etf.spotSource';
+
+/** 上游区间涨幅字符串 → 数字（`""`、`"—"` 一律 null，不当成 0） */
+function parseFloatOrNull(text: string | null): number | null {
+  if (text === null) return null;
+  const value = Number.parseFloat(text);
+  return Number.isFinite(value) ? value : null;
+}
+
+/**
+ * 接口 H 响应 → 落库行。
+ *
+ * 只取三个窗口 + 同行的 `hs300` 基准：`6Y`=近6月、`1N`=近1年、`3N`=近3年
+ * （`title` 里 `Y` 是「月」、`N` 是「年」，见 sources 的注释）。
+ * 上游 `rank/avg` 不落库：同类分组口径不透明（见设计文档 §1.3/§9）。
+ */
+function toPeriodReturnInput(code: string, data: PeriodIncreaseData): EtfPeriodReturnInput {
+  const period = (title: string) => data.periods.find((item) => item.title === title);
+  const sixMonth = period('6Y');
+  const oneYear = period('1N');
+  const threeYear = period('3N');
+  return {
+    code,
+    dataDate: data.time,
+    ret6m: parseFloatOrNull(sixMonth?.ret ?? null),
+    ret1y: parseFloatOrNull(oneYear?.ret ?? null),
+    ret3y: parseFloatOrNull(threeYear?.ret ?? null),
+    bench1y: parseFloatOrNull(oneYear?.bench ?? null),
+    bench3y: parseFloatOrNull(threeYear?.bench ?? null),
+  };
+}
+
+/**
+ * 份额变化率（净申购代理）：相对**积累起点**（该 code 首个 shares 非空的快照日）。
+ *
+ * 起点与最新是同一天时必须返回 `null` 而不是 0 —— 「刚开始积累」会被 0% 误读成「没变化」。
+ */
+function sharesChangeOf(
+  first: { date: string; shares: number } | undefined,
+  spot: EtfSpotRow,
+): { pct: number | null; since: string | null } {
+  if (first === undefined) return { pct: null, since: null };
+  if (spot.shares === null || spot.data_date === first.date || first.shares === 0) {
+    return { pct: null, since: first.date };
+  }
+  return { pct: ((spot.shares - first.shares) / first.shares) * 100, since: first.date };
+}
 
 /** 环境变量给的默认偏好（没有运行时配置时使用） */
 function envDefaultSource(config: AppConfig): EtfSpotSourceId {
@@ -354,6 +431,30 @@ export class EtfService {
     const dataDate = spotDataDate(items, this.now());
     const capturedAt = new Date(this.now()).toISOString();
 
+    const profileInputs: EtfProfileInput[] = profiles.map((row) => ({
+      code: row.code,
+      name: row.name,
+      indexCode: row.indexCode,
+      indexName: row.indexName,
+      money: row.money,
+      crossBorder: row.crossBorder,
+      bond: row.bond,
+      commodity: row.commodity,
+      broad: row.broad,
+      industry: row.industry,
+      style: row.style,
+      change1w: row.change1w,
+      change1m: row.change1m,
+      change3m: row.change3m,
+      ytdChange: row.ytdChange,
+      maxDrawdown1y: row.maxDrawdown1y,
+      netAssetsYi: row.netAssetsYi,
+      shares: row.shares,
+    }));
+    // 份额写进行情日表（0011）：目录先于行情构建，这里按代码回填当日份额 ——
+    // 目录失败时为 null（该日不计入份额序列，起点查询会跳过 shares 为空的行）
+    const sharesByCode = new Map(profileInputs.map((row) => [row.code, row.shares]));
+
     const spotInputs: EtfSpotInput[] = items.map((item) => ({
       code: item.code,
       name: item.name ?? item.code,
@@ -378,27 +479,7 @@ export class EtfService {
       listingDate: item.listingDate,
       mainInflow: item.mainInflow,
       quoteAt: isoTimestamp(item.quoteTs),
-    }));
-
-    const profileInputs: EtfProfileInput[] = profiles.map((row) => ({
-      code: row.code,
-      name: row.name,
-      indexCode: row.indexCode,
-      indexName: row.indexName,
-      money: row.money,
-      crossBorder: row.crossBorder,
-      bond: row.bond,
-      commodity: row.commodity,
-      broad: row.broad,
-      industry: row.industry,
-      style: row.style,
-      change1w: row.change1w,
-      change1m: row.change1m,
-      change3m: row.change3m,
-      ytdChange: row.ytdChange,
-      maxDrawdown1y: row.maxDrawdown1y,
-      netAssetsYi: row.netAssetsYi,
-      shares: row.shares,
+      shares: sharesByCode.get(item.code) ?? null,
     }));
 
     const inserted = this.deps.db.transaction(() => {
@@ -612,6 +693,137 @@ export class EtfService {
   }
 
   // ---------------------------------------------------------------------------
+  // 区间涨幅（0011，接口 H）—— 热点研究的 6月/1年/3年窗口
+  // ---------------------------------------------------------------------------
+
+  /** 距全库最新一次抓取是否已超过补跑阈值（从没抓过 → 必跑） */
+  periodsScanPlan(): EtfPeriodScanPlan {
+    const rows = this.deps.repo.loadPeriodReturns();
+    if (rows.length === 0) return { due: true };
+    let latest = 0;
+    for (const row of rows) {
+      const at = Date.parse(row.captured_at);
+      if (Number.isFinite(at) && at > latest) latest = at;
+    }
+    return { due: latest === 0 || this.now() - latest >= ETF_PERIOD_DUE_AFTER_MS };
+  }
+
+  /**
+   * 批量抓区间涨幅并落库。
+   *
+   * 名单 = 最新行情里**非货币**且「缺失或行已过期（>7 天）」的代码；
+   * `full` 忽略新鲜度（首次建库 / 手动强制）。
+   * 只 upsert 抓成功的代码 —— 失败保留旧行，`captured_at` 不前进，下轮自动重试。
+   */
+  async refreshPeriodReturns(options: { full?: boolean } = {}): Promise<EtfPeriodRefreshStats> {
+    const startedAt = this.now();
+    const full = options.full ?? false;
+
+    const known = new Map(
+      this.deps.repo.loadPeriodReturns().map((row) => [row.code, Date.parse(row.captured_at)]),
+    );
+    const profiles = this.profileMap();
+    const codes = this.deps.repo
+      .loadLatestSpot()
+      .filter((spot) => {
+        const classification = classifyEtfOrFallback(spot.name, flagsOf(profiles.get(spot.code)));
+        if (classification.category === '货币') return false;
+        if (full) return true;
+        const at = known.get(spot.code);
+        return (
+          at === undefined || !Number.isFinite(at) || this.now() - at >= ETF_PERIOD_ROW_STALE_MS
+        );
+      })
+      .map((spot) => spot.code);
+
+    if (codes.length === 0) {
+      this.deps.logger.info('区间涨幅都是新鲜的（或没有可抓标的），跳过本轮');
+      return {
+        full,
+        scanned: 0,
+        updated: 0,
+        failed: 0,
+        skipped: true,
+        durationMs: this.now() - startedAt,
+      };
+    }
+
+    this.deps.logger.info({ scanned: codes.length, full }, '开始抓取区间涨幅（接口 H）');
+    const startedFetchAt = this.now();
+    const result = await this.deps.source.fetchPeriodIncreaseBatch(codes, {
+      onProgress: (done, total) => {
+        // 全量约 3 分钟：每 500 只留一行进度，否则日志里看不出它是在跑还是卡住了
+        if (done % 500 === 0 || done === total) {
+          this.deps.logger.info(
+            { done, total, elapsedMs: this.now() - startedFetchAt },
+            '区间涨幅抓取进度',
+          );
+        }
+      },
+    });
+
+    const capturedAt = new Date(this.now()).toISOString();
+    const rows = [...result.data.entries()].map(([code, data]) => toPeriodReturnInput(code, data));
+    this.deps.repo.upsertPeriodReturns(rows, capturedAt);
+    this.deps.cache.delete(DATASET_CACHE_KEY);
+
+    const stats: EtfPeriodRefreshStats = {
+      full,
+      scanned: codes.length,
+      updated: rows.length,
+      failed: result.failed.length,
+      skipped: false,
+      durationMs: this.now() - startedAt,
+    };
+    if (result.failed.length > 0) {
+      this.deps.logger.warn(
+        { ...stats, failedCodes: result.failed.slice(0, 10) },
+        '部分区间涨幅抓取失败（保留旧行，下轮重试）',
+      );
+    }
+    this.deps.logger.info({ ...stats }, '区间涨幅已更新');
+    return stats;
+  }
+
+  /** 抓取刷新响应（手动路由用：把内部统计翻译成契约） */
+  async refreshPeriodReturnsResponse(
+    options: { full?: boolean } = {},
+  ): Promise<EtfPeriodRefreshResponse> {
+    const stats = await this.refreshPeriodReturns(options);
+    return {
+      ok: true,
+      full: stats.full,
+      scanned: stats.scanned,
+      updated: stats.updated,
+      failed: stats.failed,
+      skipped: stats.skipped,
+      durationMs: stats.durationMs,
+      message: stats.skipped
+        ? '距上次抓取不足 7 天（或没有可抓标的），未请求上游'
+        : `抓取区间涨幅 ${stats.scanned} 只、落库 ${stats.updated} 只` +
+          (stats.failed > 0 ? `，${stats.failed} 只失败（保留旧行，下轮自动重试）` : ''),
+    };
+  }
+
+  /** 区间涨幅的覆盖度与新鲜度（数据集下发，热点 tab 据此显示空态/覆盖率） */
+  periodReturnsInfo(): EtfPeriodInfo {
+    const rows = this.deps.repo.loadPeriodReturns();
+    let updatedAt: string | null = null;
+    let dataDate: string | null = null;
+    let covered1y = 0;
+    let covered3y = 0;
+    for (const row of rows) {
+      if (updatedAt === null || row.captured_at > updatedAt) updatedAt = row.captured_at;
+      if (row.data_date !== null && (dataDate === null || row.data_date > dataDate)) {
+        dataDate = row.data_date;
+      }
+      if (row.ret_1y !== null) covered1y += 1;
+      if (row.ret_3y !== null) covered3y += 1;
+    }
+    return { updatedAt, dataDate, total: rows.length, covered1y, covered3y };
+  }
+
+  // ---------------------------------------------------------------------------
   // 数据集（汇总展示的核心载荷）
   // ---------------------------------------------------------------------------
 
@@ -662,6 +874,10 @@ export class EtfService {
       this.deps.repo.latestSpotCapturedAt() ?? new Date(this.now()).toISOString();
     const profiles = this.profileMap();
     const feeders = this.feederMap();
+    const periods = new Map(
+      this.deps.repo.loadPeriodReturns().map((row) => [row.code, row] as const),
+    );
+    const firstShares = this.deps.repo.sharesFirst();
     const records = this.deps.repo
       .loadLatestSpot()
       .map((row) =>
@@ -669,6 +885,8 @@ export class EtfService {
           row,
           profiles.get(row.code),
           feeders.get(row.code) ?? [],
+          periods.get(row.code),
+          firstShares.get(row.code),
           dataDate,
           snapshotCapturedAt,
         ),
@@ -691,6 +909,7 @@ export class EtfService {
       stats: this.buildStats(records, profiles),
       funds: records,
       feeder: this.feederInfo(),
+      periodReturns: this.periodReturnsInfo(),
       disclaimer: ETF_DISCLAIMER,
     };
   }
@@ -699,11 +918,14 @@ export class EtfService {
     spot: EtfSpotRow,
     profile: EtfProfileRow | undefined,
     feederFunds: readonly EtfFeederFund[],
+    period: EtfPeriodReturnRow | undefined,
+    firstShare: { date: string; shares: number } | undefined,
     dataDate: string | null,
     capturedAt: string,
   ): EtfRecord {
     const classification = classifyEtfOrFallback(spot.name, flagsOf(profile));
     const premium = describePremium(spot.premium_rate);
+    const shareChange = sharesChangeOf(firstShare, spot);
 
     return {
       code: spot.code,
@@ -726,9 +948,12 @@ export class EtfService {
       volumeRatio: spot.volume_ratio,
       volume: spot.volume,
       amount: spot.amount,
+      mainInflow: spot.main_inflow,
 
       scale: resolveScale(spot, profile),
-      shares: profile?.shares ?? null,
+      shares: spot.shares ?? profile?.shares ?? null,
+      sharesChangePct: shareChange.pct,
+      sharesSince: shareChange.since,
 
       premiumRate: spot.premium_rate,
       premiumLevel: premium.level,
@@ -742,6 +967,12 @@ export class EtfService {
       change3m: profile?.change_3m ?? null,
       ytdChange: profile?.ytd_change ?? null,
       maxDrawdown1y: profile?.max_drawdown_1y ?? null,
+
+      ret6m: period?.ret_6m ?? null,
+      ret1y: period?.ret_1y ?? null,
+      ret3y: period?.ret_3y ?? null,
+      bench1y: period?.bench_1y ?? null,
+      bench3y: period?.bench_3y ?? null,
 
       feederFunds: [...feederFunds],
 

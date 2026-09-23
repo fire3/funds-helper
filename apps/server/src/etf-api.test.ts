@@ -4,6 +4,7 @@ import type {
   EtfConfigUpdateResponse,
   EtfDatasetResponse,
   EtfFundDetailResponse,
+  EtfPeriodRefreshResponse,
   EtfRefreshResponse,
 } from '@funds-helper/shared';
 import { describe, expect, it } from 'vitest';
@@ -901,6 +902,200 @@ describe('场外联接基金反查（ETF → 场外）', () => {
       expect(second?.stats).toMatchObject({ skipped: true });
       // 跳过的这一轮没有打上游
       expect(source.calls.feeders ?? 0).toBe(1);
+    } finally {
+      await app.close();
+    }
+  });
+});
+
+describe('区间涨幅与热点研究数据（/api/tools/etf/periods + dataset 新字段）', () => {
+  it('没抓过时：periodReturns 全零、区间字段为 null，接口不会自己去打上游', async () => {
+    const { app, source } = await etfHarness({ eastmoney: true });
+    try {
+      const body = await datasetOf(app);
+      expect(body.periodReturns).toEqual({
+        updatedAt: null,
+        dataDate: null,
+        total: 0,
+        covered1y: 0,
+        covered3y: 0,
+      });
+      expect(body.funds.every((fund) => fund.ret6m === null && fund.ret1y === null)).toBe(true);
+      expect(body.funds.every((fund) => fund.bench1y === null)).toBe(true);
+      // 1500 个请求的慢链路绝不能挂在用户请求上
+      expect(source.calls.periods ?? 0).toBe(0);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('全量抓取：跳过货币 ETF，落库后 dataset 带 6月/1年/3年与沪深300 基准', async () => {
+    const { app, source } = await etfHarness({ eastmoney: true });
+    try {
+      // 抓取名单来自最新行情，先落一次快照
+      await app.inject({ method: 'POST', url: '/api/tools/etf/refresh' });
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/tools/etf/periods/refresh?full=1',
+      });
+      expect(response.statusCode).toBe(200);
+      const body = response.json() as EtfPeriodRefreshResponse;
+      expect(body).toMatchObject({
+        ok: true,
+        full: true,
+        scanned: 7,
+        updated: 7,
+        failed: 0,
+        skipped: false,
+      });
+      // 货币 ETF（511990）不在名单里
+      expect(source.lastPeriodCodes).not.toContain('511990');
+      expect(source.lastPeriodCodes).toHaveLength(7);
+
+      const dataset = await datasetOf(app);
+      expect(dataset.periodReturns).toMatchObject({
+        updatedAt: expect.any(String),
+        dataDate: '2026-09-22',
+        total: 7,
+        covered1y: 7,
+        covered3y: 7,
+      });
+      const hs300 = dataset.funds.find((fund) => fund.code === '510300');
+      expect(hs300).toMatchObject({
+        ret6m: 6,
+        ret1y: 12,
+        ret3y: 36,
+        bench1y: 5,
+        bench3y: 15,
+        mainInflow: -22_936_530,
+      });
+      // 货币 ETF 没抓 → 字段保持 null
+      expect(dataset.funds.find((fund) => fund.code === '511990')?.ret1y).toBeNull();
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('行还没过期（<7 天）时增量刷新直接跳过，不打任何上游', async () => {
+    const { app, source } = await etfHarness({ eastmoney: true });
+    try {
+      await app.inject({ method: 'POST', url: '/api/tools/etf/refresh' });
+      await app.inject({ method: 'POST', url: '/api/tools/etf/periods/refresh?full=1' });
+      expect(source.calls.periods).toBe(1);
+
+      const second = await app.inject({ method: 'POST', url: '/api/tools/etf/periods/refresh' });
+      const body = second.json() as EtfPeriodRefreshResponse;
+      expect(body).toMatchObject({ skipped: true, scanned: 0, updated: 0 });
+      expect(body.message).toContain('未请求上游');
+      expect(source.calls.periods).toBe(1);
+
+      // 过了 7 天：行全部过期，重新进入抓取名单
+      app.setNow(Date.parse('2026-09-22T10:00:00.000Z') + 8 * 24 * 3_600_000);
+      const third = await app.inject({ method: 'POST', url: '/api/tools/etf/periods/refresh' });
+      expect(third.json() as EtfPeriodRefreshResponse).toMatchObject({
+        skipped: false,
+        scanned: 7,
+      });
+      expect(source.calls.periods).toBe(2);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('单只失败保留旧行（captured_at 不前进），成功的照常落库', async () => {
+    const { app, source } = await etfHarness({ eastmoney: true });
+    try {
+      await app.inject({ method: 'POST', url: '/api/tools/etf/refresh' });
+      await app.inject({ method: 'POST', url: '/api/tools/etf/periods/refresh?full=1' });
+
+      // 510300 换个数值再抓一次，但这只失败 → 旧行（12%）必须原样保留
+      source.periods = new Map([
+        [
+          '159915',
+          {
+            periods: [
+              { title: '6Y', ret: '9', avg: null, bench: null, rank: null, total: null },
+              { title: '1N', ret: '99', avg: null, bench: null, rank: null, total: null },
+              { title: '3N', ret: '999', avg: null, bench: null, rank: null, total: null },
+            ],
+            estabDate: null,
+            time: '2026-09-23',
+          },
+        ],
+      ]);
+      source.failures.add('period:510300');
+      const second = await app.inject({
+        method: 'POST',
+        url: '/api/tools/etf/periods/refresh?full=1',
+      });
+      expect(second.json() as EtfPeriodRefreshResponse).toMatchObject({
+        failed: 1,
+        updated: 6,
+      });
+
+      const dataset = await datasetOf(app);
+      expect(dataset.funds.find((fund) => fund.code === '510300')?.ret1y).toBe(12);
+      expect(dataset.funds.find((fund) => fund.code === '159915')?.ret1y).toBe(99);
+      // 行都还新鲜（<7 天）→ 增量跳过；失败的行 captured_at 没前进，
+      // 行过期后（下一轮每周任务的节奏）会自动带上它重试
+      const fresh = await app.inject({ method: 'POST', url: '/api/tools/etf/periods/refresh' });
+      expect(fresh.json() as EtfPeriodRefreshResponse).toMatchObject({ skipped: true });
+
+      source.failures.delete('period:510300');
+      app.setNow(Date.parse('2026-09-22T10:00:00.000Z') + 8 * 24 * 3_600_000);
+      const third = await app.inject({ method: 'POST', url: '/api/tools/etf/periods/refresh' });
+      expect(third.json() as EtfPeriodRefreshResponse).toMatchObject({
+        skipped: false,
+        scanned: 7,
+        failed: 0,
+      });
+      const healed = await datasetOf(app);
+      expect(healed.funds.find((fund) => fund.code === '510300')?.ret1y).toBe(12);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('定时任务 etf.periods：首次必跑，距上次不足 6 天直接跳过', async () => {
+    const { app, scheduler, source } = await etfHarness({ eastmoney: true });
+    try {
+      await app.inject({ method: 'POST', url: '/api/tools/etf/refresh' });
+      const first = await scheduler.execute('etf.periods', 'manual');
+      expect(first?.stats).toMatchObject({ skipped: false, scanned: 7 });
+
+      const second = await scheduler.execute('etf.periods', 'manual');
+      expect(second?.stats).toMatchObject({ skipped: true });
+      expect(source.calls.periods).toBe(1);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('份额按日积累：跨天后给出变化率（净申购代理），起点保持在首个快照日', async () => {
+    const { app, source } = await etfHarness({ eastmoney: true });
+    try {
+      const day1 = await datasetOf(app);
+      const first = day1.funds.find((fund) => fund.code === '510300');
+      // 只积累了一天 → 变化率必须是 null（0% 会被误读成「没变化」）
+      expect(first).toMatchObject({ sharesChangePct: null, sharesSince: '2026-09-22' });
+
+      // 第二天：行情时间 +1 天、510300 份额 +10%（一级市场净申购）
+      source.spot = source.spot.map((item) =>
+        item.code === '510300' ? { ...item, quoteTs: (item.quoteTs ?? 0) + 86_400 } : item,
+      );
+      source.profiles = source.profiles.map((row) =>
+        row.code === '510300' && row.shares !== null ? { ...row, shares: row.shares * 1.1 } : row,
+      );
+      const refreshed = await app.inject({ method: 'POST', url: '/api/tools/etf/refresh' });
+      expect(refreshed.statusCode).toBe(200);
+
+      const day2 = await datasetOf(app);
+      const second = day2.funds.find((fund) => fund.code === '510300');
+      expect(second?.sharesSince).toBe('2026-09-22');
+      expect(second?.sharesChangePct).toBeCloseTo(10, 6);
+      // 其它 ETF 没变份额 → 0%（真实的变化率，与「还没积累」的 null 区分开）
+      const untouched = day2.funds.find((fund) => fund.code === '512880');
+      expect(untouched?.sharesChangePct).toBeCloseTo(0, 6);
     } finally {
       await app.close();
     }
