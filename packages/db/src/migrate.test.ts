@@ -185,6 +185,64 @@ describe('runMigrations', () => {
     db.close();
   });
 
+  it('0010 把 0009 旧结构（联合主键）收敛到 feeder_code 单列主键', () => {
+    const db = openDb(':memory:');
+    // 模拟 0009 定稿前建的库：迁移已记账、表却是 (etf_code, feeder_code) 联合主键
+    db.exec(`CREATE TABLE schema_migration (id TEXT PRIMARY KEY, applied_at TEXT NOT NULL)`);
+    for (const migration of MIGRATIONS.filter((m) => m.id < '0010')) {
+      db.run('INSERT INTO schema_migration (id, applied_at) VALUES (?, ?)', [
+        migration.id,
+        '2026-09-22T00:00:00.000Z',
+      ]);
+    }
+    db.exec(`
+      CREATE TABLE etf_feeder_fund (
+        etf_code    TEXT NOT NULL,
+        feeder_code TEXT NOT NULL,
+        feeder_name TEXT NOT NULL,
+        report_date TEXT,
+        captured_at TEXT NOT NULL,
+        PRIMARY KEY (etf_code, feeder_code)
+      );
+      CREATE INDEX idx_etf_feeder_fund_etf ON etf_feeder_fund(etf_code);
+      INSERT INTO etf_feeder_fund VALUES
+        ('510300', '460300', '某某ETF联接A', '2026-03-31', '2026-06-01T00:00:00.000Z'),
+        ('159915', '460300', '某某ETF联接A', '2026-06-30', '2026-09-01T00:00:00.000Z'),
+        ('510300', '006131', '某某ETF联接C', NULL,        '2026-09-01T00:00:00.000Z');
+    `);
+
+    expect(runMigrations(db)).toEqual(['0010-etf-feeder-fund-pk']);
+
+    // 冲突键有落点了：换目标 ETF 走 UPDATE 而不是抛错
+    expect(() =>
+      db.run(
+        `INSERT INTO etf_feeder_fund (feeder_code, etf_code, feeder_name, report_date, captured_at)
+         VALUES ('460300', '510300', '某某ETF联接A', '2026-06-30', '2026-09-23T00:00:00.000Z')
+         ON CONFLICT(feeder_code) DO UPDATE SET etf_code = excluded.etf_code`,
+      ),
+    ).not.toThrow();
+
+    const rows = db.all<{ feeder_code: string; etf_code: string }>(
+      'SELECT feeder_code, etf_code FROM etf_feeder_fund ORDER BY feeder_code',
+    );
+    expect(rows).toEqual([
+      { feeder_code: '006131', etf_code: '510300' },
+      { feeder_code: '460300', etf_code: '510300' },
+    ]);
+
+    const pkColumns = db
+      .all<{ name: string; pk: number }>('PRAGMA table_info(etf_feeder_fund)')
+      .filter((column) => column.pk > 0)
+      .map((column) => column.name);
+    expect(pkColumns).toEqual(['feeder_code']);
+
+    const indexes = db
+      .all<{ name: string }>('PRAGMA index_list(etf_feeder_fund)')
+      .map((index) => index.name);
+    expect(indexes).toContain('idx_etf_feeder_fund_etf');
+    db.close();
+  });
+
   it('文件库重开后不会重复应用（迁移状态落在库里）', () => {
     const dbPath = join(tempDir(), 'funds.db');
     const first = openDb(dbPath);

@@ -7,6 +7,7 @@ import { SQL as ETF_SPOT_SOURCE } from './0006-etf-spot-source.ts';
 import { SQL as APP_SETTING } from './0007-app-setting.ts';
 import { SQL as QDII_CHANGE_DEDUP } from './0008-qdii-change-dedup.ts';
 import { SQL as ETF_FEEDER_FUND } from './0009-etf-feeder-fund.ts';
+import { SQL as ETF_FEEDER_FUND_PK } from './0010-etf-feeder-fund-pk.ts';
 
 export interface Migration {
   id: string;
@@ -29,4 +30,5 @@ export const MIGRATIONS: readonly Migration[] = [
   { id: '0007-app-setting', sql: APP_SETTING },
   { id: '0008-qdii-change-dedup', sql: QDII_CHANGE_DEDUP },
   { id: '0009-etf-feeder-fund', sql: ETF_FEEDER_FUND },
+  { id: '0010-etf-feeder-fund-pk', sql: ETF_FEEDER_FUND_PK },
 ];
