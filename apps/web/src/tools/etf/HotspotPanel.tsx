@@ -18,6 +18,13 @@ import { useSearchParams } from 'react-router-dom';
 import { Badge, Chip, EmptyState, ErrorState, type Tone } from '../../components/ui.tsx';
 import { api, apiErrorDetail } from '../../lib/api.ts';
 import { formatPercent, formatYuan, trendClass } from '../../lib/format.ts';
+import {
+  sortThemeRows,
+  THEME_SORT_DEFAULT_DIR,
+  THEME_SORT_KEYS,
+  type ThemeSortDir,
+  type ThemeSortKey,
+} from './themeSort.ts';
 
 /**
  * 热点研究面板 —— ETF 工具的第二个视图（见 docs/design/etf-hotspot.md §6）。
@@ -46,6 +53,56 @@ const MODES: { value: Mode; label: string }[] = [
   { value: 'reverse', label: '反查视图' },
 ];
 
+/**
+ * 表头公共样式：`sticky` 让表头在表格滚动区内固定。
+ *
+ * 底线用 `inset` 阴影而不是 `border-b` —— `border-collapse: collapse` 下
+ * 粘性单元格的边框会跟着表格网格绘制（滚动时会丢），阴影只画在单元格自己身上。
+ */
+const TH_STICKY =
+  'sticky top-0 z-10 px-3 py-2 font-medium shadow-[inset_0_-1px_0_#e2e8f0] dark:shadow-[inset_0_-1px_0_#1f2937]';
+const TH_IDLE = 'bg-white text-slate-500 dark:bg-slate-900 dark:text-slate-400';
+const TH_ACTIVE = 'bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-400';
+
+/** 可点击排序的表头：再点一次反转方向，方向用箭头常驻占位（避免列宽跳动） */
+function SortableTh({
+  label,
+  id,
+  active,
+  dir,
+  onSort,
+  title,
+  align = 'right',
+}: {
+  label: string;
+  /** 排序列标识：窗口列用 `ret:<window>`，其余用 ThemeSortKey */
+  id: string;
+  active: boolean;
+  dir: ThemeSortDir;
+  onSort: (id: string) => void;
+  title?: string;
+  align?: 'left' | 'right';
+}) {
+  return (
+    <th
+      aria-sort={active ? (dir === 'asc' ? 'ascending' : 'descending') : 'none'}
+      className={`${TH_STICKY} ${active ? TH_ACTIVE : TH_IDLE} ${align === 'right' ? 'text-right' : ''}`}
+    >
+      <button
+        type="button"
+        onClick={() => onSort(id)}
+        title={title ?? '点击按此列排序，再点一次反转方向'}
+        className="inline-flex cursor-pointer items-center gap-1 rounded transition-colors hover:text-sky-700 dark:hover:text-sky-300"
+      >
+        {label}
+        <span className={active ? 'opacity-70' : 'opacity-0'} aria-hidden>
+          {dir === 'asc' ? '↑' : '↓'}
+        </span>
+      </button>
+    </th>
+  );
+}
+
 function useHotspotParams() {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -59,6 +116,12 @@ function useHotspotParams() {
     ? (searchParams.get('m') as EtfReverseMetric)
     : 'ret';
   const mode: Mode = searchParams.get('mode') === 'reverse' ? 'reverse' : 'aggregate';
+  // 排序列（非窗口列）：null = 按焦点窗口均值排（窗口列共用 w/d 两个参数）
+  const sort: ThemeSortKey | null = (THEME_SORT_KEYS as readonly string[]).includes(
+    searchParams.get('s') ?? '',
+  )
+    ? (searchParams.get('s') as ThemeSortKey)
+    : null;
 
   // 只改自己关心的键，其余参数（含 tab、列表筛选）原样保留 → 整页 URL 可分享
   const setParams = useCallback(
@@ -73,7 +136,7 @@ function useHotspotParams() {
     [searchParams, setSearchParams],
   );
 
-  return { window, dir, metric, mode, setParams };
+  return { window, dir, metric, mode, sort, setParams };
 }
 
 /** 三块主题榜之一：按某个窗口取 Top-5 主题 */
@@ -125,26 +188,37 @@ export function HotspotPanel({
   periodReturns: EtfPeriodInfo;
   onSelect: (code: string) => void;
 }) {
-  const { window: focus, dir, metric, mode, setParams } = useHotspotParams();
+  const { window: focus, dir, metric, mode, sort, setParams } = useHotspotParams();
   const [expanded, setExpanded] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const rows = useMemo(() => aggregateThemes(records), [records]);
 
-  const sorted = useMemo(() => {
-    const list = [...rows];
-    list.sort((a, b) => {
-      const left = a.meanRet[focus];
-      const right = b.meanRet[focus];
-      if (left === null && right === null) return a.theme.localeCompare(b.theme, 'zh-CN');
-      if (left === null) return 1;
-      if (right === null) return -1;
-      return dir === 'asc'
-        ? left - right || a.theme.localeCompare(b.theme, 'zh-CN')
-        : right - left || a.theme.localeCompare(b.theme, 'zh-CN');
-    });
-    return list;
-  }, [rows, focus, dir]);
+  // 当前排序列：sort=null 时是焦点窗口那一列（窗口列与非窗口列共用一个高亮/方向）
+  const activeSort = sort ?? `ret:${focus}`;
+
+  /** 点表头/窗口 chip：已是当前列 → 反转方向；换列 → 切过去并用该列的自然方向 */
+  const activateSort = useCallback(
+    (id: string) => {
+      if (id === activeSort) {
+        setParams({ d: dir === 'asc' ? null : 'asc' });
+        return;
+      }
+      if (id.startsWith('ret:')) {
+        const window = id.slice(4) as EtfWindow;
+        setParams({ w: window === '1m' ? null : window, s: null, d: null });
+        return;
+      }
+      const key = id as ThemeSortKey;
+      setParams({ s: key, d: THEME_SORT_DEFAULT_DIR[key] === 'asc' ? 'asc' : null });
+    },
+    [activeSort, dir, setParams],
+  );
+
+  const sorted = useMemo(
+    () => sortThemeRows(rows, { key: sort, focus, dir }),
+    [rows, sort, focus, dir],
+  );
 
   // 同期沪深300（任一记录的非空值即可：它对所有基金是同一条指数序列）
   const bench1y = records.find((fund) => fund.bench1y !== null)?.bench1y ?? null;
@@ -245,7 +319,7 @@ export function HotspotPanel({
             <Chip
               key={window}
               active={focus === window}
-              onClick={() => setParams({ w: window === '1m' ? null : window })}
+              onClick={() => activateSort(`ret:${window}`)}
             >
               {ETF_WINDOW_LABELS[window]}
             </Chip>
@@ -256,7 +330,13 @@ export function HotspotPanel({
             title="切换升/降序（升序看领跌方向）"
             className="rounded-full border border-slate-300 px-3 py-1 text-sm text-slate-600 hover:border-sky-400 hover:text-sky-700 dark:border-slate-700 dark:text-slate-300"
           >
-            {dir === 'desc' ? '从高到低 ↓' : '从低到高 ↑'}
+            {sort === 'theme'
+              ? dir === 'asc'
+                ? '名称正序 ↑'
+                : '名称倒序 ↓'
+              : dir === 'desc'
+                ? '从高到低 ↓'
+                : '从低到高 ↑'}
           </button>
         </span>
       </nav>
@@ -269,32 +349,60 @@ export function HotspotPanel({
             <ThemeRankBoard title="近3年长牛" window="3y" rows={rows} />
           </div>
 
-          <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+          <div className="max-h-[70vh] overflow-auto rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
             <table className="w-full min-w-[1180px] border-collapse text-sm">
               <thead>
-                <tr className="border-b border-slate-200 text-left text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
-                  <th className="px-3 py-2 font-medium">主题（点击展开成员）</th>
-                  <th className="px-3 py-2 text-right font-medium">只数</th>
+                <tr className="text-left text-xs">
+                  <SortableTh
+                    label="主题（点击展开成员）"
+                    id="theme"
+                    active={activeSort === 'theme'}
+                    dir={dir}
+                    onSort={activateSort}
+                    align="left"
+                    title="点击按主题名排序，再点一次反转"
+                  />
+                  <SortableTh
+                    label="只数"
+                    id="count"
+                    active={activeSort === 'count'}
+                    dir={dir}
+                    onSort={activateSort}
+                  />
                   {ETF_WINDOWS.map((window) => (
-                    <th
+                    <SortableTh
                       key={window}
-                      className={
-                        'px-3 py-2 text-right font-medium ' +
-                        (window === focus
-                          ? 'bg-sky-50 text-sky-700 dark:bg-sky-950/40 dark:text-sky-400'
-                          : '')
-                      }
-                    >
-                      {ETF_WINDOW_LABELS[window]}
-                    </th>
+                      label={ETF_WINDOW_LABELS[window]}
+                      id={`ret:${window}`}
+                      active={activeSort === `ret:${window}`}
+                      dir={dir}
+                      onSort={activateSort}
+                    />
                   ))}
-                  <th className="px-3 py-2 text-right font-medium">成交额（占比）</th>
-                  <th className="px-3 py-2 text-right font-medium">规模</th>
-                  <th className="px-3 py-2 text-right font-medium" title="净申购代理，自积累起点">
-                    份额变化
-                  </th>
-                  <th className="px-3 py-2 font-medium">信号</th>
-                  <th className="px-3 py-2 font-medium">领涨（焦点窗口）</th>
+                  <SortableTh
+                    label="成交额（占比）"
+                    id="amount"
+                    active={activeSort === 'amount'}
+                    dir={dir}
+                    onSort={activateSort}
+                  />
+                  <SortableTh
+                    label="规模"
+                    id="scale"
+                    active={activeSort === 'scale'}
+                    dir={dir}
+                    onSort={activateSort}
+                  />
+                  <SortableTh
+                    label="份额变化"
+                    id="shares"
+                    active={activeSort === 'shares'}
+                    dir={dir}
+                    onSort={activateSort}
+                    title="净申购代理，自积累起点；点击按此列排序"
+                  />
+                  <th className={`${TH_STICKY} ${TH_IDLE}`}>信号</th>
+                  <th className={`${TH_STICKY} ${TH_IDLE}`}>领涨（焦点窗口）</th>
                 </tr>
               </thead>
               <tbody>
@@ -383,12 +491,14 @@ export function HotspotPanel({
                         ? row.members
                             .slice()
                             .sort((a, b) => {
+                              // 成员始终按焦点窗口排：按规模/名称的升降序不该带偏成员内部顺序
+                              const memberDir: ThemeSortDir = sort === null ? dir : 'desc';
                               const left = windowReturn(a, focus);
                               const right = windowReturn(b, focus);
                               if (left === null && right === null) return 0;
                               if (left === null) return 1;
                               if (right === null) return -1;
-                              return dir === 'asc' ? left - right : right - left;
+                              return memberDir === 'asc' ? left - right : right - left;
                             })
                             .map((member) => (
                               <tr
@@ -439,7 +549,9 @@ export function HotspotPanel({
             </table>
           </div>
           <p className="text-xs text-slate-400">
-            主题均值为<strong>等权</strong>（不区分成员体量，资金体量看成交额/规模列）；带{' '}
+            <strong className="text-slate-500 dark:text-slate-300">点击表头排序</strong>
+            （再点一次反转方向，无数据的主题恒排最后）；表头在滚动时固定。 主题均值为
+            <strong>等权</strong>（不区分成员体量，资金体量看成交额/规模列）；带{' '}
             <span className="text-slate-500">*</span> 的窗口表示只有部分成员有数据。
             基准：同期沪深300 近1年 {formatPercent(bench1y)}、近3年 {formatPercent(bench3y)}
             ；信号按「焦点窗口排名分位 × 近1年排名分位」判定（≤25% 强、≥50% 分位弱）。
@@ -472,19 +584,19 @@ export function HotspotPanel({
           ) : reverseGroups.length === 0 ? (
             <EmptyState message="该榜单在当前窗口没有可用数据（可能还没抓取区间涨幅）。" />
           ) : (
-            <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+            <div className="max-h-[70vh] overflow-auto rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
               <table className="w-full min-w-[760px] border-collapse text-sm">
                 <thead>
-                  <tr className="border-b border-slate-200 text-left text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
-                    <th className="px-3 py-2 font-medium">主题</th>
-                    <th className="px-3 py-2 text-right font-medium">上榜</th>
+                  <tr className="text-left text-xs">
+                    <th className={`${TH_STICKY} ${TH_IDLE}`}>主题</th>
+                    <th className={`${TH_STICKY} ${TH_IDLE} text-right`}>上榜</th>
                     <th
-                      className="px-3 py-2 text-right font-medium"
+                      className={`${TH_STICKY} ${TH_IDLE} text-right`}
                       title="该主题在当前窗口的聚合排名"
                     >
                       聚合排名
                     </th>
-                    <th className="px-3 py-2 font-medium">上榜成员（点击查看）</th>
+                    <th className={`${TH_STICKY} ${TH_IDLE}`}>上榜成员（点击查看）</th>
                   </tr>
                 </thead>
                 <tbody>
