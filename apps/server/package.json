@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "SERVE_STATIC=false node --watch --env-file-if-exists=.env src/index.ts",
-    "start": "node --env-file-if-exists=.env src/index.ts",
+    "dev": "SERVE_STATIC=false node --watch --experimental-strip-types --no-warnings=ExperimentalWarning --env-file-if-exists=.env src/index.ts",
+    "start": "node --experimental-strip-types --no-warnings=ExperimentalWarning --env-file-if-exists=.env src/index.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run"
   },
