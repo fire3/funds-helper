@@ -1,8 +1,17 @@
-import { periodLabel, periodRank, summarizeNav } from '@funds-helper/core';
+import {
+  buildComparableNav,
+  describeNavEvents,
+  describeNavSummaryBasis,
+  extractNavEvents,
+  periodLabel,
+  periodRank,
+  summarizeNav,
+} from '@funds-helper/core';
 import type {
   AllocationItem,
   FundDetailBase,
   Holdings,
+  NavEvent,
   NavPoint,
   NavSummaryRow,
   Notice,
@@ -10,6 +19,7 @@ import type {
   ScalePoint,
 } from '@funds-helper/shared';
 import {
+  extractAccumulatedNav,
   extractAllocation,
   extractHolders,
   extractNavTrend,
@@ -35,8 +45,14 @@ export const NAV_POINTS = 800;
 
 export interface FundDetailSections {
   base: FundDetailBase | null;
+  /** 原始**单位净值**走势（不加工，图上会出现分拆/分红造成的台阶）*/
   navTrend: NavPoint[];
+  /** 除权事件（份额分拆 / 分红除息），用于在卡片里解释净值突变 */
+  navEvents: NavEvent[];
+  /** 区间涨幅与最大回撤；发生除权时按复权口径计算 */
   navSummary: NavSummaryRow[];
+  /** 区间统计的口径说明；序列本身可比时为 null */
+  navSummaryNote: string | null;
   scale: ScalePoint[];
   allocation: AllocationItem[];
   holders: AllocationItem[];
@@ -70,7 +86,9 @@ export async function buildFundDetailSections(
 
   let base: FundDetailBase | null = null;
   let navTrend: NavPoint[] = [];
+  let navEvents: NavEvent[] = [];
   let navSummary: NavSummaryRow[] = [];
+  let navSummaryBasisNote: string | null = null;
   let scale: ScalePoint[] = [];
   let allocation: AllocationItem[] = [];
   let holders: AllocationItem[] = [];
@@ -111,9 +129,28 @@ export async function buildFundDetailSections(
       date: tsToDate(point.x),
       nav: point.y,
       change: point.equityReturn,
+      unitMoney: point.unitMoney,
     }));
+
+    // 单位净值会因份额分拆/分红机械下调（实测 159507 一天「跌」67.8%），
+    // 直接拿它算首尾比值会把除权当成亏损 —— 所以区间统计走**可比序列**，
+    // 走势图仍回传原始单位净值（它本身是准确的），并由 navEvents 解释台阶。
+    const events = extractNavEvents(points);
+    const notes = describeNavEvents(points, events);
+    navEvents = events.flatMap((event, index) => {
+      const note = notes[index];
+      return note === undefined ? [] : [{ ...event, title: note.title, text: note.text }];
+    });
+
+    const accumulated = extractAccumulatedNav(pingzhong).map((point) => ({
+      date: tsToDate(point.x),
+      nav: point.y,
+    }));
+    const comparable = buildComparableNav(points, accumulated);
+    navSummaryBasisNote = describeNavSummaryBasis(comparable.basis);
+
     // 区间统计用完整历史，图表只回传最近 NAV_POINTS 个点
-    navSummary = summarizeNav(points);
+    navSummary = summarizeNav(comparable.points);
     navTrend = points.slice(-NAV_POINTS);
     scale = extractScale(pingzhong).map((point) => ({
       date: point.date,
@@ -176,7 +213,9 @@ export async function buildFundDetailSections(
   return {
     base,
     navTrend,
+    navEvents,
     navSummary,
+    navSummaryNote: navSummaryBasisNote,
     scale,
     allocation,
     holders,

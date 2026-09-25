@@ -6,6 +6,7 @@
  */
 export * from './etf/index.ts';
 export * from './fund/code.ts';
+export * from './fund/nav.ts';
 export * from './fx/index.ts';
 export * from './qdii/index.ts';
 export * from './usd/index.ts';

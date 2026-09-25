@@ -135,14 +135,54 @@ export const AdviceItemSchema = z.object({
 export type AdviceItem = z.infer<typeof AdviceItemSchema>;
 
 // ---------------------------------------------------------------------------
+// 净值除权事件（份额分拆 / 分红除息）
+// ---------------------------------------------------------------------------
+
+/**
+ * 单位净值的**除权事件**。
+ *
+ * 单位净值会因份额分拆机械下调：实测 159507 在 2026-06-08 每份分拆 3 份，
+ * 单位净值 3.1334 → 1.0103（看起来一天跌 67.8%），而上游记录的真实涨跌只有 -3.27%。
+ * 这类「净值突变」必须在卡片里解释清楚，否则会被当成亏损。
+ *
+ * `title` / `text` 由服务端用 core 的口径生成（数值与文案一起下发），
+ * 前端只负责渲染，避免两边各有一套说法。
+ */
+export const NAV_EVENT_KINDS = ['split', 'dividend', 'other'] as const;
+export const NavEventKindSchema = z.enum(NAV_EVENT_KINDS);
+export type NavEventKind = z.infer<typeof NavEventKindSchema>;
+
+export const NavEventSchema = z.object({
+  date: z.string(),
+  kind: NavEventKindSchema,
+  /** 上游 `unitMoney` 原文 */
+  detail: z.string(),
+  /** 拆分比例：3 = 每份拆成 3 份 */
+  ratio: z.number().nullable(),
+  /** 每份分红金额（元）*/
+  amount: z.number().nullable(),
+  /** 可直接展示的标题与解释 */
+  title: z.string(),
+  text: z.string(),
+});
+export type NavEvent = z.infer<typeof NavEventSchema>;
+
+// ---------------------------------------------------------------------------
 // 详情区块（跨工具共用）
 // ---------------------------------------------------------------------------
 
 /** 详情抽屉里「与工具无关」的那部分载荷：净值 / 收益 / 规模 / 配置 / 持仓 / 公告 / 局部错误 */
 export const FundDetailSectionsSchema = z.object({
   navTrend: z.array(NavPointSchema),
-  /** 区间统计：近1月/3月/6月/1年/3年 的涨幅与最大回撤 */
+  /**
+   * 除权事件（无事件 = 空数组）。**带 `.default([])`**：详情缓存是持久化的，
+   * 旧缓存里没有这个字段，缺省成空数组能避免升级后打开抽屉直接报「数据结构不符合预期」。
+   */
+  navEvents: z.array(NavEventSchema).default([]),
+  /** 区间统计：近1月/3月/6月/1年/3年 的涨幅与最大回撤（除权后按复权口径）*/
   navSummary: z.array(NavSummaryRowSchema),
+  /** 区间统计的口径说明；序列本身可比时为 null */
+  navSummaryNote: z.string().nullable().default(null),
   scale: z.array(ScalePointSchema),
   allocation: z.array(AllocationItemSchema),
   holders: z.array(AllocationItemSchema),

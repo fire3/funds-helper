@@ -14,6 +14,20 @@ export interface NavTrendPoint {
   x: number;
   y: number;
   equityReturn: number | null;
+  /**
+   * 当日除权事件的原文（`unitMoney`）：`拆分：每份基金份额分拆3.0份` / `每份派现金0.0430元`。
+   * 空串 = 当天没有分拆或分红。
+   *
+   * **必须保留**：单位净值会因份额分拆/分红机械下调，丢掉这个字段就无法区分
+   * 「真跌了」和「份额变了」（见 `@funds-helper/core` 的 `fund/nav.ts`）。
+   */
+  unitMoney: string | null;
+}
+
+/** 累计净值点（`Data_ACWorthTrend` 是 `[时间戳, 净值]` 的二元组数组）*/
+export interface AccumulatedNavPoint {
+  x: number;
+  y: number;
 }
 
 export interface ScalePoint {
@@ -58,7 +72,31 @@ export function extractNavTrend(data: Record<string, unknown>): NavTrendPoint[] 
     const x = num(item.x);
     const y = num(item.y);
     if (x === null || y === null) continue;
-    points.push({ x, y, equityReturn: num(item.equityReturn) });
+    points.push({
+      x,
+      y,
+      equityReturn: num(item.equityReturn),
+      // 上游的空串统一归一化成 null，调用方只需判断 null
+      unitMoney: str(item.unitMoney),
+    });
+  }
+  return points;
+}
+
+/**
+ * 提取**累计净值**走势。
+ *
+ * 份额分拆/分红后单位净值会台阶式下调，累计净值则是连续的 —— 详情卡的
+ * 「区间涨幅 / 最大回撤」用它来算复权口径（见 core 的 `buildComparableNav`）。
+ */
+export function extractAccumulatedNav(data: Record<string, unknown>): AccumulatedNavPoint[] {
+  const points: AccumulatedNavPoint[] = [];
+  for (const raw of array(data.Data_ACWorthTrend)) {
+    const pair = array(raw);
+    const x = num(pair[0]);
+    const y = num(pair[1]);
+    if (x === null || y === null) continue;
+    points.push({ x, y });
   }
   return points;
 }

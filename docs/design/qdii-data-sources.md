@@ -572,8 +572,8 @@ GET https://fund.eastmoney.com/pingzhongdata/{code}.js
 
 | 块名 | 结构 | 说明 |
 |---|---|---|
-| `Data_netWorthTrend` | `[{"x":1344960000000,"y":1.0,"equityReturn":0}, ...]` | **全历史单位净值**，3392 点；`x` 为毫秒时间戳 |
-| `Data_ACWorthTrend` | `[[1344960000000, 1.0], ...]` | 累计净值 |
+| `Data_netWorthTrend` | `[{"x":1344960000000,"y":1.0,"equityReturn":0,"unitMoney":""}, ...]` | **全历史单位净值**，3392 点；`x` 为毫秒时间戳。`unitMoney` 是当日除权事件原文（`拆分：每份基金份额分拆3.0份` / `每份派现金0.0430元`），**必须保留**——单位净值会因分拆/分红机械下调（见 `etf-tool.md` §13） |
+| `Data_ACWorthTrend` | `[[1344960000000, 1.0], ...]` | 累计净值（分拆/分红后仍连续，详情卡的复权口径用它） |
 | `Data_fluctuationScale` | `{"categories":["2026-06-30",...],"series":[{"y":122.23,"mom":"25.81%"},...]}` | **季度净资产规模（亿元）** |
 | `Data_assetAllocation` | `{"series":[{"name":"现金占净比","data":[...]},{"name":"净资产","type":"line","data":[...]}],"categories":[...]}` | 资产配置（最新季度） |
 | `Data_holderStructure` | `{"series":[{"name":"机构持有比例","data":[0.66,...]},...],"categories":[...]}` | 持有人结构 |

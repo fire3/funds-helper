@@ -496,6 +496,56 @@ describe('GET /api/tools/etf/funds/:code', () => {
     }
   });
 
+  it('份额分拆：走势保留原始单位净值，区间统计与说明改走复权口径', async () => {
+    const { app, source } = await etfHarness();
+    try {
+      // 159507 形态：2026-09-11 每份分拆 3 份，单位净值 3.3 → 1.1（看起来一天跌 66.7%）
+      source.fetchPingzhong = async () => ({
+        Data_netWorthTrend: [
+          { x: Date.UTC(2026, 8, 1), y: 3.0, equityReturn: 0, unitMoney: '' },
+          { x: Date.UTC(2026, 8, 10), y: 3.3, equityReturn: 10, unitMoney: '' },
+          {
+            x: Date.UTC(2026, 8, 11),
+            y: 1.1,
+            equityReturn: 0,
+            unitMoney: '拆分：每份基金份额分拆3.0份',
+          },
+          { x: Date.UTC(2026, 8, 20), y: 1.0, equityReturn: -9.09, unitMoney: '' },
+          { x: Date.UTC(2026, 8, 30), y: 1.2, equityReturn: 20, unitMoney: '' },
+        ],
+        Data_ACWorthTrend: [
+          [Date.UTC(2026, 8, 1), 3.0],
+          [Date.UTC(2026, 8, 10), 3.3],
+          [Date.UTC(2026, 8, 11), 3.3],
+          [Date.UTC(2026, 8, 20), 3.0],
+          [Date.UTC(2026, 8, 30), 3.6],
+        ],
+      });
+
+      const response = await app.inject({ method: 'GET', url: '/api/tools/etf/funds/510300' });
+      expect(response.statusCode).toBe(200);
+      const body = response.json() as EtfFundDetailResponse;
+
+      // 走势图仍是原始单位净值（台阶是真实发生的）
+      expect(body.navTrend.map((point) => point.nav)).toEqual([3.0, 3.3, 1.1, 1.0, 1.2]);
+
+      // 卡片可展示的解释：哪天、什么事件、多大比例、真实涨跌
+      expect(body.navEvents).toHaveLength(1);
+      expect(body.navEvents[0]).toMatchObject({ date: '2026-09-11', kind: 'split', ratio: 3 });
+      expect(body.navEvents[0]?.title).toContain('份额分拆');
+      expect(body.navEvents[0]?.text).toContain('不是亏损');
+      expect(body.navEvents[0]?.text).toContain('复权口径');
+      expect(body.navSummaryNote).toContain('复权口径');
+
+      // 区间统计按累计净值：+20%（不是单位净值的 -60%），回撤 -9.09%（不是 -69.7%）
+      const month = body.navSummary.find((row) => row.label === '近1月');
+      expect(month?.returnPct).toBe(20);
+      expect(month?.maxDrawdownPct).toBeCloseTo(-9.09, 1);
+    } finally {
+      await app.close();
+    }
+  });
+
   it('代码格式不对 → 400；不在行情里 → 404（含已成立未上市）', async () => {
     const { app } = await etfHarness();
     try {

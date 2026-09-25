@@ -1,7 +1,7 @@
-import type { FundDetailSections as FundDetailSectionsData } from '@funds-helper/shared';
+import type { FundDetailSections as FundDetailSectionsData, NavEvent } from '@funds-helper/shared';
 import { useMemo, useState } from 'react';
 import { formatPercent, trendClass } from '../lib/format.ts';
-import { Chart } from './Chart.tsx';
+import { Chart, type MarkLine } from './Chart.tsx';
 
 /**
  * 基金详情的**通用区块**渲染：净值走势 / 收益表现 / 规模 / 配置 / 持仓 / 公告 / 局部错误。
@@ -18,6 +18,19 @@ const NAV_RANGES = [
   { label: '近3年', days: 1095 },
   { label: '全部', days: null },
 ] as const;
+
+/**
+ * 净值走势图上的事件标注文案。
+ *
+ * 「净值突变」最常见的成因就是份额分拆：本站实测 159507 在 2026-06-08 每份分拆 3 份，
+ * 单位净值 3.1334 → 1.0103，图上看起来像一天跌 67.8%。在事件当天画一条竖线，
+ * 配合下方的说明，用户不会把它误读成亏损。
+ */
+function navEventMarker(event: NavEvent): string {
+  if (event.kind === 'split' && event.ratio !== null) return `拆分 1:${Number(event.ratio)}`;
+  if (event.kind === 'dividend') return '分红除息';
+  return '除权';
+}
 
 function shiftDate(date: string, days: number): string {
   const [year = 1970, month = 1, day = 1] = date.split('-').map(Number);
@@ -55,6 +68,15 @@ export function FundDetailSections({ detail }: { detail: FundDetailSectionsData 
     return points.filter((point) => point.date >= cutoff);
   }, [detail?.navTrend, rangeIndex]);
 
+  const navEventMarks = useMemo<MarkLine[]>(
+    () =>
+      (detail?.navEvents ?? []).map((event) => ({
+        axis: event.date,
+        label: navEventMarker(event),
+      })),
+    [detail?.navEvents],
+  );
+
   if (!detail) return null;
 
   return (
@@ -82,7 +104,31 @@ export function FundDetailSections({ detail }: { detail: FundDetailSectionsData 
             categories={navSeries.map((point) => point.date)}
             series={[{ name: '单位净值', data: navSeries.map((point) => point.nav), area: true }]}
             yFormatter={(value) => value.toFixed(2)}
+            markLines={navEventMarks}
           />
+          {detail.navEvents.length > 0 ? (
+            <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+              <p className="font-medium">净值走势里的“突变”是份额分拆/分红除息，不是亏损</p>
+              <ul className="mt-1.5 space-y-1.5">
+                {detail.navEvents.map((event) => (
+                  <li key={`${event.date}-${event.detail}`}>
+                    <span className="font-medium">
+                      {event.date} · {event.title}
+                    </span>
+                    <p className="mt-0.5 text-amber-800 dark:text-amber-200/85">{event.text}</p>
+                    <p className="mt-0.5 text-amber-700/80 dark:text-amber-300/70">
+                      上游原文：{event.detail}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+              {detail.navSummaryNote ? (
+                <p className="mt-1.5 border-t border-amber-200 pt-1.5 dark:border-amber-900">
+                  {detail.navSummaryNote}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
           <div className="grid grid-cols-5 gap-2 pt-1">
             {detail.navSummary.map((row) => (
               <div
@@ -99,7 +145,9 @@ export function FundDetailSections({ detail }: { detail: FundDetailSectionsData 
               </div>
             ))}
           </div>
-          <p className="text-xs text-slate-400">上排为区间涨幅，下排为最大回撤</p>
+          <p className="text-xs text-slate-400">
+            上排为区间涨幅，下排为最大回撤；发生份额分拆/分红时按复权口径计算。
+          </p>
         </Section>
       ) : null}
 

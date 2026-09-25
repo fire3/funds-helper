@@ -7,6 +7,7 @@ import { parseHoldings } from './holdings.ts';
 import { noticeUrl, parseNotices } from './notices.ts';
 import { parsePeriodIncrease } from './period-increase.ts';
 import {
+  extractAccumulatedNav,
   extractAllocation,
   extractHolders,
   extractNavTrend,
@@ -183,6 +184,26 @@ describe('parsePingzhong —— 接口 G', () => {
 
   it('空文本返回空对象（由 fetch 层负责判定为失败）', () => {
     expect(parsePingzhong('/* nothing here */')).toEqual({});
+  });
+
+  it('保留 unitMoney：份额分拆/分红是解释「净值突变」的唯一线索', () => {
+    const trend = extractNavTrend(parsePingzhong(fixture('pingzhong/split.js')));
+    expect(trend).toHaveLength(3);
+    // 没有事件的日子归一化成 null，有事件的日子保留原文
+    expect(trend[0]?.unitMoney).toBeNull();
+    expect(trend[2]?.unitMoney).toBe('拆分：每份基金份额分拆3.0份');
+  });
+
+  it('提取累计净值走势（Data_ACWorthTrend 是 [时间戳, 净值] 二元组）', () => {
+    const accumulated = extractAccumulatedNav(parsePingzhong(fixture('pingzhong/split.js')));
+    expect(accumulated).toHaveLength(3);
+    expect(accumulated[2]).toMatchObject({ x: 1789084800000, y: 3.3 });
+    // 分拆日累计净值连续（单位净值同日 3.3 → 1.1）
+    expect(accumulated[1]?.y).toBe(3.3);
+  });
+
+  it('没有累计净值块时返回空数组（由 core 退回按拆分比例还原）', () => {
+    expect(extractAccumulatedNav(parsePingzhong('/* nothing here */'))).toEqual([]);
   });
 });
 

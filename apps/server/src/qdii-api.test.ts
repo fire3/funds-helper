@@ -28,6 +28,9 @@ describe('GET /api/tools/qdii/funds/:code', () => {
 
       expect(body.navTrend.length).toBe(5);
       expect(body.navTrend.at(-1)).toMatchObject({ date: '2026-09-30', nav: 110 });
+      // 没有分拆/分红 → 无需解释，也不改变区间统计口径
+      expect(body.navEvents).toEqual([]);
+      expect(body.navSummaryNote).toBeNull();
 
       expect(body.scale).toHaveLength(2);
       expect(body.allocation.map((item) => item.name)).toEqual(['股票占净比', '现金占净比']);
