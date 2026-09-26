@@ -1,3 +1,4 @@
+import { ETF_SORT_NATURAL_DIR } from '@funds-helper/core';
 import type { EtfRecord } from '@funds-helper/shared';
 import { describe, expect, it } from 'vitest';
 import {
@@ -317,5 +318,85 @@ describe('区间涨幅排序键（近6月/近1年/近3年）', () => {
       'A',
       'B',
     ]);
+  });
+});
+
+describe('表头排序（sort + dir）', () => {
+  it('方向只在偏离该列自然方向时写进链接', () => {
+    // 规模的自然方向是降序 → 不写 dir
+    expect(
+      toSearchParams({ ...DEFAULT_FILTERS, sort: 'scale', dir: 'desc' }).get('dir'),
+    ).toBeNull();
+    expect(toSearchParams({ ...DEFAULT_FILTERS, sort: 'scale', dir: 'asc' }).get('dir')).toBe(
+      'asc',
+    );
+    // 代码的自然方向是升序
+    expect(toSearchParams({ ...DEFAULT_FILTERS, sort: 'code', dir: 'asc' }).get('dir')).toBeNull();
+    expect(toSearchParams({ ...DEFAULT_FILTERS, sort: 'code', dir: 'desc' }).get('dir')).toBe(
+      'desc',
+    );
+  });
+
+  it('没写 dir = 该列的自然方向；写了就用写的，脏值回落自然方向', () => {
+    expect(fromSearchParams(new URLSearchParams('sort=scale')).dir).toBe('desc');
+    expect(fromSearchParams(new URLSearchParams('sort=scale&dir=asc')).dir).toBe('asc');
+    expect(fromSearchParams(new URLSearchParams('sort=code')).dir).toBe('asc');
+    expect(fromSearchParams(new URLSearchParams('sort=code&dir=乱写')).dir).toBe('asc');
+    // 没有 sort 时 dir 仍生效（默认列 = 规模）
+    expect(fromSearchParams(new URLSearchParams('dir=asc')).sort).toBe(DEFAULT_FILTERS.sort);
+    expect(fromSearchParams(new URLSearchParams('dir=asc')).dir).toBe('asc');
+  });
+
+  it('旧链接 sort=discount（折价最深）= 折溢价列升序，且能原样往返', () => {
+    const filters = fromSearchParams(new URLSearchParams('sort=discount'));
+    expect(filters.sort).toBe('premium');
+    expect(filters.dir).toBe('asc');
+    expect(fromSearchParams(toSearchParams(filters))).toEqual(filters);
+  });
+
+  it('refine 按方向排序，空值两个方向都恒排最后', () => {
+    const rows = [
+      fund({ code: 'A', scale: 100 }),
+      fund({ code: 'B', scale: null }),
+      fund({ code: 'C', scale: 50 }),
+    ];
+    expect(refine(rows, { ...DEFAULT_FILTERS, dir: 'asc' }).map((item) => item.code)).toEqual([
+      'C',
+      'A',
+      'B',
+    ]);
+    expect(refine(rows, { ...DEFAULT_FILTERS, dir: 'desc' }).map((item) => item.code)).toEqual([
+      'A',
+      'C',
+      'B',
+    ]);
+  });
+
+  it('表格每一列的排序键都能往返（含新加的简称/跟踪指数/最新价/场外联接）', () => {
+    const columns = [
+      'code',
+      'name',
+      'category',
+      'index',
+      'feeder',
+      'price',
+      'changePct',
+      'premium',
+      'amount',
+      'turnover',
+      'scale',
+      'ret1y',
+      'ret3y',
+      'listingDate',
+    ] as const;
+    for (const key of columns) {
+      const natural = ETF_SORT_NATURAL_DIR[key];
+      for (const dir of ['asc', 'desc'] as const) {
+        const params = toSearchParams({ ...DEFAULT_FILTERS, sort: key, dir });
+        expect(fromSearchParams(params).sort).toBe(key);
+        expect(fromSearchParams(params).dir).toBe(dir);
+      }
+      expect(natural === 'asc' || natural === 'desc').toBe(true);
+    }
   });
 });

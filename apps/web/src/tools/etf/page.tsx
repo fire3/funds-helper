@@ -1,3 +1,4 @@
+import { ETF_SORT_NATURAL_DIR, type EtfSortKey } from '@funds-helper/core';
 import {
   ETF_SPOT_SOURCE_ORDER,
   ETF_SPOT_SOURCES,
@@ -159,6 +160,16 @@ export default function EtfPage() {
   const closeDrawer = useCallback(
     () => navigate({ pathname: '/tools/etf', search: searchParams.toString() }),
     [navigate, searchParams],
+  );
+
+  /** 点表头排序：已是当前列 → 反转方向；换列 → 用该列的自然方向（见 core 的自然方向表） */
+  const onSort = useCallback(
+    (key: EtfSortKey) => {
+      let dir = ETF_SORT_NATURAL_DIR[key];
+      if (filters.sort === key) dir = filters.dir === 'asc' ? 'desc' : 'asc';
+      applyFilters({ ...filters, sort: key, dir });
+    },
+    [applyFilters, filters],
   );
 
   return (
@@ -431,16 +442,26 @@ export default function EtfPage() {
                 排序
                 <select
                   value={filters.sort}
-                  onChange={(event) =>
-                    applyFilters({ ...filters, sort: event.target.value as EtfFilters['sort'] })
-                  }
+                  title="与表头点击同源：也可以直接点表头排序（再点一次反转方向）"
+                  onChange={(event) => {
+                    const key = event.target.value as EtfSortKey;
+                    // 选列 = 用该列的自然方向（在已选列上再选一次 = 复位到自然方向）
+                    applyFilters({ ...filters, sort: key, dir: ETF_SORT_NATURAL_DIR[key] });
+                  }}
                   className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm dark:border-slate-700 dark:bg-slate-950"
                 >
-                  {SORT_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
+                  {SORT_OPTIONS.map((option) => {
+                    // 选中项显示当前方向，其余显示点选后会得到的自然方向
+                    const dir =
+                      filters.sort === option.value
+                        ? filters.dir
+                        : ETF_SORT_NATURAL_DIR[option.value];
+                    return (
+                      <option key={option.value} value={option.value}>
+                        {option.label} {dir === 'asc' ? '↑' : '↓'}
+                      </option>
+                    );
+                  })}
                 </select>
               </label>
               <button
@@ -505,7 +526,14 @@ export default function EtfPage() {
               }
             />
           ) : (
-            <FundTable funds={visible} selectedCode={selectedCode} onSelect={openDrawer} />
+            <FundTable
+              funds={visible}
+              selectedCode={selectedCode}
+              onSelect={openDrawer}
+              sort={filters.sort}
+              dir={filters.dir}
+              onSort={onSort}
+            />
           )}
         </>
       ) : null}

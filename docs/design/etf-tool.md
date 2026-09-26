@@ -114,9 +114,18 @@ export function describePremium(rate: number | null):
 
 ### 3.4 排序（`sort.ts`）
 
-`ETF_SORT_KEYS = ['scale','amount','premium','discount','changePct','turnover','listingDate','category','code']`
-+ 中文标签 `ETF_SORT_LABELS`。默认 `scale`（规模降序）——「先看主流品种」。
-`premium` 按 `premiumRate` 降序（最贵在前），`discount` 升序（最便宜在前）。
+`ETF_SORT_KEYS` 与列表表格的**列一一对应**（`code / name / category / index / feeder /
+price / changePct / premium(+discount) / amount / turnover / scale / ret6m / ret1y /
+ret3y / listingDate`）+ 中文列名 `ETF_SORT_LABELS`；默认 `scale`（规模降序）——「先看主流品种」。
+
+- **列与方向分离**：键只描述「按哪一列」，升/降由 `EtfSortDir` 表达，两者都写进 URL
+  （`?sort=&dir=`，方向只在偏离 `ETF_SORT_NATURAL_DIR` 时才写）。自然方向 = 第一次点到该列的方向：
+  名称/代码/分类/跟踪指数正序，数值从大到小，上市日最新在前。
+- **点表头排序**：已是当前列 → 反转方向；换列 → 用该列的自然方向。排序下拉与表头同源
+  （选列 = 自然方向，选项上带 ↑/↓ 提示实际方向）。
+- `premium` / `discount` 是同一列（折溢价）的两个预设方向，给榜单等「不需要方向状态」的调用方
+  （`panels.tsx` 的溢价最高 / 折价最深）；旧链接 `?sort=discount` 解析成折溢价列升序。
+- **空值恒排最后**（两个方向都是）：没抓到的数据不冒充 0 参与比较；并列时按代码兜底，结果可复现。
 
 ---
 
@@ -225,6 +234,8 @@ export function describePremium(rate: number | null):
   筛选条件写入 URL 可分享（与 QDII/美元份额一致）。
 - **表格**：代码 / 简称 / 分类 / 跟踪指数 / 最新价 / 涨跌幅 / 折溢价 / 成交额 / 换手 / 规模 / 上市日。
   涨跌与折溢价按 A 股习惯**红涨绿跌**；折溢价用中性色 + 文案，避免与涨跌混淆。
+  **每个表头都可点击排序**（再点一次反转方向，当前列高亮并显示 ↑/↓），与排序下拉、
+  `?sort=&dir=` 同源；排序状态在 URL 里，列因渠道能力显隐也不会丢。
 - **详情抽屉**：折溢价提示 → 基本信息（跟踪指数 / 管理费 / 托管费 / 净资产规模 / 管理人 /
   托管人 / 成立日 / 风险等级）→ 通用区块（净值走势 / 分周期收益 / 规模 / 配置 / 持仓 / 公告）。
 

@@ -4,6 +4,8 @@ import {
   ETF_MARKETS,
   ETF_SORT_KEYS,
   ETF_SORT_LABELS,
+  ETF_SORT_NATURAL_DIR,
+  type EtfSortDir,
   type EtfSortKey,
   sortEtfs,
 } from '@funds-helper/core';
@@ -55,7 +57,13 @@ export const AMOUNT_FILTERS = [
   { value: '1', label: '≥1 亿' },
 ] as const;
 
-export const SORT_OPTIONS = ETF_SORT_KEYS.map((value) => ({
+/**
+ * 排序下拉的选项 = 表格列（与表头一一对应，选中后表头亮同名的那一列）。
+ *
+ * `discount` 是「折溢价」列的反向预设（旧链接 `?sort=discount` 仍认），方向已经能由
+ * `dir` 表达，不再单独占一个选项；`ret6m` 没有对应列，但仍是合法的排序键，保留。
+ */
+export const SORT_OPTIONS = ETF_SORT_KEYS.filter((value) => value !== 'discount').map((value) => ({
   value,
   label: ETF_SORT_LABELS[value],
 }));
@@ -72,6 +80,8 @@ export interface EtfFilters {
   feeder: string;
   keyword: string;
   sort: EtfSortKey;
+  /** 排序方向（表头升降序）。只与 `sort` 一起才有意义 */
+  dir: EtfSortDir;
 }
 
 export const DEFAULT_FILTERS: EtfFilters = {
@@ -84,9 +94,11 @@ export const DEFAULT_FILTERS: EtfFilters = {
   keyword: '',
   // 默认按规模降序：先看主流品种，避免一屏全是迷你 ETF
   sort: ETF_DEFAULT_SORT,
+  dir: ETF_SORT_NATURAL_DIR[ETF_DEFAULT_SORT],
 };
 
 const SORT_SET = new Set<string>(ETF_SORT_KEYS);
+const DIR_SET = new Set<string>(['asc', 'desc']);
 const CATEGORY_SET = new Set<string>(ETF_CATEGORIES);
 const MARKET_SET = new Set<string>([ETF_MARKETS.Sh, ETF_MARKETS.Sz]);
 const PREMIUM_SET = new Set<string>(PREMIUM_FILTERS.map((item) => item.value));
@@ -103,7 +115,26 @@ function pickAll(values: readonly string[], allowed: Set<string>): string[] {
   return values.filter((value) => allowed.has(value));
 }
 
+/**
+ * `?sort=` / `?dir=` → 当前排序列与方向。
+ *
+ * 方向缺省时回落到该列的**自然方向**（分享链接只写与默认不同的项）；
+ * 旧链接 `?sort=discount`（折价最深）会被认成折溢价列升序，而不是静默回到默认排序。
+ */
+function pickSort(params: URLSearchParams): { sort: EtfSortKey; dir: EtfSortDir } {
+  const legacy = params.get('sort') === 'discount';
+  const sort = pick(
+    legacy ? 'premium' : params.get('sort'),
+    SORT_SET,
+    DEFAULT_FILTERS.sort,
+  ) as EtfSortKey;
+  const rawDir = params.get('dir');
+  if (DIR_SET.has(rawDir ?? '')) return { sort, dir: rawDir as EtfSortDir };
+  return { sort, dir: legacy ? 'asc' : ETF_SORT_NATURAL_DIR[sort] };
+}
+
 export function fromSearchParams(params: URLSearchParams): EtfFilters {
+  const { sort, dir } = pickSort(params);
   return {
     categories: pickAll(params.getAll('category'), CATEGORY_SET),
     markets: pickAll(params.getAll('market'), MARKET_SET),
@@ -112,7 +143,8 @@ export function fromSearchParams(params: URLSearchParams): EtfFilters {
     minAmount: pick(params.get('minAmount'), AMOUNT_SET, DEFAULT_FILTERS.minAmount),
     feeder: pick(params.get('feeder'), FEEDER_SET, DEFAULT_FILTERS.feeder),
     keyword: params.get('q') ?? '',
-    sort: pick(params.get('sort'), SORT_SET, DEFAULT_FILTERS.sort) as EtfSortKey,
+    sort,
+    dir,
   };
 }
 
@@ -127,6 +159,8 @@ export function toSearchParams(filters: EtfFilters): URLSearchParams {
   if (filters.feeder !== DEFAULT_FILTERS.feeder) params.set('feeder', filters.feeder);
   if (filters.keyword.trim() !== '') params.set('q', filters.keyword.trim());
   if (filters.sort !== DEFAULT_FILTERS.sort) params.set('sort', filters.sort);
+  // 方向只在**偏离该列自然方向**时写入（自然方向可以从 sort 推出来，链接更短）
+  if (filters.dir !== ETF_SORT_NATURAL_DIR[filters.sort]) params.set('dir', filters.dir);
   return params;
 }
 
@@ -177,7 +211,7 @@ export function filterEtfs(records: readonly EtfRecord[], filters: EtfFilters): 
 
 /** 筛选 + 排序。排序口径与后端共用 core 的实现，避免出现两套规则 */
 export function refine(records: readonly EtfRecord[], filters: EtfFilters): EtfRecord[] {
-  return sortEtfs(filterEtfs(records, filters), filters.sort);
+  return sortEtfs(filterEtfs(records, filters), filters.sort, filters.dir);
 }
 
 export type FacetDimension = 'category' | 'market';

@@ -1,3 +1,4 @@
+import type { EtfSortDir, EtfSortKey } from '@funds-helper/core';
 import type { EtfRecord } from '@funds-helper/shared';
 import { Badge, type Tone } from '../../components/ui.tsx';
 import { formatNumber, formatPercent, formatYuan, trendClass } from '../../lib/format.ts';
@@ -7,6 +8,9 @@ import { formatNumber, formatPercent, formatYuan, trendClass } from '../../lib/f
  *
  * 折溢价用中性色 + 文案（不是涨跌配色）—— 溢价高意味着「买贵了」是风险，
  * 与「今天涨了」是两件事，混用红绿会误导。
+ *
+ * **每个表头都可点击排序**（再点一次反转方向，方向由箭头表达）；排序状态由外部
+ * 持有并写进 URL，因此列的显隐（渠道能力不同）不会重置排序。
  */
 
 const CATEGORY_TONE: Record<string, Tone> = {
@@ -28,14 +32,63 @@ const PREMIUM_TONE: Record<string, string> = {
   未知: 'text-slate-400 dark:text-slate-500',
 };
 
+/** 可点击排序的表头：箭头常驻占位（`opacity-0`），避免列宽随状态跳动 */
+function SortableTh({
+  label,
+  sortKey,
+  sort,
+  dir,
+  onSort,
+  align = 'left',
+  title,
+}: {
+  label: string;
+  sortKey: EtfSortKey;
+  sort: EtfSortKey;
+  dir: EtfSortDir;
+  onSort: (key: EtfSortKey) => void;
+  align?: 'left' | 'right';
+  title?: string;
+}) {
+  const active = sort === sortKey;
+  return (
+    <th
+      aria-sort={active ? (dir === 'asc' ? 'ascending' : 'descending') : 'none'}
+      className={`px-3 py-2 font-medium ${align === 'right' ? 'text-right' : ''}`}
+    >
+      <button
+        type="button"
+        onClick={() => onSort(sortKey)}
+        title={title ?? '点击按此列排序，再点一次反转方向'}
+        className={`inline-flex cursor-pointer items-center gap-1 rounded transition-colors hover:text-sky-700 dark:hover:text-sky-300 ${
+          active ? 'text-sky-700 dark:text-sky-400' : ''
+        }`}
+      >
+        {label}
+        <span className={active ? 'opacity-70' : 'opacity-0'} aria-hidden>
+          {dir === 'asc' ? '↑' : '↓'}
+        </span>
+      </button>
+    </th>
+  );
+}
+
 export function FundTable({
   funds,
   selectedCode,
   onSelect,
+  sort,
+  dir,
+  onSort,
 }: {
   funds: readonly EtfRecord[];
   selectedCode: string | null;
   onSelect: (code: string) => void;
+  /** 当前排序列（与排序下拉、URL 的 `?sort=` 同源） */
+  sort: EtfSortKey;
+  /** 当前排序方向（`?dir=`） */
+  dir: EtfSortDir;
+  onSort: (key: EtfSortKey) => void;
 }) {
   // 渠道能力不同（新浪列表没有 IOPV 与上市日期）：整列都是空的时候直接隐藏，
   // 否则一屏 1600 行 '--' 只会让人以为「数据坏了」
@@ -52,41 +105,111 @@ export function FundTable({
       <table className="w-full min-w-[1080px] border-collapse text-sm">
         <thead>
           <tr className="border-b border-slate-200 text-left text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
-            <th className="px-3 py-2 font-medium">代码</th>
-            <th className="px-3 py-2 font-medium">简称</th>
-            <th className="px-3 py-2 font-medium">分类</th>
-            <th className="px-3 py-2 font-medium">跟踪指数</th>
+            <SortableTh label="代码" sortKey="code" sort={sort} dir={dir} onSort={onSort} />
+            <SortableTh label="简称" sortKey="name" sort={sort} dir={dir} onSort={onSort} />
+            <SortableTh
+              label="分类"
+              sortKey="category"
+              sort={sort}
+              dir={dir}
+              onSort={onSort}
+              title="按分类顺序排（宽基 → 行业主题 → …），再点一次反转"
+            />
+            <SortableTh label="跟踪指数" sortKey="index" sort={sort} dir={dir} onSort={onSort} />
             {hasFeeder ? (
-              <th
-                className="px-3 py-2 text-right font-medium"
+              <SortableTh
+                label="场外联接"
+                sortKey="feeder"
+                sort={sort}
+                dir={dir}
+                onSort={onSort}
+                align="right"
                 title="场外可申赎的联接基金份额数（点开详情看代码）"
-              >
-                场外联接
-              </th>
+              />
             ) : null}
-            <th className="px-3 py-2 text-right font-medium">最新价</th>
-            <th className="px-3 py-2 text-right font-medium">涨跌幅</th>
-            {hasPremium ? <th className="px-3 py-2 text-right font-medium">折溢价</th> : null}
-            <th className="px-3 py-2 text-right font-medium">成交额</th>
-            <th className="px-3 py-2 text-right font-medium">换手</th>
-            <th className="px-3 py-2 text-right font-medium">规模</th>
+            <SortableTh
+              label="最新价"
+              sortKey="price"
+              sort={sort}
+              dir={dir}
+              onSort={onSort}
+              align="right"
+            />
+            <SortableTh
+              label="涨跌幅"
+              sortKey="changePct"
+              sort={sort}
+              dir={dir}
+              onSort={onSort}
+              align="right"
+            />
+            {hasPremium ? (
+              <SortableTh
+                label="折溢价"
+                sortKey="premium"
+                sort={sort}
+                dir={dir}
+                onSort={onSort}
+                align="right"
+                title="按折溢价率排序（正数 = 场内价高于净值），再点一次反转方向"
+              />
+            ) : null}
+            <SortableTh
+              label="成交额"
+              sortKey="amount"
+              sort={sort}
+              dir={dir}
+              onSort={onSort}
+              align="right"
+            />
+            <SortableTh
+              label="换手"
+              sortKey="turnover"
+              sort={sort}
+              dir={dir}
+              onSort={onSort}
+              align="right"
+            />
+            <SortableTh
+              label="规模"
+              sortKey="scale"
+              sort={sort}
+              dir={dir}
+              onSort={onSort}
+              align="right"
+            />
             {hasRet1y ? (
-              <th
-                className="px-3 py-2 text-right font-medium"
+              <SortableTh
+                label="近1年"
+                sortKey="ret1y"
+                sort={sort}
+                dir={dir}
+                onSort={onSort}
+                align="right"
                 title="区间涨幅来自接口 H（每周刷新），次新 ETF 可能为空"
-              >
-                近1年
-              </th>
+              />
             ) : null}
             {hasRet3y ? (
-              <th
-                className="px-3 py-2 text-right font-medium"
+              <SortableTh
+                label="近3年"
+                sortKey="ret3y"
+                sort={sort}
+                dir={dir}
+                onSort={onSort}
+                align="right"
                 title="区间涨幅来自接口 H（每周刷新），成立不足 3 年的为空"
-              >
-                近3年
-              </th>
+              />
             ) : null}
-            {hasListingDate ? <th className="px-3 py-2 text-right font-medium">上市日</th> : null}
+            {hasListingDate ? (
+              <SortableTh
+                label="上市日"
+                sortKey="listingDate"
+                sort={sort}
+                dir={dir}
+                onSort={onSort}
+                align="right"
+              />
+            ) : null}
           </tr>
         </thead>
         <tbody>
