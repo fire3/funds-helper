@@ -1,0 +1,663 @@
+<!-- fixture: scmp
+     采集日期: 2026-09-26
+     原始 URL: https://www.scmp.com/rss/91/feed
+     格式: RSS 2.0
+     用途: packages/sources/src/feeds/rss.test.ts（上游改版时用同一 URL 重采、diff、更新解析逻辑）
+-->
+<?xml version="1.0"?>
+<rss version="2.0" xml:base="link" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:media="http://www.rssboard.org/media-rss" xmlns:og="http://ogp.me/ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:schema="http://schema.org/" xmlns:sioc="http://rdfs.org/sioc/ns#" xmlns:sioct="http://rdfs.org/sioc/types#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <channel>
+    <title>News - South China Morning Post</title>
+    <link>https://www.scmp.com/rss/91/feed</link>
+    <description>All the latest breaking news from Hong Kong, China and around the world</description>
+    <language>en</language>
+    <image>
+      <url>https://assets-v2.i-scmp.com/production/static/img/icons/scmp-meta-1200x630.png</url>
+      <title>News - South China Morning Post</title>
+      <link>https://www.scmp.com</link>
+    </image>
+    <atom:link href="https://www.scmp.com/rss/91/feed" rel="self" type="application/rss+xml"/>
+    <item>
+      <author>Jayson Albano</author>
+      <dc:creator>Jayson Albano</dc:creator>
+      <description>When Dyan Agonoy left the Philippines to work as a domestic helper in Hong Kong, she had to leave her family behind.
+“I’ve missed a lot of my kids’ milestones, our special occasions. I’m always the only one missing from the pictures,” she said.
+Agonoy left university, married young and started a family. Without the bachelor’s degree required for many jobs, she took up domestic work abroad.
+Gelanie Aguilario faced a similar plight. She twice tried to earn a bachelor’s degree – first in political...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/hong-kong/education/article/3368867/never-too-late-filipino-domestic-helpers-pursue-degree-dreams-they-put-hold?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/hong-kong/education/article/3368867/never-too-late-filipino-domestic-helpers-pursue-degree-dreams-they-put-hold?utm_source=rss_feed</link>
+      <pubDate>Sat, 26 Sep 2026 02:30:08 +0000</pubDate>
+      <title>‘Never too late’: Filipino domestic helpers pursue degree dreams they put on hold</title>
+      <enclosure length="4096" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/ed4f041a-d246-411a-a630-871392415bd0_713e3990.jpg?itok=A9jm8nRS&amp;v=1790355683"/>
+      <media:content height="3072" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/ed4f041a-d246-411a-a630-871392415bd0_713e3990.jpg?itok=A9jm8nRS&amp;v=1790355683" width="4096"/>
+    </item>
+    <item>
+      <author>Alice Yan</author>
+      <dc:creator>Alice Yan</dc:creator>
+      <description>A middle-aged couple in rural China has recently trended on social media for having 13 children.
+The family, living in a village in Qinzhou in the Guangxi Zhuang autonomous region, stands out in mainland China, particularly in light of the country’s declining birth rate. This situation has prompted authorities to implement various policies encouraging marriage and larger families.
+According to Jiupai News, the 49-year-old man, surnamed Huang, and his 42-year-old wife have welcomed 13 children –...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/people-culture/trending-china/article/3368855/china-couple-have-13-kids-avoid-village-bullying-elderly-loneliness-dividing-public-opinion?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/people-culture/trending-china/article/3368855/china-couple-have-13-kids-avoid-village-bullying-elderly-loneliness-dividing-public-opinion?utm_source=rss_feed</link>
+      <pubDate>Sat, 26 Sep 2026 02:00:21 +0000</pubDate>
+      <title>China couple have 13 kids to avoid village bullying, elderly loneliness, dividing public opinion</title>
+      <enclosure length="3000" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/9a66f762-2816-4ad0-a705-8dc2ddf3e64d_999099b8.jpg?itok=N0g4EWrH&amp;v=1790343184"/>
+      <media:content height="1688" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/9a66f762-2816-4ad0-a705-8dc2ddf3e64d_999099b8.jpg?itok=N0g4EWrH&amp;v=1790343184" width="3000"/>
+    </item>
+    <item>
+      <author>Chao Kong</author>
+      <dc:creator>Chao Kong</dc:creator>
+      <description>Offshore wind farms can reduce the coverage of shore-based radar systems and create areas where targets become harder to detect, according to a new study.
+The researchers found that at a range of 5km (3 miles), effective radar coverage fell by 6.9 per cent while blind spots increased by 14.9 per cent.
+The research, published online last month in the peer-reviewed Chinese journal Radio Engineering, was conducted by Professor Liu Zunnian and his team from Qingdao Technological University and the...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/china/science/article/3368851/offshore-wind-farm-could-create-radar-blind-spots-and-ghost-targets-chinese-study-warns?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/china/science/article/3368851/offshore-wind-farm-could-create-radar-blind-spots-and-ghost-targets-chinese-study-warns?utm_source=rss_feed</link>
+      <pubDate>Sat, 26 Sep 2026 02:00:18 +0000</pubDate>
+      <title>Offshore wind farm could create radar blind spots and ‘ghost’ targets, Chinese study warns</title>
+      <enclosure length="3829" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/9209895e-5389-4461-84d3-efa1184a4fa0_3d48c81f.jpg?itok=5tti1ufq&amp;v=1790341824"/>
+      <media:content height="2184" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/9209895e-5389-4461-84d3-efa1184a4fa0_3d48c81f.jpg?itok=5tti1ufq&amp;v=1790341824" width="3829"/>
+    </item>
+    <item>
+      <author>Reuters</author>
+      <dc:creator>Reuters</dc:creator>
+      <description>Alabama said on Friday it had reached a settlement with TikTok and its Chinese parent company, ByteDance, that requires the social media platform to impose new usage limits and enhanced age-verification measures for users in the US state, resolving claims that the platform endangered children and misled consumers about its safety.
+The agreement, which came days before a scheduled trial, calls for TikTok to implement changes for teenagers in Alabama including a two-hour daily time limit, pauses...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/us/economy-trade-business/article/3368877/tiktok-settles-lawsuit-alabama-least-us100m-apply-safety-steps?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/us/economy-trade-business/article/3368877/tiktok-settles-lawsuit-alabama-least-us100m-apply-safety-steps?utm_source=rss_feed</link>
+      <pubDate>Sat, 26 Sep 2026 01:38:08 +0000</pubDate>
+      <title>TikTok settles lawsuit with Alabama for at least US$100m, to apply safety steps</title>
+      <enclosure length="3512" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/69c40f20-970f-4212-9448-ca0e1dc6374e_fe46aac8.jpg?itok=wpHXTf7z&amp;v=1790386685"/>
+      <media:content height="2098" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/69c40f20-970f-4212-9448-ca0e1dc6374e_fe46aac8.jpg?itok=wpHXTf7z&amp;v=1790386685" width="3512"/>
+    </item>
+    <item>
+      <author>Ambrose Li,Wynna Wong</author>
+      <dc:creator>Ambrose Li,Wynna Wong</dc:creator>
+      <description>Hong Kong’s economic transformation is at a critical juncture, and the private sector must adapt along with it, as Chief Executive John Lee Ka-chiu has noted. In the first of a two-part series, Ambrose Li and Wynna Wong examine the forces driving change among established enterprises.
+Before visiting a vendor in mainland China’s Jiangsu province, a salesman from Hong Kong bottling giant Swire Coca-Cola can now use a mobile phone to see which drinks customers in the neighbourhood are most likely...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/hong-kong/hong-kong-economy/article/3368853/how-hong-kong-firms-are-future-proofing-business-challenging-times?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/hong-kong/hong-kong-economy/article/3368853/how-hong-kong-firms-are-future-proofing-business-challenging-times?utm_source=rss_feed</link>
+      <pubDate>Sat, 26 Sep 2026 01:00:16 +0000</pubDate>
+      <title>How Hong Kong firms are future-proofing business in challenging times</title>
+      <enclosure length="1800" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/7e32804b-d599-4016-833f-dca4b114f69d_93b91b34.jpg?itok=rWQcs9fO&amp;v=1790342404"/>
+      <media:content height="1200" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/7e32804b-d599-4016-833f-dca4b114f69d_93b91b34.jpg?itok=rWQcs9fO&amp;v=1790342404" width="1800"/>
+    </item>
+    <item>
+      <author>Xinmei Shen</author>
+      <dc:creator>Xinmei Shen</dc:creator>
+      <description>Chinese biotech deal making is moving beyond the licensing of individual drug candidates, as the country transforms from a follower to a global innovation leader, according to analysts.
+The latest transaction underscores that shift. Beijing-based cancer drug developer InnoCare Pharma said on Thursday that it had entered into a strategic research collaboration and licensing agreement with US pharmaceutical giant Eli Lilly that could be worth up to US$3.35 billion.
+InnoCare said it would use its...</description>
+      <guid isPermaLink="true">https://www.scmp.com/tech/tech-trends/article/3368781/chinas-biotech-firms-move-value-chain-drug-deals-evolve-beyond-licensing-analysts?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/tech/tech-trends/article/3368781/chinas-biotech-firms-move-value-chain-drug-deals-evolve-beyond-licensing-analysts?utm_source=rss_feed</link>
+      <pubDate>Sat, 26 Sep 2026 01:00:08 +0000</pubDate>
+      <title>China’s biotech firms move up value chain as drug deals evolve beyond licensing: analysts</title>
+      <enclosure length="4096" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/74f8bc46-a9de-460b-85de-0e28442f8a0d_3e5e81b8.jpg?itok=mmSmlUGK&amp;v=1790320656"/>
+      <media:content height="2304" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/74f8bc46-a9de-460b-85de-0e28442f8a0d_3e5e81b8.jpg?itok=mmSmlUGK&amp;v=1790320656" width="4096"/>
+    </item>
+    <item>
+      <author>Mark Magnier</author>
+      <dc:creator>Mark Magnier</dc:creator>
+      <description>During their three-day summit that ended on Friday, US President Donald Trump and Chinese President Xi Jinping worked overtime to underscore their increasingly close relationship even as the meeting produced few concrete deliverables.
+But the fact that the two economic and military giants are talking – and pledging to talk some more – suggests some period of relative stability ahead, certainly relative to last year’s all-out trade war, chest-thumping and market turmoil, said analysts, companies...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/china/diplomacy/article/3368875/xi-trump-atmospherics-welcomed-mask-structural-rifts-analysts?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/china/diplomacy/article/3368875/xi-trump-atmospherics-welcomed-mask-structural-rifts-analysts?utm_source=rss_feed</link>
+      <pubDate>Sat, 26 Sep 2026 00:02:27 +0000</pubDate>
+      <title>Xi-Trump atmospherics welcomed but mask structural rifts: analysts</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/de63bea2-83c2-428d-8c9d-fac3cac520c6_6919b43b.jpg?itok=R92jJ-DS&amp;v=1790380941"/>
+      <media:content height="2894" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/de63bea2-83c2-428d-8c9d-fac3cac520c6_6919b43b.jpg?itok=R92jJ-DS&amp;v=1790380941" width="4095"/>
+    </item>
+    <item>
+      <author>Aidan Jones</author>
+      <dc:creator>Aidan Jones</dc:creator>
+      <description>At a zoo a short drive south of Bangkok, Charoon Youngprapakorn has spent a lifetime taking the pulse of Thailand’s tourism industry from an unlikely vantage point: the open jaws of crocodiles.
+Handlers at his Samut Prakan Crocodile Farm &amp; Zoo have long thrilled onlookers by coaxing tips from the audience and carefully placing the money into the mouths of animals capable of taking off an entire hand.
+The crocodiles at this open-air, fan-cooled throwback to 1980s showmanship still take their tips...</description>
+      <guid isPermaLink="true">https://www.scmp.com/week-asia/economics/article/3368828/thailand-has-had-enough-foreign-tourists-behaving-badly?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/week-asia/economics/article/3368828/thailand-has-had-enough-foreign-tourists-behaving-badly?utm_source=rss_feed</link>
+      <pubDate>Sat, 26 Sep 2026 00:00:18 +0000</pubDate>
+      <title>Thailand has had enough of foreign tourists behaving badly</title>
+      <enclosure length="2000" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/158c9fd5-f114-443b-b07e-7edf79bd54c6_32ee8b2d.jpg?itok=yW2yictj&amp;v=1790331799"/>
+      <media:content height="1333" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/158c9fd5-f114-443b-b07e-7edf79bd54c6_32ee8b2d.jpg?itok=yW2yictj&amp;v=1790331799" width="2000"/>
+    </item>
+    <item>
+      <author>Lucy Quaggin</author>
+      <dc:creator>Lucy Quaggin</dc:creator>
+      <description>As Chinese leader Xi Jinping and US President Donald Trump wrapped up their three-day state visit on Friday, a stark contrast in the two presidential couples’ hand-holding dynamics was on display, body language experts said.
+The exchanges between Xi and his wife, Peng Liyuan, and Trump and first lady Melania Trump, were closely followed on the trip, with the couples’ activities together on Friday culminating in an outing at the National Archives Museum in Washington.
+The couples’ divergent...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/china/diplomacy/article/3368874/what-donald-trump-and-xi-jinping-revealed-body-language-their-wives?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/china/diplomacy/article/3368874/what-donald-trump-and-xi-jinping-revealed-body-language-their-wives?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 23:29:47 +0000</pubDate>
+      <title>What Donald Trump and Xi Jinping revealed in the body language with their wives</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/aebf6794-e86d-49a8-b352-ac9a1182e88f_e55173be.jpg?itok=5U2vIO6i&amp;v=1790378985"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/aebf6794-e86d-49a8-b352-ac9a1182e88f_e55173be.jpg?itok=5U2vIO6i&amp;v=1790378985" width="4095"/>
+    </item>
+    <item>
+      <author>Alex Lo</author>
+      <dc:creator>Alex Lo</dc:creator>
+      <description>Washington and Beijing have spent nearly a decade trading tariffs, export controls and blacklists, with each round threatening rupture. Yet they keep recovering from the brink.
+Tensions soared before summits and plunged immediately after. For example, in 2019 at Osaka, Trump walked back threats to impose tariffs on US$300 billion of Chinese goods and eased curbs on Huawei after Beijing reportedly agreed to buy American farm goods. In Busan last October, he lowered tariffs and shelved export...</description>
+      <guid isPermaLink="true">https://www.scmp.com/opinion/china-opinion/article/3368480/china-and-us-can-make-nice-if-not-peace?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/opinion/china-opinion/article/3368480/china-and-us-can-make-nice-if-not-peace?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 21:30:10 +0000</pubDate>
+      <title>China and the US can make nice, if not peace</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/23/e3be6d0e-5f4e-4b96-b5a8-0cc138b3fcfc_3b41023a.jpg?itok=HT-ZtlAa&amp;v=1790146297"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/23/e3be6d0e-5f4e-4b96-b5a8-0cc138b3fcfc_3b41023a.jpg?itok=HT-ZtlAa&amp;v=1790146297" width="4095"/>
+    </item>
+    <item>
+      <author>Agence France-Presse</author>
+      <dc:creator>Agence France-Presse</dc:creator>
+      <description>Iran’s Foreign Minister Abbas Araghchi said on Friday that Tehran had offered Washington a plan that would see the Strait of Hormuz reopened to maritime navigation within seven days once agreed.
+Araghchi met with US President Donald Trump’s envoy Steve Witkoff for talks on Tuesday, and previously set out conditions for ending the war and reopening the vital energy shipping channel.
+“Iran has conveyed to the United States, through Qatar, a concrete seven-day plan. If the necessary conditions are...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/world/middle-east/article/3368872/iran-offers-us-plan-reopen-hormuz-within-7-days?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/world/middle-east/article/3368872/iran-offers-us-plan-reopen-hormuz-within-7-days?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 21:03:29 +0000</pubDate>
+      <title>Iran offers US plan to reopen Hormuz within 7 days</title>
+      <enclosure length="4056" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/6d44b89b-a748-482c-9bbd-4b57affe36d8_ec959add.jpg?itok=KwgBPBlF&amp;v=1790370202"/>
+      <media:content height="2751" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/6d44b89b-a748-482c-9bbd-4b57affe36d8_ec959add.jpg?itok=KwgBPBlF&amp;v=1790370202" width="4056"/>
+    </item>
+    <item>
+      <author>Associated Press</author>
+      <dc:creator>Associated Press</dc:creator>
+      <description>Investigators believe Tasia Fortune was already dead before the black woman’s body was hanged from a tree behind an abandoned home in the Mississippi capital this summer, a detective testified on Friday.
+The hanging of Tasia Fortune’s body, which was found on August 3, was “staged”, Jackson police detective Samuel Dukes testified, citing the medical examiner’s opinion.
+Authorities have not disclosed the exact cause of Fortune’s death, but they did rule it a homicide and have arrested two men,...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/world/united-states-canada/article/3368871/black-woman-tasia-fortunes-hanging-was-staged-after-her-death-mississippi-police-say?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/world/united-states-canada/article/3368871/black-woman-tasia-fortunes-hanging-was-staged-after-her-death-mississippi-police-say?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 19:59:37 +0000</pubDate>
+      <title>Black woman Tasia Fortune’s hanging was ‘staged’ after her death, Mississippi police say</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/f5e40376-88c5-4b2c-99cb-05195c6c2a92_e18688f5.jpg?itok=S1SLFt5W&amp;v=1790366372"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/f5e40376-88c5-4b2c-99cb-05195c6c2a92_e18688f5.jpg?itok=S1SLFt5W&amp;v=1790366372" width="4095"/>
+    </item>
+    <item>
+      <author>Nayan Seth</author>
+      <dc:creator>Nayan Seth</dc:creator>
+      <description>Chinese President Xi Jinping has completed a whirlwind 43-hour trip to the United States, his first state visit to the country in more than a decade, with US President Donald Trump pulling out all the stops to make it a grand affair.
+The two leaders met several times during the visit, including at a ceremonial airport welcome, the White House reception and bilateral talks on a wide range of topics including trade, tariffs and Taiwan.
+They also attended a state dinner in Xi’s honour with top...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/china/diplomacy/article/3368870/trade-deliverables-taiwan-push-and-strategic-stability-key-xi-trump-takeaways-overall?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/china/diplomacy/article/3368870/trade-deliverables-taiwan-push-and-strategic-stability-key-xi-trump-takeaways-overall?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 19:47:09 +0000</pubDate>
+      <title>Trade deliverables, Taiwan push and ‘strategic stability’: key Xi-Trump takeaways overall</title>
+      <enclosure length="3899" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/35ba356d-7e2e-4222-a9aa-608c667bceb0_9b07ac73.jpg?itok=ankKjgvn&amp;v=1790365623"/>
+      <media:content height="2599" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/35ba356d-7e2e-4222-a9aa-608c667bceb0_9b07ac73.jpg?itok=ankKjgvn&amp;v=1790365623" width="3899"/>
+    </item>
+    <item>
+      <author>Igor Patrick</author>
+      <dc:creator>Igor Patrick</dc:creator>
+      <description>China is poised to decide which of two Latin American women becomes the first to lead the United Nations, after three rounds of informal voting in the Security Council failed to produce a favourite.
+Several UN delegations that spoke to the South China Morning Post over the past three days said Beijing was weighing Rebeca Grynspan, the Costa Rican economist who heads UN Trade and Development, and Carolyn Rodrigues-Birkett, Guyana’s ambassador to the UN.
+The same delegations said China had ruled...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/china/article/3368869/china-set-decide-if-costa-rican-or-guyanese-diplomat-becomes-first-woman-un-chief?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/china/article/3368869/china-set-decide-if-costa-rican-or-guyanese-diplomat-becomes-first-woman-un-chief?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 17:09:32 +0000</pubDate>
+      <title>China set to decide if Costa Rican or Guyanese diplomat becomes first woman UN chief</title>
+      <enclosure length="1538" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/8771fc58-b0d9-4b0e-ab05-e18bdcfdccb2_67bc2662.jpg?itok=jKNzWChT&amp;v=1790356170"/>
+      <media:content height="987" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/8771fc58-b0d9-4b0e-ab05-e18bdcfdccb2_67bc2662.jpg?itok=jKNzWChT&amp;v=1790356170" width="1538"/>
+    </item>
+    <item>
+      <author>Reuters</author>
+      <dc:creator>Reuters</dc:creator>
+      <description>US television networks resumed coverage of President Donald Trump’s White House events on Friday, providing the first live pool access for Chinese President Xi Jinping’s visit, as a legal battle continues over restrictions on CNN, MS Now and Politico.
+Trump last week banned the three outlets from the White House, before a judge ordered the administration to restore their access.
+The White House television press pool aired video of Xi’s arrival at the White House for tea on the final day of the...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/world/united-states-canada/article/3368868/us-tv-networks-back-white-house-trump-praises-fair-coverage-xi-visit?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/world/united-states-canada/article/3368868/us-tv-networks-back-white-house-trump-praises-fair-coverage-xi-visit?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 17:07:41 +0000</pubDate>
+      <title>US TV networks back at White House, as Trump praises ‘fair’ coverage of Xi visit</title>
+      <enclosure length="3000" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/a67665dd-2bd9-4efa-9c43-e7cf76b2347a_3ab295c5.jpg?itok=i0kfz9f7&amp;v=1790356059"/>
+      <media:content height="2000" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/a67665dd-2bd9-4efa-9c43-e7cf76b2347a_3ab295c5.jpg?itok=i0kfz9f7&amp;v=1790356059" width="3000"/>
+    </item>
+    <item>
+      <author>Reuters</author>
+      <dc:creator>Reuters</dc:creator>
+      <description>US President Donald Trump raised concerns about yen weakness at a summit with Japanese Prime Minister Sanae Takaichi, Japan’s Finance Minister Satsuki Katayama said on Friday, offering an unusually detailed account of the leaders’ talks on currencies.
+“At the recent Japan-US summit meeting, President Trump expressed concern about the yen’s weakness,” Katayama said at a regular news conference, adding that she was disclosing the exchange for the first time after consulting with the ‌Prime...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/asia/east-asia/article/3368863/japan-says-trump-voiced-concern-over-weak-yen-summit-pm-takaichi?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/asia/east-asia/article/3368863/japan-says-trump-voiced-concern-over-weak-yen-summit-pm-takaichi?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 15:52:59 +0000</pubDate>
+      <title>Japan says Trump voiced concern over weak yen in summit with PM Takaichi</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/0ded5e4e-44c4-4c04-b6df-56f6da30db10_ecd1f15c.jpg?itok=RLwwta0I&amp;v=1790351578"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/0ded5e4e-44c4-4c04-b6df-56f6da30db10_ecd1f15c.jpg?itok=RLwwta0I&amp;v=1790351578" width="4095"/>
+    </item>
+    <item>
+      <author>Lo Hoi-ying</author>
+      <dc:creator>Lo Hoi-ying</dc:creator>
+      <description>Hong Kong businessman Jason Poon Chuk-hung and his wife have been charged with defrauding a government financing scheme for businesses out of HK$6 million during the Covid-19 pandemic, the South China Morning Post has learned.
+A source said on Friday that construction businessman Poon, 56, and his 54-year-old wife, both out on bail, had been charged with conspiracy to defraud and money laundering and would appear at Kowloon Court on Monday.
+Poon, director of mask manufacturer Lockill...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/hong-kong/law-and-crime/article/3368861/whistle-blower-jason-poon-and-wife-charged-over-hk6-million-covid-19-loan-fraud?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/hong-kong/law-and-crime/article/3368861/whistle-blower-jason-poon-and-wife-charged-over-hk6-million-covid-19-loan-fraud?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 14:42:58 +0000</pubDate>
+      <title>Whistle-blower Jason Poon and wife charged over HK$6 million Covid-19 loan fraud</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/bf0d4c00-332c-4be9-bc19-4997b8dd8dad_e19ec88b.jpg?itok=uSearnns&amp;v=1790347370"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/bf0d4c00-332c-4be9-bc19-4997b8dd8dad_e19ec88b.jpg?itok=uSearnns&amp;v=1790347370" width="4095"/>
+    </item>
+    <item>
+      <author>Orange Wang,Caroline Lin</author>
+      <dc:creator>Orange Wang,Caroline Lin</dc:creator>
+      <description>Domestic US political turmoil and Donald Trump’s feud with the media overshadowed a summit that Beijing hoped would project an image of China on equal footing and help stabilise ties with the United States.
+Trump rolled out the full red-carpet treatment for Chinese President Xi Jinping as he paid his first state visit to the US in over a decade.
+In addition to Trump and his wife Melania greeting Xi and his wife Peng Liyuan on the tarmac on arrival, the “many special arrangements” included a...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/china/diplomacy/article/3368860/what-summit-us-tv-blackout-and-midterms-turmoil-overshadow-red-carpet-treatment?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/china/diplomacy/article/3368860/what-summit-us-tv-blackout-and-midterms-turmoil-overshadow-red-carpet-treatment?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 13:54:34 +0000</pubDate>
+      <title>US TV blackout and midterms turmoil overshadow Xi-Trump red-carpet treatment</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/7fb332a5-fcba-4ad5-81e4-57d45d3331a4_4f1a5751.jpg?itok=lc9apWr8&amp;v=1790344472"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/7fb332a5-fcba-4ad5-81e4-57d45d3331a4_4f1a5751.jpg?itok=lc9apWr8&amp;v=1790344472" width="4095"/>
+    </item>
+    <item>
+      <author>Lo Hoi-ying</author>
+      <dc:creator>Lo Hoi-ying</dc:creator>
+      <description>Hong Kong police have arrested three men suspected of using crowbars to steal popular Jellycat dolls and other plush toys worth about HK$70,000 (US$8,923) from a claw machine shop to resell them.
+The force on Friday said it received a report in the early hours of September 17 that two thieves had broken into an unstaffed claw machine shop in Tai Wai.
+The shop owner had offered a HK$100,000 reward on social media to catch the thieves after the crime.
+“They used a crowbar to pry open two claw...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/hong-kong/law-and-crime/article/3368859/police-arrest-3-over-hk70000-jellycat-claw-machine-shop-theft?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/hong-kong/law-and-crime/article/3368859/police-arrest-3-over-hk70000-jellycat-claw-machine-shop-theft?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 13:52:58 +0000</pubDate>
+      <title>Police arrest 3 over HK$70,000 Jellycat claw machine shop theft</title>
+      <enclosure length="1776" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/40a2dd13-f969-4c3d-bca8-7b1f0ad564bc_ff565b2a.jpg?itok=HkHIZumj&amp;v=1790344376"/>
+      <media:content height="1033" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/40a2dd13-f969-4c3d-bca8-7b1f0ad564bc_ff565b2a.jpg?itok=HkHIZumj&amp;v=1790344376" width="1776"/>
+    </item>
+    <item>
+      <author>SCMP Reporters</author>
+      <dc:creator>SCMP Reporters</dc:creator>
+      <description>This live article is freely available to our registered users. Please log in or create an account.
+Unrivalled Xi-Trump summit analysis: get real-time updates and exclusive boots-on-the-ground reporting from our US and China bureaus all year round. Subscribe now with great savings to stay ahead.
+After three days in Washington, President Xi Jinping and first lady Peng Liyuan returned to China with a promise of more face-to-face diplomacy with US President Donald Trump later this year, but not a...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/china/diplomacy/article/3368858/last-day-xis-us-visit-begins-trump-white-house-tea?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/china/diplomacy/article/3368858/last-day-xis-us-visit-begins-trump-white-house-tea?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 13:49:31 +0000</pubDate>
+      <title>Xi ends 3-day Trump visit with promise to meet again in November in China – as it happened</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/06f06b2b-9717-43b1-99d1-061023691a5a_c3a309c1.jpg?itok=KhxfKEwY&amp;v=1790353795"/>
+      <media:content height="2626" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/06f06b2b-9717-43b1-99d1-061023691a5a_c3a309c1.jpg?itok=KhxfKEwY&amp;v=1790353795" width="4095"/>
+    </item>
+    <item>
+      <author>Agence France-Presse</author>
+      <dc:creator>Agence France-Presse</dc:creator>
+      <description>Pope Leo on Friday warned against losing humanity in a “paradise of machines”, after church bells rang and thousands gathered to welcome him to France amid worldwide concern over the dangers of artificial intelligence.
+“If we are to avoid losing our humanity amid a paradise of machines invading and conditioning our daily lives, there is an urgent need for education in ethical discernment,” Leo said after President Emmanuel Macron welcomed him to the presidential palace, on the first of four days...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/world/europe/article/3368852/paris-pope-warns-against-losing-humanity-paradise-machines?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/world/europe/article/3368852/paris-pope-warns-against-losing-humanity-paradise-machines?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 13:14:40 +0000</pubDate>
+      <title>In Paris, Pope warns against losing humanity in ‘paradise of machines’</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/a9e40bcb-d997-4753-bc8f-374875e292b9_96863a54.jpg?itok=V6WM5ckG&amp;v=1790342079"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/a9e40bcb-d997-4753-bc8f-374875e292b9_96863a54.jpg?itok=V6WM5ckG&amp;v=1790342079" width="4095"/>
+    </item>
+    <item>
+      <author>Reuters</author>
+      <dc:creator>Reuters</dc:creator>
+      <description>European Union member countries ⁠have agreed a ⁠deal to release €6.6 billion (US$7.5 billion) in EU funds linked to military aid for Ukraine, EU foreign policy chief Kaja Kallas said on Friday.
+The money will ‌come from the European Peace Facility, a fund used by EU members to finance military aid to countries outside the bloc. It also refunds EU governments for military aid they have provided.
+Of the released funds, €900 million will ⁠go to the EU’s military assistance mission for Ukraine and...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/world/europe/article/3368849/eu-release-us75-billion-linked-ukraine-military-aid?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/world/europe/article/3368849/eu-release-us75-billion-linked-ukraine-military-aid?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 12:57:47 +0000</pubDate>
+      <title>EU to release US$7.5 billion linked to Ukraine military aid</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/c63ccaff-c818-49fe-b60b-51340393fd7a_95df4184.jpg?itok=_u0LIOBI&amp;v=1790341066"/>
+      <media:content height="2785" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/c63ccaff-c818-49fe-b60b-51340393fd7a_95df4184.jpg?itok=_u0LIOBI&amp;v=1790341066" width="4095"/>
+    </item>
+    <item>
+      <author>Fiona Sun</author>
+      <dc:creator>Fiona Sun</dc:creator>
+      <description>The organiser of a lantern display at Hong Kong’s Victoria Park cut short the entry hours on Friday night out of public safety concerns after large crowds flocked there to celebrate the Mid-Autumn Festival.
+“In light of the large number of visitors and in the interest of public safety and order, entry queues of the ‘World Lantern Boulevard’ will be closed shortly,” the Hong Kong Tourism Board said at around 9pm.
+“All lantern installations at the International Lantern Spectacular will remain on...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/hong-kong/society/article/3368848/thousands-visit-victoria-park-mid-autumn-global-showcase-lanterns?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/hong-kong/society/article/3368848/thousands-visit-victoria-park-mid-autumn-global-showcase-lanterns?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 12:53:22 +0000</pubDate>
+      <title>Entry hours cut short as large crowds at lantern display spark safety fears</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/f4288c8e-0fa4-46ca-a43f-3272f6d78f53_aeae7333.jpg?itok=y-MeFXSo&amp;v=1790347386"/>
+      <media:content height="2805" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/f4288c8e-0fa4-46ca-a43f-3272f6d78f53_aeae7333.jpg?itok=y-MeFXSo&amp;v=1790347386" width="4095"/>
+    </item>
+    <item>
+      <author>Lo Hoi-ying</author>
+      <dc:creator>Lo Hoi-ying</dc:creator>
+      <description>HK Electric customers are set to pay less for electricity in October after the Hong Kong supplier cut its fuel charge for the first time in four months, but it warned that international energy prices remained volatile.
+CLP Power, the city’s other electricity supplier, will raise its energy prices next month.
+HK Electric, which mainly supplies Hong Kong Island and Lamma Island, said on Friday that its fuel clause charge would fall by 1.4 HK cents to 59.3 cents per kilowatt hour (kWh) in...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/hong-kong/society/article/3368847/hk-electric-cut-fuel-charge-first-time-4-months-clp-raises-rate?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/hong-kong/society/article/3368847/hk-electric-cut-fuel-charge-first-time-4-months-clp-raises-rate?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 12:45:47 +0000</pubDate>
+      <title>HK Electric to cut fuel charge for first time in 4 months as CLP raises rate</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/81ed63e1-79c3-4684-921d-54f52056aed2_b971599e.jpg?itok=emLFgNCN&amp;v=1790340262"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/81ed63e1-79c3-4684-921d-54f52056aed2_b971599e.jpg?itok=emLFgNCN&amp;v=1790340262" width="4095"/>
+    </item>
+    <item>
+      <author>Chong Ming Lee</author>
+      <dc:creator>Chong Ming Lee</dc:creator>
+      <description>For China’s elite artificial intelligence researchers, Silicon Valley no longer holds the unrivalled appeal it once did.
+A growing number are opting to stay home to build their careers, helping China overtake the United States as the leading workplace for top-tier AI talent, according to a study released this week by the think tank Carnegie China.
+China employed 41 per cent of the world’s leading AI researchers tracked by the study last year, pulling ahead of the US at 34 per cent, according to...</description>
+      <guid isPermaLink="true">https://www.scmp.com/tech/tech-trends/article/3368809/china-overtakes-us-top-workplace-elite-ai-researchers-study-finds?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/tech/tech-trends/article/3368809/china-overtakes-us-top-workplace-elite-ai-researchers-study-finds?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 12:30:17 +0000</pubDate>
+      <title>China overtakes US as top workplace for elite AI researchers, study finds</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/95ccac42-914c-435b-b35d-8a4e696e2f63_05d51dc5.jpg?itok=Ry9ZfbE9&amp;v=1790328276"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/95ccac42-914c-435b-b35d-8a4e696e2f63_05d51dc5.jpg?itok=Ry9ZfbE9&amp;v=1790328276" width="4095"/>
+    </item>
+    <item>
+      <author>Simon Tay</author>
+      <dc:creator>Simon Tay</dc:creator>
+      <description>The good news is, when US President Donald Trump and Chinese President Xi Jinping met in Washington this week, neither chose confrontation. Amid the high pomp and ceremony, what China has called “constructive strategic stability” continues.
+Even an uneasy truce in great power relations can be useful. Both recognise the considerable incentive to prevent their economic rivalry from spiralling out of control. Even limited understandings can reduce risks in artificial intelligence (AI) and other...</description>
+      <guid isPermaLink="true">https://www.scmp.com/opinion/asia-opinion/article/3368638/us-china-world-asean-must-do-more-avoid-choosing-sides?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/opinion/asia-opinion/article/3368638/us-china-world-asean-must-do-more-avoid-choosing-sides?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 12:30:12 +0000</pubDate>
+      <title>In a US-China world, Asean must do more than avoid choosing sides</title>
+      <enclosure length="2756" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/835a3149-84cc-4efe-976e-6e6b50c508e3_6ed3927b.jpg?itok=O41j4JSU&amp;v=1790304922"/>
+      <media:content height="1838" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/835a3149-84cc-4efe-976e-6e6b50c508e3_6ed3927b.jpg?itok=O41j4JSU&amp;v=1790304922" width="2756"/>
+    </item>
+    <item>
+      <author>Cao Jiaxuan</author>
+      <dc:creator>Cao Jiaxuan</dc:creator>
+      <description>Throughout President Xi Jinping’s state visit to Washington, Chinese aesthetics were not confined to first lady Peng Liyuan, long an ambassador of Chinese fashion, but also appeared in the outfits of other senior Chinese officials and even members of the US delegation.
+At the state dinner in the White House on Thursday, Xi and other senior Chinese officials – including his chief of staff Cai Qi and foreign minister Wang Yi – wore black Mao suits.
+
+Notably, while Xi has regularly worn the attire...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/china/diplomacy/article/3368846/chinese-aesthetics-abound-washington-summit-mao-suits-peony-trousers?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/china/diplomacy/article/3368846/chinese-aesthetics-abound-washington-summit-mao-suits-peony-trousers?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 12:27:16 +0000</pubDate>
+      <title>Chinese aesthetics abound at Washington summit, from Mao suits to peony trousers</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/3c4641bd-264e-4277-ac57-0aca8f7e7647_a19fee27.jpg?itok=1Dl40SLA&amp;v=1790339235"/>
+      <media:content height="2752" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/3c4641bd-264e-4277-ac57-0aca8f7e7647_a19fee27.jpg?itok=1Dl40SLA&amp;v=1790339235" width="4095"/>
+    </item>
+    <item>
+      <author>SCMP</author>
+      <dc:creator>SCMP</dc:creator>
+      <description>We have put together stories from our coverage of the White House state dinner. If you would like to see more of our reporting, please consider subscribing.
+1. Xi-Trump dinner puts US tech titans in spotlight – what does it mean for ties?
+If the American guests seated at the head table with President Xi Jinping and US President Donald Trump at Thursday’s White House state dinner were any indication, Washington now views its relationship with Beijing largely through the prism of technology.
+2....</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/china/diplomacy/article/3368845/xi-trump-banquet-flasks-us-tech-titans-attendance-heres-everything-you-missed?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/china/diplomacy/article/3368845/xi-trump-banquet-flasks-us-tech-titans-attendance-heres-everything-you-missed?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 12:09:32 +0000</pubDate>
+      <title>Xi-Trump banquet: from flasks to US tech titans in attendance, here’s everything you missed</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/9533b2e4-7598-4829-85f0-96c28cc1ff9d_632f6a89.jpg?itok=DbJOxTIL&amp;v=1790338171"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/9533b2e4-7598-4829-85f0-96c28cc1ff9d_632f6a89.jpg?itok=DbJOxTIL&amp;v=1790338171" width="4095"/>
+    </item>
+    <item>
+      <author>Nayan Seth,Lucy Quaggin,Josephine Ma</author>
+      <dc:creator>Nayan Seth,Lucy Quaggin,Josephine Ma</dc:creator>
+      <description>In a surprise nod to shared history, US President Donald Trump called China a World War II ally as he welcomed Xi Jinping to the White House on Thursday ahead of summit talks.
+But the historical reference was far from one-sided, with both leaders repeatedly referring to the joint fight against Japanese aggression as they sought to emphasise the long history of US-China friendship and the need to seek common ground.
+“If we focus on our common interests, I’m confident there is much we can...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/china/diplomacy/article/3368844/trump-hails-wwii-ally-china-xi-tells-bonds-forged-blood-and-fire?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/china/diplomacy/article/3368844/trump-hails-wwii-ally-china-xi-tells-bonds-forged-blood-and-fire?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 12:06:23 +0000</pubDate>
+      <title>Trump hails WWII ‘ally’ China as Xi tells of bonds ‘forged in blood and fire’</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/dc0fda4b-794b-4a60-8cd7-6871acb7151f_c62460fa.jpg?itok=eFz2Bi19&amp;v=1790337839"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/dc0fda4b-794b-4a60-8cd7-6871acb7151f_c62460fa.jpg?itok=eFz2Bi19&amp;v=1790337839" width="4095"/>
+    </item>
+    <item>
+      <author>Amber Wang</author>
+      <dc:creator>Amber Wang</dc:creator>
+      <description>Chinese President Xi Jinping pressed his US counterpart Donald Trump to explicitly oppose Taiwan independence – a call that would require a shift in Washington’s long-standing position and further restraint on American arms sales to the island, according to analysts.
+During the meeting between the two leaders on Thursday, Xi said he hoped the US side would “adhere to the correct position of opposing ‘Taiwan independence’”, according to a statement from the foreign ministry in Beijing.
+The...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/china/military/article/3368829/xi-presses-trump-take-next-step-taiwan-oppose-independence?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/china/military/article/3368829/xi-presses-trump-take-next-step-taiwan-oppose-independence?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 12:00:06 +0000</pubDate>
+      <title>Xi presses Trump to take the next step on Taiwan: oppose independence</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/4455cea4-e2a5-47f8-887a-e57b98f57642_7fba4f2d.jpg?itok=L_n75i3J&amp;v=1790338167"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/4455cea4-e2a5-47f8-887a-e57b98f57642_7fba4f2d.jpg?itok=L_n75i3J&amp;v=1790338167" width="4095"/>
+    </item>
+    <item>
+      <author>Fiona Chow</author>
+      <dc:creator>Fiona Chow</dc:creator>
+      <description>A Hong Kong teacher clinically evaluated as a paedophile has been jailed for three years for molesting a primary school pupil and taking intimate pictures of the child and another boy during volunteer tutoring.
+Deputy District Judge Ko Wai-hung on Friday sentenced the 31-year-old, who earlier admitted to sexually abusing a student in his Yuen Long flat between January 2022 and July 2024. The pupil was aged nine when the first assault took place.
+The defendant, a maths teacher who was identified...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/hong-kong/law-and-crime/article/3368841/hong-kong-teacher-jailed-3-years-molesting-pupil-during-free-tutoring?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/hong-kong/law-and-crime/article/3368841/hong-kong-teacher-jailed-3-years-molesting-pupil-during-free-tutoring?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 11:48:55 +0000</pubDate>
+      <title>Hong Kong teacher jailed for 3 years for molesting pupil during free tutoring</title>
+      <enclosure length="4096" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/c716afeb-df4b-48d3-a99b-8726f546b40a_1c78ec17.jpg?itok=Kx8MVoNW&amp;v=1790336844"/>
+      <media:content height="2732" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/c716afeb-df4b-48d3-a99b-8726f546b40a_1c78ec17.jpg?itok=Kx8MVoNW&amp;v=1790336844" width="4096"/>
+    </item>
+    <item>
+      <author>Iris Deng</author>
+      <dc:creator>Iris Deng</dc:creator>
+      <description>The United States and China must work together to establish safety guardrails for artificial intelligence, leading scholars and industry leaders said at a Singapore forum, warning that rapid advances in the technology demand stronger risk controls.
+Speaking at the FutureChina Business Forum on Friday, Jude Blanchette, managing director of consultancy Macro Advisory Partners, urged the two superpowers to find common ground despite escalating geopolitical tensions.
+“If ever there was a moment for...</description>
+      <guid isPermaLink="true">https://www.scmp.com/tech/tech-trends/article/3368813/china-and-us-are-racing-ahead-ai-can-they-manage-risks-together?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/tech/tech-trends/article/3368813/china-and-us-are-racing-ahead-ai-can-they-manage-risks-together?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 11:30:07 +0000</pubDate>
+      <title>China and the US are racing ahead on AI. Can they manage risks together?</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/9796adcf-9993-4867-9c7b-4a1c24d3e178_11d55679.jpg?itok=tacqU5uR&amp;v=1790328886"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/9796adcf-9993-4867-9c7b-4a1c24d3e178_11d55679.jpg?itok=tacqU5uR&amp;v=1790328886" width="4095"/>
+    </item>
+    <item>
+      <author>Lawrence Chung</author>
+      <dc:creator>Lawrence Chung</dc:creator>
+      <description>Taiwanese officials and observers have reacted cautiously to the Washington summit between Donald Trump and Xi Jinping, with uncertainty lingering over what the two leaders discussed about the island.
+The only public mention of Taiwan after Thursday’s closed-door talks between the pair came from Beijing’s official statement, which said Xi had urged Trump to “oppose ‘Taiwan independence’” and “handle the Taiwan question with caution”. The White House did not immediately give its own detailed...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/china/politics/article/3368839/trumps-warm-welcome-xi-met-caution-and-uncertainty-taiwan?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/china/politics/article/3368839/trumps-warm-welcome-xi-met-caution-and-uncertainty-taiwan?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 11:26:13 +0000</pubDate>
+      <title>Trump’s warm welcome for Xi met with caution and uncertainty in Taiwan</title>
+      <enclosure length="4096" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/8f17d8b0-a9ed-4c4b-9fd5-91900e134e0e_c8c8fa6a.jpg?itok=tn5e0mVD&amp;v=1790335571"/>
+      <media:content height="2884" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/8f17d8b0-a9ed-4c4b-9fd5-91900e134e0e_c8c8fa6a.jpg?itok=tn5e0mVD&amp;v=1790335571" width="4096"/>
+    </item>
+    <item>
+      <author>Caroline Lin</author>
+      <dc:creator>Caroline Lin</dc:creator>
+      <description>Chinese President Xi Jinping has not only made history as the first Chinese leader to undertake two formal state visits to the United States, he is also the only Chinese leader to be spending two Mid-Autumn Festivals on American soil.
+Xi offered festive greetings during his toast at Thursday’s state banquet.
+“As I speak, my compatriots in China are celebrating Mid-Autumn Festival – a cherished occasion for family reunions according to Chinese tradition. I wish you all a very happy Mid-Autumn...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/china/diplomacy/article/3368838/xi-jinping-marks-second-mid-autumn-festival-us-during-state-visit?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/china/diplomacy/article/3368838/xi-jinping-marks-second-mid-autumn-festival-us-during-state-visit?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 11:20:13 +0000</pubDate>
+      <title>Xi Jinping marks second Mid-Autumn Festival in US during state visit</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/e544bddf-3b13-4d91-aa5d-5bf579f7d6b7_aae4ee7a.jpg?itok=rq_C4jX4&amp;v=1790335211"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/e544bddf-3b13-4d91-aa5d-5bf579f7d6b7_aae4ee7a.jpg?itok=rq_C4jX4&amp;v=1790335211" width="4095"/>
+    </item>
+    <item>
+      <author>dpa</author>
+      <dc:creator>dpa</dc:creator>
+      <description>Italy has passed a decree banning face coverings in all schools and capping the proportion of newly arrived foreign pupils with insufficient Italian at 30 per cent per class from the next school year, the government in Rome said on Friday.
+The government said the 30 per cent quota applies in primary school to children who do not hold Italian citizenship, were not born in Italy and have not attended an Italian kindergarten for at least two years.
+In secondary schools the same rules apply, except...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/world/europe/article/3368837/italy-ban-burkas-schools-30-cap-pupils-poor-italian?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/world/europe/article/3368837/italy-ban-burkas-schools-30-cap-pupils-poor-italian?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 11:20:08 +0000</pubDate>
+      <title>Italy to ban burkas in schools, with 30% cap on pupils with poor Italian</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/450b0759-4136-4100-902b-357a0d925f31_e5b405d8.jpg?itok=jdOC9-Sr&amp;v=1790335206"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/450b0759-4136-4100-902b-357a0d925f31_e5b405d8.jpg?itok=jdOC9-Sr&amp;v=1790335206" width="4095"/>
+    </item>
+    <item>
+      <author>Connor Mycroft</author>
+      <dc:creator>Connor Mycroft</dc:creator>
+      <description>Hong Kong animal welfare activists say they will forge ahead with microchipping stray dogs despite the heightened legal risk after authorities charged an advocate who engaged in the practice during an investigation into the death of a cyclist.
+The advocates argued that charging dog rescuers was counterproductive and renewed their calls to implement a comprehensive “trap, neuter, release” programme, while the government said allegations it engaged in “convenience culling” were untrue.
+The...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/hong-kong/society/article/3368836/dog-rescuers-vow-microchip-after-arrest-decry-punishing-those-trying-help?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/hong-kong/society/article/3368836/dog-rescuers-vow-microchip-after-arrest-decry-punishing-those-trying-help?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 11:10:48 +0000</pubDate>
+      <title>Dog rescuers vow to microchip after charges, decry punishing ‘those trying to help’</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/eb6cbd00-416c-44fe-83b1-e2353e0b434b_9aa7c61c.jpg?itok=iRa7cTDC&amp;v=1790334644"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/eb6cbd00-416c-44fe-83b1-e2353e0b434b_9aa7c61c.jpg?itok=iRa7cTDC&amp;v=1790334644" width="4095"/>
+    </item>
+    <item>
+      <author>William Zheng</author>
+      <dc:creator>William Zheng</dc:creator>
+      <description>Amid the polished silverware and fine crystal stemware on display at the state dinner in the White House on Thursday sat the vacuum flasks brought by Chinese President Xi Jinping and first lady Peng Liyuan.
+The couple’s flasks, black for Xi and white for Peng, were spotted on their table during the formal dinner, signalling a subtle self-assurance as cultural authenticity met high diplomacy.
+Extending this everyday practice to the White House banquet was in tune with the host nation’s own...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/china/politics/article/3368835/why-did-xi-and-chinas-first-lady-bring-their-own-flasks-white-house-banquet?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/china/politics/article/3368835/why-did-xi-and-chinas-first-lady-bring-their-own-flasks-white-house-banquet?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 10:49:27 +0000</pubDate>
+      <title>Why did Xi and China’s first lady bring their own flasks to White House banquet?</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/e19e81c4-8b13-4116-89c0-4d89785ef733_ed7e163b.jpg?itok=kzWg1bK1&amp;v=1790333366"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/e19e81c4-8b13-4116-89c0-4d89785ef733_ed7e163b.jpg?itok=kzWg1bK1&amp;v=1790333366" width="4095"/>
+    </item>
+    <item>
+      <author>Liu Zhen</author>
+      <dc:creator>Liu Zhen</dc:creator>
+      <description>Chinese viewers watching Donald Trump welcome Xi Jinping to the White House on Thursday may have been puzzled by the US president’s reference to the “Chinese phrase” gung-ho. Turning to Baidu – or increasingly, Doubao, the country’s most popular AI chatbot – they may well have asked: what Chinese expression is he referring to?
+It sounds Chinese, but gung-ho is neither part of everyday usage nor an idiom drawn from classical texts – making this moment almost as baffling as when US Secretary of...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/china/military/article/3368832/chinese-roots-gung-ho-trump-and-xi-look-shared-history?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/china/military/article/3368832/chinese-roots-gung-ho-trump-and-xi-look-shared-history?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 10:38:11 +0000</pubDate>
+      <title>The Chinese roots of ‘gung-ho’ as Trump and Xi look to shared history</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/214564fa-8b29-4bf1-9193-1298e2e9dc22_e2e44fcc.jpg?itok=zg-QwD_u&amp;v=1790332690"/>
+      <media:content height="2740" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/214564fa-8b29-4bf1-9193-1298e2e9dc22_e2e44fcc.jpg?itok=zg-QwD_u&amp;v=1790332690" width="4095"/>
+    </item>
+    <item>
+      <author>Zoey Zhang</author>
+      <dc:creator>Zoey Zhang</dc:creator>
+      <description>Frustrated by low-quality materials, careless craftsmanship, and escalating prices, some young women in China are taking matters into their own hands by learning to sew their own underwear, accessories, and handbags.
+This summer, a surge of sewing enthusiasts flocked to RedNote to showcase their handmade creations.
+Many beginners embarked on their journey with underwear, assuming it would be a straightforward first project due to its minimal fabric requirements.
+However, they quickly encountered...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/people-culture/trending-china/article/3368831/young-chinese-women-sew-own-underwear-clothes-amid-frustration-fast-fashion?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/people-culture/trending-china/article/3368831/young-chinese-women-sew-own-underwear-clothes-amid-frustration-fast-fashion?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 10:37:24 +0000</pubDate>
+      <title>Young Chinese women sew own underwear, clothes, amid frustration with fast fashion</title>
+      <enclosure length="3000" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/6f54c511-fe0f-48ab-a4ed-71b77f6cbb91_599b4061.jpg?itok=sXoX2uK6&amp;v=1790332643"/>
+      <media:content height="1688" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/6f54c511-fe0f-48ab-a4ed-71b77f6cbb91_599b4061.jpg?itok=sXoX2uK6&amp;v=1790332643" width="3000"/>
+    </item>
+    <item>
+      <author>Biman Mukherji</author>
+      <dc:creator>Biman Mukherji</dc:creator>
+      <description>India’s “cockroach” youth movement is testing whether it can turn anger over education and jobs into a broader challenge to the country’s political establishment, two months after its protests helped force an education minister to resign over alleged entrance exam leaks.
+Its latest target is another powerful institution: the country’s election watchdog. The shift marks a transition for the movement from high-profile demonstrations in New Delhi to a more diffuse campaign of school audits,...</description>
+      <guid isPermaLink="true">https://www.scmp.com/week-asia/politics/article/3368821/indias-cockroach-movement-targets-election-chief-political-pivot?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/week-asia/politics/article/3368821/indias-cockroach-movement-targets-election-chief-political-pivot?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 10:30:17 +0000</pubDate>
+      <title>India’s ‘cockroach’ movement targets election chief in political pivot</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/99605979-4212-4e8c-b048-efbf6a49c1ee_64a6414e.jpg?itok=tlyUkafN&amp;v=1790330852"/>
+      <media:content height="2725" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/99605979-4212-4e8c-b048-efbf6a49c1ee_64a6414e.jpg?itok=tlyUkafN&amp;v=1790330852" width="4095"/>
+    </item>
+    <item>
+      <author>Xiaofei Xu</author>
+      <dc:creator>Xiaofei Xu</dc:creator>
+      <description>Beijing and Brussels remain “deadlocked” on trade in medical devices following discussions in Beijing this week, a source said, adding that “intensive consultations” were under way about Brussels’ plan to launch import safeguards against made-in-China plug-in hybrid electric vehicles (PHEVs).
+Vice-Minister of Commerce Ling Ji – China’s deputy international trade representative – held discussions with Ditte Juul Jorgensen, the European Commission’s director general for trade and economic...</description>
+      <guid isPermaLink="true">https://www.scmp.com/economy/china-economy/article/3368811/china-and-eu-deadlocked-medical-devices-still-talking-phev-curbs-source?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/economy/china-economy/article/3368811/china-and-eu-deadlocked-medical-devices-still-talking-phev-curbs-source?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 10:30:12 +0000</pubDate>
+      <title>China and EU deadlocked on medical devices, still talking on PHEV curbs: source</title>
+      <enclosure length="3519" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/d4504b3f-f0eb-4a2b-82ae-076f0c70efa9_228ee38d.jpg?itok=nOeierkP&amp;v=1790328545"/>
+      <media:content height="2346" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/d4504b3f-f0eb-4a2b-82ae-076f0c70efa9_228ee38d.jpg?itok=nOeierkP&amp;v=1790328545" width="3519"/>
+    </item>
+    <item>
+      <author>Huizhao Huang</author>
+      <dc:creator>Huizhao Huang</dc:creator>
+      <description>Chinese carmakers have gained ground in Europe’s shift to electric cars, emerging as the biggest winners in plug-in hybrids despite moves by Brussels to curb their expansion.
+As petrol prices climbed across the EU, hitting a record high of more than €2.30 a litre (US$9.91 a US gallon) in Germany this month, the move to battery power gathered pace. Battery-electric registrations jumped 62.7 per cent year on year in August and accounted for 21.7 per cent of new registrations in the first eight...</description>
+      <guid isPermaLink="true">https://www.scmp.com/economy/china-economy/article/3368814/chinese-marques-driving-seat-high-petrol-prices-accelerate-eu-shift-electric-cars?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/economy/china-economy/article/3368814/chinese-marques-driving-seat-high-petrol-prices-accelerate-eu-shift-electric-cars?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 09:37:49 +0000</pubDate>
+      <title>Chinese marques in driving seat as high petrol prices accelerate EU shift to electric cars</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/53173ad3-6e5a-48c6-ba31-8601b008997d_0bcea471.jpg?itok=UDhKOf_X&amp;v=1790329066"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/53173ad3-6e5a-48c6-ba31-8601b008997d_0bcea471.jpg?itok=UDhKOf_X&amp;v=1790329066" width="4095"/>
+    </item>
+    <item>
+      <author>Sam Beltran</author>
+      <dc:creator>Sam Beltran</dc:creator>
+      <description>The Philippines’ decision to block messaging platform Discord for less than a day following a series of school shootings has raised questions about the government’s response to child safety online, with analysts describing the move as a show of regulatory muscle that did little to address underlying problems.
+The Department of Information and Communications Technology (DICT) announced on Thursday that it had lifted the ban after what officials described as successful negotiations with Discord...</description>
+      <guid isPermaLink="true">https://www.scmp.com/week-asia/health-environment/article/3368812/philippines-short-lived-discord-ban-exposes-cracks-online-safety-strategy?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/week-asia/health-environment/article/3368812/philippines-short-lived-discord-ban-exposes-cracks-online-safety-strategy?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 09:31:31 +0000</pubDate>
+      <title>Philippines’ short-lived Discord ban exposes cracks in online safety strategy</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/429ffc10-c7e8-438f-b9ec-73548f282ad3_81602f7e.jpg?itok=ySbYPQo4&amp;v=1790328688"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/429ffc10-c7e8-438f-b9ec-73548f282ad3_81602f7e.jpg?itok=ySbYPQo4&amp;v=1790328688" width="4095"/>
+    </item>
+    <item>
+      <author>Agence France-Presse</author>
+      <dc:creator>Agence France-Presse</dc:creator>
+      <description>Six people, including four tourists, were missing after a building collapsed following an explosion early Friday in Athens’ historic Plaka district that was probably due to a huge gas leak.
+The city’s mayor Haris Doukas called the blast an “unbelievable disaster” and spoke of the likelihood of an “explosion triggered by … a very significant gas leak” that led to the collapse of the two-storey building at around 7.30am on Friday morning.
+The building is just below the Acropolis.
+According to the...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/world/europe/article/3368808/3-injured-after-explosion-causes-building-collapse-athens-tourist-centre?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/world/europe/article/3368808/3-injured-after-explosion-causes-building-collapse-athens-tourist-centre?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 09:13:15 +0000</pubDate>
+      <title>6 missing after explosion fells building in heart of touristic Athens</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/1bcd753f-827d-4a8c-996f-f7bd3c81957b_0b06f6e6.jpg?itok=Rou8GkUV&amp;v=1790376170"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/26/1bcd753f-827d-4a8c-996f-f7bd3c81957b_0b06f6e6.jpg?itok=Rou8GkUV&amp;v=1790376170" width="4095"/>
+    </item>
+    <item>
+      <author>Raymond Ma,Neil Denslow</author>
+      <dc:creator>Raymond Ma,Neil Denslow</dc:creator>
+      <description>Chinese President Xi Jinping and US President Donald Trump discussed artificial intelligence (AI) and Taiwan at the White House on Thursday as part of a state visit dominated by pageantry.
+On AI, Xi said that “the right thing to do is to draw on each other’s strengths, not guard against each other”, according to a statement from the Chinese foreign ministry. He also backed continued dialogue about risks, joint efforts to prevent misuse and keeping AI under human control.
+Trump earlier said on...</description>
+      <guid isPermaLink="true">https://www.scmp.com/plus/news/china/diplomacy/article/3368799/xi-white-house-trade-war-truce-extension-golden-week-travel?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/plus/news/china/diplomacy/article/3368799/xi-white-house-trade-war-truce-extension-golden-week-travel?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 09:00:10 +0000</pubDate>
+      <title>Xi at White House, trade-war truce extension, Golden Week travel</title>
+      <enclosure length="2155" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/7288fc10-1929-401c-96ca-d96cbb694426_a7131b11.jpg?itok=gBPOAJU4&amp;v=1790325354"/>
+      <media:content height="1640" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/7288fc10-1929-401c-96ca-d96cbb694426_a7131b11.jpg?itok=gBPOAJU4&amp;v=1790325354" width="2155"/>
+    </item>
+    <item>
+      <author>Laura Zhou</author>
+      <dc:creator>Laura Zhou</dc:creator>
+      <description>Chinese President Xi Jinping’s trip to the US will conclude not at the diplomatic negotiating table, but in front of America’s founding documents.
+After morning tea in the White House Red Room, US President Donald Trump and his wife Melania will take Xi and his wife Peng Liyuan on a tour of the National Archives, the home of the Declaration of Independence, the Constitution and other texts that established the basis of the US government.
+According to the Office of the First Lady, the two couples...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/china/diplomacy/article/3368793/xi-and-trump-cap-summit-tour-through-shared-us-and-chinese-history?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/china/diplomacy/article/3368793/xi-and-trump-cap-summit-tour-through-shared-us-and-chinese-history?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 09:00:06 +0000</pubDate>
+      <title>Why is the National Archives the last stop on Xi and Trump’s summit itinerary?</title>
+      <enclosure length="4096" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/84ca31b2-6220-410f-a5b6-2f51d35f5b7c_25e38041.jpg?itok=G6gaEEnS&amp;v=1790323698"/>
+      <media:content height="3187" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/84ca31b2-6220-410f-a5b6-2f51d35f5b7c_25e38041.jpg?itok=G6gaEEnS&amp;v=1790323698" width="4096"/>
+    </item>
+    <item>
+      <author>Cao Jiaxuan</author>
+      <dc:creator>Cao Jiaxuan</dc:creator>
+      <description>Property developer-turned-president Donald Trump appeared to relish showing off the White House’s latest building works to Xi Jinping on Thursday, eager to give his Chinese counterpart a glimpse of his construction ambitions since they last met in China.
+In May, Trump was hosted at Beijing’s Great Hall of the People, a sprawling complex that the US president compares with his planned White House ballroom.
+After their talks in the Oval Office, Trump led Xi out to the South Lawn, where his...</description>
+      <guid isPermaLink="true">https://www.scmp.com/news/china/diplomacy/article/3368792/trump-gives-xi-tour-his-pet-white-house-building-projects-including-ballroom?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/news/china/diplomacy/article/3368792/trump-gives-xi-tour-his-pet-white-house-building-projects-including-ballroom?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 08:05:54 +0000</pubDate>
+      <title>Trump gives Xi a tour of his pet White House building projects, including the ballroom</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/b00a65db-95ce-4744-af0c-63984b5b3534_54e06abb.jpg?itok=Puh1rvsM&amp;v=1790323382"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/b00a65db-95ce-4744-af0c-63984b5b3534_54e06abb.jpg?itok=Puh1rvsM&amp;v=1790323382" width="4095"/>
+    </item>
+    <item>
+      <author>Johannes Nugroho</author>
+      <dc:creator>Johannes Nugroho</dc:creator>
+      <description>A major coal deal in Indonesia is set to secure a powerful new partner for one of the country’s biggest miners, even as the industry worries a delay in the government’s approval of production quotas could have a severe impact on the business outlook.
+Low Tuck Kwong and his daughter Elaine Low, the biggest shareholders of Bayan Resources, agreed on September 16 to sell a 30 per cent stake in Indonesia’s third-largest coal producer to fellow tycoon Andi Syamsuddin Arsyad, better known as Haji...</description>
+      <guid isPermaLink="true">https://www.scmp.com/week-asia/economics/article/3368765/indonesian-coal-deal-fuels-doubts-over-production-quota-approvals?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/week-asia/economics/article/3368765/indonesian-coal-deal-fuels-doubts-over-production-quota-approvals?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 08:00:21 +0000</pubDate>
+      <title>Indonesian coal deal fuels doubts over production quota approvals</title>
+      <enclosure length="4000" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/3436eae8-f832-46dc-9b90-62e7c91e7bd5_94368b3d.jpg?itok=-3Cyq5TF&amp;v=1790314431"/>
+      <media:content height="2666" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/3436eae8-f832-46dc-9b90-62e7c91e7bd5_94368b3d.jpg?itok=-3Cyq5TF&amp;v=1790314431" width="4000"/>
+    </item>
+    <item>
+      <author>Cheryl Arcibal</author>
+      <dc:creator>Cheryl Arcibal</dc:creator>
+      <description>Investor appetite for hotel assets increased in Hong Kong and the wider Asia-Pacific region in the first half of the year as consumers showed growing eagerness to travel and constrained supply supported property values, according to CBRE.
+The region netted US$8 billion of investment in the period, up 21 per cent from a year earlier, with Japan, mainland China and South Korea attracting the most activity, the property consultancy said in a report on Thursday.
+“Hotels have become one of the most...</description>
+      <guid isPermaLink="true">https://www.scmp.com/business/article/3368759/asia-pacific-hotels-most-compelling-investment-amid-travel-growth-flat-supply-cbre?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/business/article/3368759/asia-pacific-hotels-most-compelling-investment-amid-travel-growth-flat-supply-cbre?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 08:00:16 +0000</pubDate>
+      <title>Asia-Pacific hotels a ‘most compelling’ investment amid travel growth, flat supply: CBRE</title>
+      <enclosure length="4096" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/6258e1b4-24b1-47a6-a136-438b28e854f9_7f7b54eb.jpg?itok=IQ3x52hU&amp;v=1790312435"/>
+      <media:content height="2731" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/6258e1b4-24b1-47a6-a136-438b28e854f9_7f7b54eb.jpg?itok=IQ3x52hU&amp;v=1790312435" width="4096"/>
+    </item>
+    <item>
+      <author>Joseph Sipalan</author>
+      <dc:creator>Joseph Sipalan</dc:creator>
+      <description>Former Malaysian leader Najib Razak has no money to pay the fine to secure his transfer to house arrest, his lawyers have said, as they question the delay in releasing the full details of the conditional pardon granted by Malaysia’s king last week.
+King Sultan Ibrahim Iskandar last Friday decreed that Najib would be allowed to serve out the remainder of his sentence at home, on condition that he pay his 50 million ringgit (US$10.3 million) fine.
+The decision triggered widespread outrage among...</description>
+      <guid isPermaLink="true">https://www.scmp.com/week-asia/politics/article/3368790/malaysias-najib-has-no-money-pay-fine-house-arrest-lawyer-says?utm_source=rss_feed</guid>
+      <link>https://www.scmp.com/week-asia/politics/article/3368790/malaysias-najib-has-no-money-pay-fine-house-arrest-lawyer-says?utm_source=rss_feed</link>
+      <pubDate>Fri, 25 Sep 2026 07:59:23 +0000</pubDate>
+      <title>Malaysia’s Najib ‘has no money’ to pay fine for house arrest, lawyer says</title>
+      <enclosure length="4095" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/1e1c4a47-7457-4b64-98c1-49fb8e2372d3_04a908ec.jpg?itok=hshWf6Xp&amp;v=1790323161"/>
+      <media:content height="2730" medium="image" type="image/jpeg" url="https://cdn.i-scmp.com/sites/default/files/styles/1280x720/public/d8/images/canvas/2026/09/25/1e1c4a47-7457-4b64-98c1-49fb8e2372d3_04a908ec.jpg?itok=hshWf6Xp&amp;v=1790323161" width="4095"/>
+    </item>
+  </channel>
+</rss>

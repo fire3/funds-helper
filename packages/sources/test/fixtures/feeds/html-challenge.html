@@ -1,0 +1,19 @@
+<!-- fixture: html-challenge
+     采集日期: 2026-09-26（**合成样例**，非真实抓取）
+     原始 URL: 无
+     用途: HTTP 200 但返回 HTML 的情况（WAF 挑战页 / 错误页）。
+           调研文档 global-financial-news-sources.md §1.2：**HTTP 200 不等于可用** ——
+           这种响应必须抛 ParseError 并写进 news_source.last_status，绝不当 feed 解析。
+-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Attention Required! | Cloudflare</title>
+  </head>
+  <body>
+    <h1>Sorry, you have been blocked</h1>
+    <p>You are unable to access news.example.com</p>
+    <div id="challenge-form"></div>
+  </body>
+</html>

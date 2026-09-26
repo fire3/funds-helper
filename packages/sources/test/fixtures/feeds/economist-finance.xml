@@ -1,0 +1,3319 @@
+<!-- fixture: economist-finance
+     采集日期: 2026-09-26
+     原始 URL: https://www.economist.com/finance-and-economics/rss.xml
+     格式: RSS 2.0（CDATA 标题/摘要）
+     用途: packages/sources/src/feeds/rss.test.ts（上游改版时用同一 URL 重采、diff、更新解析逻辑）
+-->
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>
+      <![CDATA[Finance & economics]]>
+    </title>
+    <description/>
+    <link>https://www.economist.com/finance-and-economics</link>
+    <pubDate>Fri, 25 Sep 2026 11:25:20 +0000</pubDate>
+    <lastBuildDate>Fri, 25 Sep 2026 11:25:20 +0000</lastBuildDate>
+    <atom:link href="https://www.economist.com/finance-and-economics/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>
+        <![CDATA[How the Fed should measure inflation]]>
+      </title>
+      <description>
+        <![CDATA[Pinning down the underlying rate may be harder than Kevin Warsh thinks]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/24/how-the-fed-should-measure-inflation</link>
+      <guid isPermaLink="false">a657bb03-367a-4fa0-897f-955e60d1cae6</guid>
+      <pubDate>Thu, 24 Sep 2026 09:44:07 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Israel’s war economy is thriving]]>
+      </title>
+      <description>
+        <![CDATA[But conflict is worsening its industrial divide]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/24/israels-war-economy-is-thriving</link>
+      <guid isPermaLink="false">cd2a6a70-05fa-4d85-841b-cafbfc729485</guid>
+      <pubDate>Thu, 24 Sep 2026 09:43:14 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The battle between India’s stock exchanges is heating up again]]>
+      </title>
+      <description>
+        <![CDATA[Number two is trying harder]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/24/the-battle-between-indias-stock-exchanges-is-heating-up-again</link>
+      <guid isPermaLink="false">07ef11fe-f7da-441c-8540-437a74b88125</guid>
+      <pubDate>Thu, 24 Sep 2026 09:42:29 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Turkey’s investment-fund fiasco]]>
+      </title>
+      <description>
+        <![CDATA[The country could lose its status as an emerging market]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/24/turkeys-investment-fund-fiasco</link>
+      <guid isPermaLink="false">b2fe09cc-65c4-4d76-a3c5-401e5e422799</guid>
+      <pubDate>Thu, 24 Sep 2026 09:40:24 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[You can’t trade your way through the AI apocalypse]]>
+      </title>
+      <description>
+        <![CDATA[It’s hard to price the threats posed by a misaligned superintelligence]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/22/you-cant-trade-your-way-through-the-ai-apocalypse</link>
+      <guid isPermaLink="false">145a3826-1423-4403-bcd1-7d89beb3b467</guid>
+      <pubDate>Tue, 22 Sep 2026 19:51:26 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Data centres are straining the insurance market]]>
+      </title>
+      <description>
+        <![CDATA[The premiums are juicy, but the financial stakes are hard to digest]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/22/data-centres-are-straining-the-insurance-market</link>
+      <guid isPermaLink="false">49138091-079e-43cd-a3ce-706ab409c46f</guid>
+      <pubDate>Tue, 22 Sep 2026 17:36:59 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[House prices survived the last rise in interest rates. Will they this time?]]>
+      </title>
+      <description>
+        <![CDATA[Supports that shored up the housing market when borrowing costs last rose are gone]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/20/house-prices-survived-the-last-rise-in-interest-rates-will-they-this-time</link>
+      <guid isPermaLink="false">1b99ae31-063a-423b-b3d8-41b8ee8be578</guid>
+      <pubDate>Sun, 20 Sep 2026 09:05:41 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The GDP-per-person slowdown threatens global living standards]]>
+      </title>
+      <description>
+        <![CDATA[Brazil, China, Germany and Russia have recently joined an unfortunate club]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/17/the-gdp-per-person-slowdown-threatens-global-living-standards</link>
+      <guid isPermaLink="false">dc617d38-4e77-43d9-a4c5-4a6ebea55daf</guid>
+      <pubDate>Thu, 17 Sep 2026 10:30:49 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The trickle-down economics of the AI boom]]>
+      </title>
+      <description>
+        <![CDATA[How fast are AI investments translating into broader gains? Taiwan and South Korea offer hints]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/17/the-trickle-down-economics-of-the-ai-boom</link>
+      <guid isPermaLink="false">2919f110-b6c7-4947-b37a-8ddd58eb3901</guid>
+      <pubDate>Thu, 17 Sep 2026 09:27:11 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Ricardo Reis was too frank for the IMF]]>
+      </title>
+      <description>
+        <![CDATA[It can still benefit from the economist’s ideas]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/17/ricardo-reis-was-too-frank-for-the-imf</link>
+      <guid isPermaLink="false">394d4a34-eb7e-432c-ad17-38f2be42cd2c</guid>
+      <pubDate>Thu, 17 Sep 2026 09:24:30 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Soaring bond yields, gaping deficits and towering debts: what could go wrong?]]>
+      </title>
+      <description>
+        <![CDATA[The rich world is flirting with fiscal disaster]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/16/soaring-bond-yields-gaping-deficits-and-towering-debts-what-could-go-wrong</link>
+      <guid isPermaLink="false">a375a944-3126-48bf-8983-b89635582a7f</guid>
+      <pubDate>Wed, 16 Sep 2026 18:22:11 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[What Africa’s biggest IPO can do for its stock markets]]>
+      </title>
+      <description>
+        <![CDATA[A new generation of investors is buying up African stocks]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/15/what-africas-biggest-ipo-can-do-for-its-stock-markets</link>
+      <guid isPermaLink="false">fe87d33d-c5a2-4292-98db-14e46f78b59d</guid>
+      <pubDate>Tue, 15 Sep 2026 20:44:13 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Scott Bessent should stop blaming the bond market]]>
+      </title>
+      <description>
+        <![CDATA[It is working just fine; his interventions, less so]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/15/scott-bessent-should-stop-blaming-the-bond-market</link>
+      <guid isPermaLink="false">45ea54e1-af05-4277-b956-1d8582a19a05</guid>
+      <pubDate>Tue, 15 Sep 2026 19:43:54 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Wanted: new business, finance and economics interns]]>
+      </title>
+      <description>
+        <![CDATA[The Economist invites applications for the Marjorie Deane internship]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/12/wanted-new-business-finance-and-economics-interns</link>
+      <guid isPermaLink="false">9a7cf1f0-ac1c-4716-bda1-b50c7b7ccd18</guid>
+      <pubDate>Sat, 12 Sep 2026 08:04:14 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Surging bond yields presage pain—and not just for bond investors]]>
+      </title>
+      <description>
+        <![CDATA[Stubborn inflation, corporate demand for capital and big public debts are squeezing holders of government bonds]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/11/surging-bond-yields-presage-pain-and-not-just-for-bond-investors</link>
+      <guid isPermaLink="false">c36daeb3-44ec-454e-94be-089511809ff3</guid>
+      <pubDate>Fri, 11 Sep 2026 16:02:32 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Can Germany’s economic recovery outrun the AfD?]]>
+      </title>
+      <description>
+        <![CDATA[It is showing signs of life—but fragile ones]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/10/can-germanys-economic-recovery-outrun-the-afd</link>
+      <guid isPermaLink="false">cf2de53c-3109-4052-9e18-8dae513b5499</guid>
+      <pubDate>Thu, 10 Sep 2026 09:17:17 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The economic folly of free buses]]>
+      </title>
+      <description>
+        <![CDATA[There are better ways to fight climate change, immobility and inequality]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/10/the-economic-folly-of-free-buses</link>
+      <guid isPermaLink="false">019b08e2-1308-44f5-8cdf-7cbc07e6d991</guid>
+      <pubDate>Thu, 10 Sep 2026 09:17:11 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[What is causing the global bond sell-off?]]>
+      </title>
+      <description>
+        <![CDATA[India hints at the answer]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/08/what-is-causing-the-global-bond-sell-off</link>
+      <guid isPermaLink="false">8d7fc992-cef6-4990-a7b0-816cec9990b1</guid>
+      <pubDate>Tue, 08 Sep 2026 18:15:09 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[China’s $54bn capital boost for banks falls far short]]>
+      </title>
+      <description>
+        <![CDATA[Old problems bedevil balance-sheets and hold back lending]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/08/chinas-54bn-capital-boost-for-banks-falls-far-short</link>
+      <guid isPermaLink="false">bd6c1511-ad56-4fa1-a047-465b1740fd13</guid>
+      <pubDate>Tue, 08 Sep 2026 16:18:35 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Inflation is back around the world—as is the fight against it]]>
+      </title>
+      <description>
+        <![CDATA[Central banks are raising interest rates again]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/06/inflation-is-back-around-the-world-as-is-the-fight-against-it</link>
+      <guid isPermaLink="false">5abf3cff-05db-42dc-97d1-0da8fc41ea18</guid>
+      <pubDate>Sun, 06 Sep 2026 15:39:54 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The jobs apocalypse is postponed. An AI jobs boom is here]]>
+      </title>
+      <description>
+        <![CDATA[Initial effects of the technology on employment look positive]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/04/the-jobs-apocalypse-is-postponed-an-ai-jobs-boom-is-here</link>
+      <guid isPermaLink="false">bfccb886-c290-45fb-bba5-314a25b591f6</guid>
+      <pubDate>Fri, 04 Sep 2026 18:05:02 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Mexico is struggling to win over bond markets]]>
+      </title>
+      <description>
+        <![CDATA[Investors are unconvinced by Claudia Sheinbaum’s policies]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/03/mexico-is-struggling-to-win-over-bond-markets</link>
+      <guid isPermaLink="false">a90daec8-fb06-4a25-a5ca-6140cbb1f74c</guid>
+      <pubDate>Thu, 03 Sep 2026 09:35:43 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[China tries to look past the property slump]]>
+      </title>
+      <description>
+        <![CDATA[But its new policies could hurt construction and employment]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/03/china-tries-to-look-past-the-property-slump</link>
+      <guid isPermaLink="false">048d2cf7-a264-41d5-8770-981e09262cf7</guid>
+      <pubDate>Thu, 03 Sep 2026 09:35:32 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Indian regulators’ attempts to protect retail traders are backfiring]]>
+      </title>
+      <description>
+        <![CDATA[The unintended consequences of curbs on options trading]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/03/indian-regulators-attempts-to-protect-retail-traders-are-backfiring</link>
+      <guid isPermaLink="false">1788fc9e-69e1-47f8-a775-f6bc0f239fc1</guid>
+      <pubDate>Thu, 03 Sep 2026 09:34:25 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Central banking has a forbidding future]]>
+      </title>
+      <description>
+        <![CDATA[But Kevin Warsh has bought himself time]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/02/central-banking-has-a-forbidding-future</link>
+      <guid isPermaLink="false">1c41e99a-a7ab-4c70-92b8-bd511c181f77</guid>
+      <pubDate>Wed, 02 Sep 2026 19:47:06 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Europe’s bond markets are suffering a post-holiday shock]]>
+      </title>
+      <description>
+        <![CDATA[Reasons for rising yields differ somewhat from those in America, but are no less problematic]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/01/europes-bond-markets-are-suffering-a-post-holiday-shock</link>
+      <guid isPermaLink="false">4808bfad-8219-47c5-acef-6a1e8a17f356</guid>
+      <pubDate>Tue, 01 Sep 2026 21:58:14 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[IPO booms can spell trouble for the markets]]>
+      </title>
+      <description>
+        <![CDATA[Companies go public in good times that may not last]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/09/01/ipo-booms-can-spell-trouble-for-the-markets</link>
+      <guid isPermaLink="false">185ec6e6-00cf-4611-b3b1-c0672339e9ab</guid>
+      <pubDate>Tue, 01 Sep 2026 19:03:06 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The extraordinary rise of Miami’s economy]]>
+      </title>
+      <description>
+        <![CDATA[Thanks to a combination of capital and politics, the city is booming. Can its success be sustained?]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/31/the-extraordinary-rise-of-miamis-economy</link>
+      <guid isPermaLink="false">b3bc4809-0f3f-47d9-853a-ab1f898980ce</guid>
+      <pubDate>Mon, 31 Aug 2026 17:01:41 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Kevin Warsh tries being a normal central banker]]>
+      </title>
+      <description>
+        <![CDATA[And markets like it]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/28/kevin-warsh-tries-being-a-normal-central-banker</link>
+      <guid isPermaLink="false">4a8b287f-3315-40f9-80f9-f8aefe3fb989</guid>
+      <pubDate>Fri, 28 Aug 2026 17:02:18 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The economic costs of Donald Trump’s immigration crackdown]]>
+      </title>
+      <description>
+        <![CDATA[A smaller workforce and slower growth]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/27/the-economic-costs-of-donald-trumps-immigration-crackdown</link>
+      <guid isPermaLink="false">b3f0034a-832f-4041-bfa9-c1618595c40a</guid>
+      <pubDate>Thu, 27 Aug 2026 09:49:05 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Scott Bessent takes on the bond market]]>
+      </title>
+      <description>
+        <![CDATA[And makes trouble for the Fed]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/27/scott-bessent-takes-on-the-bond-market</link>
+      <guid isPermaLink="false">cdd1be31-54c5-4ed7-93be-01f50e744c98</guid>
+      <pubDate>Thu, 27 Aug 2026 09:13:40 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[China should be loosening budgetary policy. It’s doing the opposite]]>
+      </title>
+      <description>
+        <![CDATA[Its belt-tightening is good micro, but bad macro]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/27/china-should-be-loosening-budgetary-policy-its-doing-the-opposite</link>
+      <guid isPermaLink="false">10d56e24-353d-4a75-98ce-5245af1e4ca2</guid>
+      <pubDate>Thu, 27 Aug 2026 08:57:32 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How India’s central bank subsidised the diaspora]]>
+      </title>
+      <description>
+        <![CDATA[The scheme has helped to stabilise the rupee]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/27/how-indias-central-bank-subsidised-the-diaspora</link>
+      <guid isPermaLink="false">ff2f8996-9e9d-4a41-9998-1269e971c196</guid>
+      <pubDate>Thu, 27 Aug 2026 08:57:29 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Tax breaks for charity donations should be scrapped]]>
+      </title>
+      <description>
+        <![CDATA[They are a poor way to do good]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/27/tax-breaks-for-charity-donations-should-be-scrapped</link>
+      <guid isPermaLink="false">3dfd7634-4994-4220-b3db-9a15af3e01b9</guid>
+      <pubDate>Thu, 27 Aug 2026 08:57:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Why is Russia deliberately weakening its currency?]]>
+      </title>
+      <description>
+        <![CDATA[A strong rouble was hurting the budget]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/26/why-is-russia-deliberately-weakening-its-currency</link>
+      <guid isPermaLink="false">78d5a41c-632f-4170-8d3c-0b4ba6cd5340</guid>
+      <pubDate>Wed, 26 Aug 2026 18:28:55 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[What makes a great investor?]]>
+      </title>
+      <description>
+        <![CDATA[A big dose of luck, and a distinctly odd character]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/25/what-makes-a-great-investor</link>
+      <guid isPermaLink="false">4a8b1961-9a5f-42ec-bb96-989c571c9eda</guid>
+      <pubDate>Tue, 25 Aug 2026 17:15:09 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Is Scott Bessent the Fed chair Donald Trump always wanted?]]>
+      </title>
+      <description>
+        <![CDATA[Perhaps. But his effort to talk bond yields lower is likely to fail]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/23/is-scott-bessent-the-fed-chair-donald-trump-always-wanted</link>
+      <guid isPermaLink="false">0224fd6d-646a-40af-9c6c-2d5356232e38</guid>
+      <pubDate>Sun, 23 Aug 2026 13:38:58 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Tracking the cost of Donald Trump’s tariffs]]>
+      </title>
+      <description>
+        <![CDATA[America’s global effective tariff stands at 10.0%]]>
+      </description>
+      <link>https://www.economist.com/interactive/trump-tariff-costs-tracker</link>
+      <guid isPermaLink="false">288a6f8e-979b-4ce1-89b7-bc75650d4330</guid>
+      <pubDate>Fri, 21 Aug 2026 17:00:33 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The high cost of phantom tollbooths]]>
+      </title>
+      <description>
+        <![CDATA[Freedom of navigation is worth preserving]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/20/the-high-cost-of-phantom-tollbooths</link>
+      <guid isPermaLink="false">1c8984ce-4ef1-4f65-8d43-de88a2b67210</guid>
+      <pubDate>Thu, 20 Aug 2026 09:21:32 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[However you measure it, China’s job market is weak]]>
+      </title>
+      <description>
+        <![CDATA[Some workers are going back to the farm]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/20/however-you-measure-it-chinas-job-market-is-weak</link>
+      <guid isPermaLink="false">2d2d892d-331f-4db1-933e-3ae07d585f00</guid>
+      <pubDate>Thu, 20 Aug 2026 09:21:25 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Why bond markets are unnerving rich-world politicians]]>
+      </title>
+      <description>
+        <![CDATA[As stocks rise ever higher, yields have been climbing ominously]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/19/why-bond-markets-are-unnerving-rich-world-politicians</link>
+      <guid isPermaLink="false">7a5e07ba-29c4-40f2-9aef-a780f72ed9bf</guid>
+      <pubDate>Wed, 19 Aug 2026 18:02:58 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Stock indices no longer reflect equity reality]]>
+      </title>
+      <description>
+        <![CDATA[Lies, damned lies and stock markets]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/18/stock-indices-no-longer-reflect-equity-reality</link>
+      <guid isPermaLink="false">2ec6766e-ced9-4547-80f1-2f468610d16a</guid>
+      <pubDate>Tue, 18 Aug 2026 17:50:12 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The White House’s absurd claim of a Chinese transshipment “scam” ]]>
+      </title>
+      <description>
+        <![CDATA[High tariffs on Chinese goods have had predictable effects]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/18/the-white-houses-absurd-claim-of-a-chinese-transshipment-scam</link>
+      <guid isPermaLink="false">61c93820-aaa4-4579-ab7e-a0da64116d1d</guid>
+      <pubDate>Tue, 18 Aug 2026 15:42:49 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The world’s most influential economist is oddly unconvincing]]>
+      </title>
+      <description>
+        <![CDATA[Daron Acemoglu is revered. Why?]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/17/the-worlds-most-influential-economist-is-oddly-unconvincing</link>
+      <guid isPermaLink="false">3d459519-93ba-4cc2-9586-162a293dd43f</guid>
+      <pubDate>Mon, 17 Aug 2026 17:34:22 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[When Japan buys yen, it unwinds a dangerous trade]]>
+      </title>
+      <description>
+        <![CDATA[The world’s biggest carry trader begins to exit its position]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/13/when-japan-buys-yen-it-unwinds-a-dangerous-trade</link>
+      <guid isPermaLink="false">ced5b9df-36de-4fea-a5da-e72a6d02f800</guid>
+      <pubDate>Thu, 13 Aug 2026 08:49:36 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Is China’s debt-bomb squad about to blow up?]]>
+      </title>
+      <description>
+        <![CDATA[Firms tasked with defusing credit crises are getting into trouble]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/13/is-chinas-debt-bomb-squad-about-to-blow-up</link>
+      <guid isPermaLink="false">8fd2ee52-3e5e-471d-a95e-9e7f67bac150</guid>
+      <pubDate>Thu, 13 Aug 2026 08:37:46 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Can Singapore ever build a proper stock market?]]>
+      </title>
+      <description>
+        <![CDATA[The city-state wants to fill a hole in its financial portfolio]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/13/can-singapore-ever-build-a-proper-stock-market</link>
+      <guid isPermaLink="false">3f8c7670-293f-4046-ace2-32d4f7ecfec8</guid>
+      <pubDate>Thu, 13 Aug 2026 08:37:16 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Kevin Warsh is struggling to escape his predecessor’s problems]]>
+      </title>
+      <description>
+        <![CDATA[High inflation, weak jobs numbers and presidential interference trouble the Federal Reserve]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/12/kevin-warsh-is-struggling-to-escape-his-predecessors-problems</link>
+      <guid isPermaLink="false">16f6a683-9436-4d3f-ae40-5e72a5e3a26b</guid>
+      <pubDate>Wed, 12 Aug 2026 17:33:32 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Hooray for index funds—just don’t call them passive]]>
+      </title>
+      <description>
+        <![CDATA[Jack Bogle’s creation has transformed markets, and involves plenty of choices]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/11/hooray-for-index-funds-just-dont-call-them-passive</link>
+      <guid isPermaLink="false">2d0d12e1-ebe0-41ce-bac7-fdd150bbf9b1</guid>
+      <pubDate>Tue, 11 Aug 2026 19:25:38 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[China is now the world’s great oil power]]>
+      </title>
+      <description>
+        <![CDATA[Forget OPEC. The Chinese Communist Party calls the shots]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/09/china-is-now-the-worlds-great-oil-power</link>
+      <guid isPermaLink="false">460f267b-2d80-4d15-a493-d294f9b11170</guid>
+      <pubDate>Sun, 09 Aug 2026 16:22:40 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[India’s IT sector is surviving artificial intelligence]]>
+      </title>
+      <description>
+        <![CDATA[Though the technology is making life still harder for many graduates]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/06/indias-it-sector-is-surviving-artificial-intelligence</link>
+      <guid isPermaLink="false">b02a540f-e829-416e-99be-3b3b78d4d54b</guid>
+      <pubDate>Thu, 06 Aug 2026 09:22:08 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[African countries are souring on the dollar]]>
+      </title>
+      <description>
+        <![CDATA[The yuan and local currencies stand to benefit]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/06/african-countries-are-souring-on-the-dollar</link>
+      <guid isPermaLink="false">e562c7c0-5f58-4728-88cf-725e25e28b4c</guid>
+      <pubDate>Thu, 06 Aug 2026 08:55:14 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How—and how much—should central banks talk? ]]>
+      </title>
+      <description>
+        <![CDATA[The art is to say enough, and no more]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/06/how-and-how-much-should-central-banks-talk</link>
+      <guid isPermaLink="false">69a9a634-8527-431a-be92-f7344a6809be</guid>
+      <pubDate>Thu, 06 Aug 2026 08:55:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Investors in Situational Awareness deserved to lose their shirts]]>
+      </title>
+      <description>
+        <![CDATA[The plight of the hedge fund says more about them than about its 24-year-old founder]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/04/investors-in-situational-awareness-deserved-to-lose-their-shirts</link>
+      <guid isPermaLink="false">65f9e976-b236-4df4-9585-0354e92a4070</guid>
+      <pubDate>Tue, 04 Aug 2026 17:11:44 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How China gets better bang for its buck than America in AI]]>
+      </title>
+      <description>
+        <![CDATA[Its investment lags far behind America’s. Its models do not]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/03/how-china-gets-better-bang-for-its-buck-than-america-in-ai</link>
+      <guid isPermaLink="false">398b2845-23bd-46db-94d3-c8869181fa79</guid>
+      <pubDate>Mon, 03 Aug 2026 17:15:13 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[What will Kevin Warsh do if America’s economy breaks?]]>
+      </title>
+      <description>
+        <![CDATA[An enigmatic Fed faces the risk of AI stocks falling and the oil price soaring]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/08/02/what-will-kevin-warsh-do-if-americas-economy-breaks</link>
+      <guid isPermaLink="false">e431882d-53e4-4e10-8540-bdd135113832</guid>
+      <pubDate>Sun, 02 Aug 2026 16:12:02 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Oil prices remain highly flammable]]>
+      </title>
+      <description>
+        <![CDATA[As tensions flare in the Gulf, triple digits could return in a flash]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/30/oil-prices-remain-highly-flammable</link>
+      <guid isPermaLink="false">95911b8f-78f9-4333-8225-461e3b05bb6b</guid>
+      <pubDate>Thu, 30 Jul 2026 13:02:21 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How many people are dying as a result of USAID’s demise?]]>
+      </title>
+      <description>
+        <![CDATA[Fewer than academics imagine, but more than Elon Musk will admit]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/30/how-many-people-are-dying-as-a-result-of-usaids-demise</link>
+      <guid isPermaLink="false">cd879aca-2181-4739-b9dc-62017d56ed5e</guid>
+      <pubDate>Thu, 30 Jul 2026 09:38:15 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[A common European safe asset is still unlikely]]>
+      </title>
+      <description>
+        <![CDATA[For that, blame high national debts]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/30/a-common-european-safe-asset-is-still-unlikely</link>
+      <guid isPermaLink="false">8e6b30a8-db1b-481e-8b84-d3f7431812c9</guid>
+      <pubDate>Thu, 30 Jul 2026 09:13:36 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Japan pursues an ill-timed fiscal stimulus]]>
+      </title>
+      <description>
+        <![CDATA[Takaichi Sanae’s economic agenda bears little resemblance to her mentor’s]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/30/japan-pursues-an-ill-timed-fiscal-stimulus</link>
+      <guid isPermaLink="false">006572e9-3fa1-4753-a54a-53abf826b9f4</guid>
+      <pubDate>Thu, 30 Jul 2026 09:12:57 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Retail investors should beware perpetual futures]]>
+      </title>
+      <description>
+        <![CDATA[These peculiar products, popular in the crypto world, are hitting the mainstream]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/28/retail-investors-should-beware-perpetual-futures</link>
+      <guid isPermaLink="false">83b5eda3-fea4-45c0-b5f4-92e16d5a14e9</guid>
+      <pubDate>Tue, 28 Jul 2026 18:48:27 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[AI revenues are growing fast, but not fast enough]]>
+      </title>
+      <description>
+        <![CDATA[The returns on trillions of dollars of spending are deeply uncertain]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/28/ai-revenues-are-growing-fast-but-not-fast-enough</link>
+      <guid isPermaLink="false">2e4534e7-dd43-4e12-a296-e8d1ff18dead</guid>
+      <pubDate>Tue, 28 Jul 2026 10:45:17 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How to design paper money that represents Europe]]>
+      </title>
+      <description>
+        <![CDATA[The euro gets a makeover]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/27/how-to-design-paper-money-that-represents-europe</link>
+      <guid isPermaLink="false">13b1994b-ce8f-4030-ac4d-449f28c4802b</guid>
+      <pubDate>Mon, 27 Jul 2026 17:16:17 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Oil markets are on edge again]]>
+      </title>
+      <description>
+        <![CDATA[The bombing may have paused, but energy supplies are precarious]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/26/oil-markets-are-on-edge-again</link>
+      <guid isPermaLink="false">f06a47c9-9b58-4af7-b27c-42806b9b0ad7</guid>
+      <pubDate>Sun, 26 Jul 2026 14:06:48 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The world’s balance-sheet is out of kilter with its economy]]>
+      </title>
+      <description>
+        <![CDATA[Restoring balance could be painful]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/23/the-worlds-balance-sheet-is-out-of-kilter-with-its-economy</link>
+      <guid isPermaLink="false">8e2f568d-5bd1-4243-8719-464bb318d278</guid>
+      <pubDate>Thu, 23 Jul 2026 09:42:17 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[A brief history of Luddism]]>
+      </title>
+      <description>
+        <![CDATA[States ultimately decide how fast technology is adopted]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/23/a-brief-history-of-luddism</link>
+      <guid isPermaLink="false">3d3df04f-64b5-40c6-b15d-c29734375550</guid>
+      <pubDate>Thu, 23 Jul 2026 09:09:03 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Can China dominate AI exports, too?]]>
+      </title>
+      <description>
+        <![CDATA[Robotaxis offer an early test case]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/23/can-china-dominate-ai-exports-too</link>
+      <guid isPermaLink="false">6809e10c-bd35-47a7-8bbe-a2c57dec98a9</guid>
+      <pubDate>Thu, 23 Jul 2026 09:03:47 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The rise of the deserving rich]]>
+      </title>
+      <description>
+        <![CDATA[Today’s billionaires are more likely than yesterday’s to have made their own money]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/23/the-rise-of-the-deserving-rich</link>
+      <guid isPermaLink="false">e45e05e0-490f-4ad9-96d4-7c5c2160781a</guid>
+      <pubDate>Thu, 23 Jul 2026 08:59:38 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Can prediction markets win over Wall Street?]]>
+      </title>
+      <description>
+        <![CDATA[Clearing the regulatory hurdles is only half the battle]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/23/can-prediction-markets-win-over-wall-street</link>
+      <guid isPermaLink="false">54bc799f-03c6-44c8-9b3b-5d56fea78b75</guid>
+      <pubDate>Thu, 23 Jul 2026 08:59:27 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How investors learned to live with inflation]]>
+      </title>
+      <description>
+        <![CDATA[Fewer than ever believe central bankers will bring it back to target]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/21/how-investors-learned-to-live-with-inflation</link>
+      <guid isPermaLink="false">e8456514-5b50-413a-a250-13e7fb3c2af1</guid>
+      <pubDate>Tue, 21 Jul 2026 17:29:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How to shrink the Fed’s $7trn balance-sheet]]>
+      </title>
+      <description>
+        <![CDATA[Kevin Warsh will struggle to reverse the effects of bond-buying]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/16/how-to-shrink-the-feds-7trn-balance-sheet</link>
+      <guid isPermaLink="false">eaddb901-8fbf-46fa-b353-cdd246e42467</guid>
+      <pubDate>Thu, 16 Jul 2026 09:06:46 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Can Kevin Warsh’s Fed force 5 reimagine monetary policymaking?]]>
+      </title>
+      <description>
+        <![CDATA[The new chairman enlists heavy-hitters to fight a handful of gnarly problems]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/16/can-kevin-warshs-fed-force-5-reimagine-monetary-policymaking</link>
+      <guid isPermaLink="false">0d66d4bb-e95c-442c-bab6-aac888397800</guid>
+      <pubDate>Thu, 16 Jul 2026 09:02:38 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[China’s trade gap is narrowing. And other surprises]]>
+      </title>
+      <description>
+        <![CDATA[The world’s second-biggest economy is stumbling into fiscal austerity]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/15/chinas-trade-gap-is-narrowing-and-other-surprises</link>
+      <guid isPermaLink="false">42705660-1fe5-4a72-81a1-abfd232dc4f5</guid>
+      <pubDate>Wed, 15 Jul 2026 17:55:22 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[America’s Hormuz brinkmanship is worsening a global fuel crunch]]>
+      </title>
+      <description>
+        <![CDATA[Rising oil prices are only part of the problem]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/14/americas-hormuz-brinkmanship-is-worsening-a-global-fuel-crunch</link>
+      <guid isPermaLink="false">94388254-7d2c-4da0-917e-4789669d15bf</guid>
+      <pubDate>Tue, 14 Jul 2026 18:22:01 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[What investment gurus get wrong]]>
+      </title>
+      <description>
+        <![CDATA[To see a country’s financial follies, look to its celebrity advisers]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/14/what-investment-gurus-get-wrong</link>
+      <guid isPermaLink="false">d3fc81de-a569-4970-81a4-586558173ff7</guid>
+      <pubDate>Tue, 14 Jul 2026 17:21:18 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The stubborn scarcity of female breadwinners]]>
+      </title>
+      <description>
+        <![CDATA[Wives who out-earn their husbands remain rare in America]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/13/the-stubborn-scarcity-of-female-breadwinners</link>
+      <guid isPermaLink="false">41439e36-07b8-42c6-91b7-1f1339da6da4</guid>
+      <pubDate>Mon, 13 Jul 2026 19:12:11 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Storm clouds gather over America’s financial supremacy]]>
+      </title>
+      <description>
+        <![CDATA[Its payments firms may be the first casualties]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/12/storm-clouds-gather-over-americas-financial-supremacy</link>
+      <guid isPermaLink="false">c0fd633f-ba62-4086-b95c-730b17708976</guid>
+      <pubDate>Sun, 12 Jul 2026 17:05:30 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[China may struggle to fund Xi Jinping’s tech dreams]]>
+      </title>
+      <description>
+        <![CDATA[Even though capital markets are staging a comeback]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/09/china-may-struggle-to-fund-xi-jinpings-tech-dreams</link>
+      <guid isPermaLink="false">d7b40c5a-955b-442b-8705-eaea67f74c2e</guid>
+      <pubDate>Thu, 09 Jul 2026 08:27:02 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[An ageing society might not cost too much]]>
+      </title>
+      <description>
+        <![CDATA[A dystopian vision of the future may not come to pass]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/09/an-ageing-society-might-not-cost-too-much</link>
+      <guid isPermaLink="false">1e43521a-7dec-4276-bf9d-551b9ad26746</guid>
+      <pubDate>Thu, 09 Jul 2026 08:26:42 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Three ways the LNG market could crack before winter]]>
+      </title>
+      <description>
+        <![CDATA[War, weather and outages may still send gas prices soaring]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/08/three-ways-the-lng-market-could-crack-before-winter</link>
+      <guid isPermaLink="false">a03ec4d4-990f-4fe3-bf17-11c6d166f5e0</guid>
+      <pubDate>Wed, 08 Jul 2026 14:08:15 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[AI has taken over the stock market. The bond market is next]]>
+      </title>
+      <description>
+        <![CDATA[Judging credit risk of the AI boom is difficult ]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/07/ai-has-taken-over-the-stock-market-the-bond-market-is-next</link>
+      <guid isPermaLink="false">b7a52142-44d5-4937-a06e-2d10d071cb3a</guid>
+      <pubDate>Tue, 07 Jul 2026 20:08:30 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Europe’s economy is a mess. Its stock markets are a steal]]>
+      </title>
+      <description>
+        <![CDATA[International investors still aren’t interested]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/07/europes-economy-is-a-mess-its-stock-markets-are-a-steal</link>
+      <guid isPermaLink="false">9365a8de-f8b5-4252-afcc-693430fe074a</guid>
+      <pubDate>Tue, 07 Jul 2026 19:20:24 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The World Bank has ditched its climate targets]]>
+      </title>
+      <description>
+        <![CDATA[The rise and fall of the institution’s love for green growth]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/06/the-world-bank-has-ditched-its-climate-targets</link>
+      <guid isPermaLink="false">1a97f4d4-45a0-4450-a6f2-506c5c353951</guid>
+      <pubDate>Mon, 06 Jul 2026 19:40:33 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Women’s progress at work is stalling]]>
+      </title>
+      <description>
+        <![CDATA[Is the “Lean In” generation leaning out?]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/05/womens-progress-at-work-is-stalling</link>
+      <guid isPermaLink="false">9ddeeb53-e0a2-42fd-aec9-30f43151d358</guid>
+      <pubDate>Sun, 05 Jul 2026 17:22:02 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Is The Economist always wrong?]]>
+      </title>
+      <description>
+        <![CDATA[We used artificial intelligence to test the accuracy of our forecasts]]>
+      </description>
+      <link>https://www.economist.com/interactive/finance-and-economics/2026/07/02/is-the-economist-always-wrong</link>
+      <guid isPermaLink="false">721106fd-2771-43d0-a0d4-7c193bd8abae</guid>
+      <pubDate>Thu, 02 Jul 2026 14:22:37 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How much will a 4th of July cookout cost this year?]]>
+      </title>
+      <description>
+        <![CDATA[We calculate the rising price of Americans’ summer staples]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/02/how-much-will-a-4th-of-july-cookout-cost-this-year</link>
+      <guid isPermaLink="false">a46eadd2-de4a-4ac3-b6d4-5efb591f77f7</guid>
+      <pubDate>Thu, 02 Jul 2026 09:41:44 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Are stablecoins money?]]>
+      </title>
+      <description>
+        <![CDATA[Policymakers’ job is to make them safe as well as useful]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/02/are-stablecoins-money</link>
+      <guid isPermaLink="false">ff9031ac-d1bb-4c9f-9011-1dc7675e2f18</guid>
+      <pubDate>Thu, 02 Jul 2026 09:37:02 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Unpacking Venezuela’s peculiar debt restructuring]]>
+      </title>
+      <description>
+        <![CDATA[Hazy numbers and the absence of the IMF make for an unusual negotiation]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/07/02/unpacking-venezuelas-peculiar-debt-restructuring</link>
+      <guid isPermaLink="false">1baeabd4-7041-4f62-913c-ddaa68e43d2d</guid>
+      <pubDate>Thu, 02 Jul 2026 09:36:54 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[A new Plaza Accord for global currencies wouldn’t work]]>
+      </title>
+      <description>
+        <![CDATA[The conditions and will for a deal are not what they were in 1985]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/30/a-new-plaza-accord-for-global-currencies-wouldnt-work</link>
+      <guid isPermaLink="false">54223bd9-7eac-4259-b7e6-b80b4fcab2f3</guid>
+      <pubDate>Tue, 30 Jun 2026 19:46:45 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Turkey’s economic plan to win from the Iran war]]>
+      </title>
+      <description>
+        <![CDATA[The country is a case study in the spillovers of conflict—both positive and negative]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/29/turkeys-economic-plan-to-win-from-the-iran-war</link>
+      <guid isPermaLink="false">845c40da-656c-4778-bede-01c8b570bf87</guid>
+      <pubDate>Mon, 29 Jun 2026 20:52:26 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[China cracks down on rule-bending offshore investments]]>
+      </title>
+      <description>
+        <![CDATA[It wants mainland investors to bet on its own tech dreams, not America’s]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/28/china-cracks-down-on-rule-bending-offshore-investments</link>
+      <guid isPermaLink="false">09383b82-5e8e-4ad2-a9fb-9ce49058faf9</guid>
+      <pubDate>Sun, 28 Jun 2026 10:33:26 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Will AI lower interest rates?]]>
+      </title>
+      <description>
+        <![CDATA[Kevin Warsh is drawing lessons about tech from Alan Greenspan—but selectively]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/25/will-ai-lower-interest-rates</link>
+      <guid isPermaLink="false">51077634-3d13-4ee2-8b74-cb00b9de1edb</guid>
+      <pubDate>Thu, 25 Jun 2026 09:39:49 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Waiving sanctions on Iranian oil is a huge concession by America]]>
+      </title>
+      <description>
+        <![CDATA[It will enrich an adversary]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/23/waiving-sanctions-on-iranian-oil-is-a-huge-concession-by-america</link>
+      <guid isPermaLink="false">a0808c4e-7785-4c58-9d8d-883c2a93235c</guid>
+      <pubDate>Tue, 23 Jun 2026 19:52:15 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Why macro trading is hard]]>
+      </title>
+      <description>
+        <![CDATA[More difficult than knowing what to buy is how much]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/23/why-macro-trading-is-hard</link>
+      <guid isPermaLink="false">153143b0-2b2c-4701-ba40-81afb9825326</guid>
+      <pubDate>Tue, 23 Jun 2026 18:45:01 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Russia’s war economy has problems—but is not about to crash]]>
+      </title>
+      <description>
+        <![CDATA[Vladimir Putin is still able to fund his aggression]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/22/russias-war-economy-has-problems-but-is-not-about-to-crash</link>
+      <guid isPermaLink="false">1f47a86e-6337-4592-b6e3-ea7383f9a029</guid>
+      <pubDate>Mon, 22 Jun 2026 19:07:09 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How to turn compute into a financial asset]]>
+      </title>
+      <description>
+        <![CDATA[Entrepreneurs, exchange operators and AI firms are creating tradable instruments backed by processing power]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/22/how-to-turn-compute-into-a-financial-asset</link>
+      <guid isPermaLink="false">520104b9-6966-4b39-9f32-c280ec556719</guid>
+      <pubDate>Mon, 22 Jun 2026 18:09:55 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How stretched is the American consumer?]]>
+      </title>
+      <description>
+        <![CDATA[The household saving rate has plunged—but don’t panic]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/21/how-stretched-is-the-american-consumer</link>
+      <guid isPermaLink="false">f44710bb-bc26-400f-b010-404c12b7f502</guid>
+      <pubDate>Sun, 21 Jun 2026 13:08:53 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[A new golden age for Japanese banks comes with a catch]]>
+      </title>
+      <description>
+        <![CDATA[Smaller lenders are saddled with low-return bonds they cannot sell]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/18/a-new-golden-age-for-japanese-banks-comes-with-a-catch</link>
+      <guid isPermaLink="false">7938e862-4e8e-4425-a79f-9db7d61abea0</guid>
+      <pubDate>Thu, 18 Jun 2026 09:23:55 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Europe buys the future, America builds it]]>
+      </title>
+      <description>
+        <![CDATA[Does that matter? A high-stakes transatlantic spat has erupted over GDP figures]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/18/europe-buys-the-future-america-builds-it</link>
+      <guid isPermaLink="false">0a42b746-d806-475a-a684-903535450fcd</guid>
+      <pubDate>Thu, 18 Jun 2026 09:21:50 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Deal or no deal, oil prices will stay volatile for months]]>
+      </title>
+      <description>
+        <![CDATA[The pre-war days of $60 crude are not coming back soon]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/16/deal-or-no-deal-oil-prices-will-stay-volatile-for-months</link>
+      <guid isPermaLink="false">0a3f9212-0610-403a-ba44-f6de7019e941</guid>
+      <pubDate>Tue, 16 Jun 2026 19:55:31 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[America’s bull market has entered its manic phase]]>
+      </title>
+      <description>
+        <![CDATA[Options markets show optimism is giving way to euphoria]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/16/americas-bull-market-has-entered-its-manic-phase</link>
+      <guid isPermaLink="false">3c187236-c363-4c0d-b668-84777533d3a9</guid>
+      <pubDate>Tue, 16 Jun 2026 18:19:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Meet the world’s top AI-pilled economists ]]>
+      </title>
+      <description>
+        <![CDATA[Most of them are not found in ivory towers]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/15/meet-the-worlds-top-ai-pilled-economists</link>
+      <guid isPermaLink="false">47f2fbdd-f59b-49ce-a9de-afc17cb5b46c</guid>
+      <pubDate>Mon, 15 Jun 2026 19:04:42 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Does Donald Trump make Latin America a good bet?]]>
+      </title>
+      <description>
+        <![CDATA[Nowhere in the developing world has done so well out of the past year]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/14/does-donald-trump-make-latin-america-a-good-bet</link>
+      <guid isPermaLink="false">e2ab9b18-c173-4e3e-8d4c-3a11c543b260</guid>
+      <pubDate>Sun, 14 Jun 2026 17:14:46 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How big are China’s emerging industries?]]>
+      </title>
+      <description>
+        <![CDATA[Probably not big enough to offset the drag from the old]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/11/how-big-are-chinas-emerging-industries</link>
+      <guid isPermaLink="false">287d351e-4232-4d1d-ae17-77db5ac94440</guid>
+      <pubDate>Thu, 11 Jun 2026 10:31:01 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Stears wants to be Africa’s Bloomberg terminal ]]>
+      </title>
+      <description>
+        <![CDATA[As the continent’s markets mature, high-quality financial analysis is more essential than ever]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/11/stears-wants-to-be-africas-bloomberg-terminal</link>
+      <guid isPermaLink="false">c1681c7e-c4fa-49de-bad3-b04cdc4b4add</guid>
+      <pubDate>Thu, 11 Jun 2026 09:31:29 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The world’s strategic oil reserves are running out fast]]>
+      </title>
+      <description>
+        <![CDATA[They cannot hold back the energy crunch for ever]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/11/the-worlds-strategic-oil-reserves-are-running-out-fast</link>
+      <guid isPermaLink="false">73e4c492-6a94-4484-b6e7-c76e25e52e48</guid>
+      <pubDate>Thu, 11 Jun 2026 09:29:58 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How to share AI riches]]>
+      </title>
+      <description>
+        <![CDATA[From Donald Trump to Sam Altman, the idea of redistributing them is catching on. Does it make sense?]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/11/how-to-share-ai-riches</link>
+      <guid isPermaLink="false">bc34d4e4-870a-4dd9-b6b4-7a2c58c69730</guid>
+      <pubDate>Thu, 11 Jun 2026 09:29:25 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Wall Street’s undignified SpaceX mania]]>
+      </title>
+      <description>
+        <![CDATA[Is that a rocket in your lobby, or are you just happy to see me? ]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/09/wall-streets-undignified-spacex-mania</link>
+      <guid isPermaLink="false">bfc7a0d4-207e-4d05-8de5-e363a3e96697</guid>
+      <pubDate>Tue, 09 Jun 2026 19:16:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[China is innovative. Its economy is a mess. Which matters more?]]>
+      </title>
+      <description>
+        <![CDATA[A question that will define the 21st century]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/08/china-is-innovative-its-economy-is-a-mess-which-matters-more</link>
+      <guid isPermaLink="false">0b8aa36d-02a5-4656-bb71-5c47ba5bf8b1</guid>
+      <pubDate>Mon, 08 Jun 2026 19:17:35 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[A bidding war erupts for the world’s oldest bank]]>
+      </title>
+      <description>
+        <![CDATA[Monte dei Paschi di Siena is suddenly all the rage]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/08/a-bidding-war-erupts-for-the-worlds-oldest-bank</link>
+      <guid isPermaLink="false">f81ae2a4-62bb-453f-8f5f-d504d175927a</guid>
+      <pubDate>Mon, 08 Jun 2026 18:37:54 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How hot is America’s labour market? ]]>
+      </title>
+      <description>
+        <![CDATA[At the moment, balmy. But it wouldn’t take a lot to require some Fed air-conditioning]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/05/how-hot-is-americas-labour-market</link>
+      <guid isPermaLink="false">d6a90fe5-5fd2-4d59-9095-58cdce391882</guid>
+      <pubDate>Fri, 05 Jun 2026 19:10:42 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Indians can now bet on the monsoon]]>
+      </title>
+      <description>
+        <![CDATA[Heatwaves may be more important]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/04/indians-can-now-bet-on-the-monsoon</link>
+      <guid isPermaLink="false">c5abd59d-29d5-44fb-8efb-b88e4734f03a</guid>
+      <pubDate>Thu, 04 Jun 2026 09:48:11 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[European electricity markets have too much power ]]>
+      </title>
+      <description>
+        <![CDATA[They must learn to deal with it]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/04/european-electricity-markets-have-too-much-power</link>
+      <guid isPermaLink="false">5944fb95-f1c2-445a-8fdf-eeb64337e5f7</guid>
+      <pubDate>Thu, 04 Jun 2026 09:37:28 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Some billionaires pay too little tax]]>
+      </title>
+      <description>
+        <![CDATA[But the case for levies on wealth is unconvincing]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/04/some-billionaires-pay-too-little-tax</link>
+      <guid isPermaLink="false">5d82e3b3-7bf3-44fe-a434-2235bd7dfe25</guid>
+      <pubDate>Thu, 04 Jun 2026 09:18:42 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Gen-Z socialism, from Zohran to Zack and beyond]]>
+      </title>
+      <description>
+        <![CDATA[The world’s leftists are embracing a new set of economic ideas]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/04/gen-z-socialism-from-zohran-to-zack-and-beyond</link>
+      <guid isPermaLink="false">16ccacd5-c47e-4c9c-a9f9-5cb00d09f00d</guid>
+      <pubDate>Thu, 04 Jun 2026 09:11:24 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Want to know the future? Don’t trust the stockmarket]]>
+      </title>
+      <description>
+        <![CDATA[Share prices are buffeted by far more than just new information]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/02/want-to-know-the-future-dont-trust-the-stockmarket</link>
+      <guid isPermaLink="false">9ad6a920-e1dc-4578-afe9-85800bb29afa</guid>
+      <pubDate>Tue, 02 Jun 2026 18:39:21 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Can the stockmarket swallow SpaceX, Anthropic and OpenAI?]]>
+      </title>
+      <description>
+        <![CDATA[Watch out for indigestion]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/06/01/can-the-stockmarket-swallow-spacex-anthropic-and-openai</link>
+      <guid isPermaLink="false">2ba1ae23-9497-40e0-abe7-495031ce97e9</guid>
+      <pubDate>Mon, 01 Jun 2026 17:16:55 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Without fanfare, China is making rural migrants’ lives easier]]>
+      </title>
+      <description>
+        <![CDATA[The notorious hukou system is being relaxed. Marx would approve]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/28/without-fanfare-china-is-making-rural-migrants-lives-easier</link>
+      <guid isPermaLink="false">9fa90241-4fd0-471f-aca6-1eac4c9dea3a</guid>
+      <pubDate>Thu, 28 May 2026 09:29:28 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How to tax businesses in orbit and beyond]]>
+      </title>
+      <description>
+        <![CDATA[As the space business grows, so will offplanet finance ]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/28/how-to-tax-businesses-in-orbit-and-beyond</link>
+      <guid isPermaLink="false">a9302524-4c9a-4ec7-b8e9-5d4c2a4686b5</guid>
+      <pubDate>Thu, 28 May 2026 09:28:19 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Kevin Warsh’s troublesome inflation in-tray]]>
+      </title>
+      <description>
+        <![CDATA[The new Fed chair will struggle to appease his colleagues, the market and Donald Trump all at once]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/27/kevin-warshs-troublesome-inflation-in-tray</link>
+      <guid isPermaLink="false">c5c2a31c-9c9e-4bdc-ab2f-d141c8833058</guid>
+      <pubDate>Wed, 27 May 2026 20:26:28 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Japan, South Korea and Taiwan are suffering industrial rot]]>
+      </title>
+      <description>
+        <![CDATA[Artificial intelligence is concealing a China shock]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/27/japan-south-korea-and-taiwan-are-suffering-industrial-rot</link>
+      <guid isPermaLink="false">07a68e86-e263-486a-895e-6bec51ea72d0</guid>
+      <pubDate>Wed, 27 May 2026 14:08:47 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Giga-IPOs are a symptom of public markets’ giga-problem]]>
+      </title>
+      <description>
+        <![CDATA[The incredible shrinking stockmarket]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/26/giga-ipos-are-a-symptom-of-public-markets-giga-problem</link>
+      <guid isPermaLink="false">83422690-abcc-4b32-9a71-c9b7e4eb6179</guid>
+      <pubDate>Tue, 26 May 2026 20:12:08 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Crackdowns on financial secrecy aren’t hurting offshore finance]]>
+      </title>
+      <description>
+        <![CDATA[There is a lot more to havens than crystal-clear waters and a promise of opacity]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/25/crackdowns-on-financial-secrecy-arent-hurting-offshore-finance</link>
+      <guid isPermaLink="false">0adcc5d9-e1e4-4b12-966f-c6614df674e0</guid>
+      <pubDate>Mon, 25 May 2026 15:38:01 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How should economists treat morality?]]>
+      </title>
+      <description>
+        <![CDATA[Sometimes it is more than merely an exogenous constraint]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/21/how-should-economists-treat-morality</link>
+      <guid isPermaLink="false">e3c9977c-8324-4130-87b7-9bd6a3a10ea1</guid>
+      <pubDate>Thu, 21 May 2026 09:27:37 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The other China shock]]>
+      </title>
+      <description>
+        <![CDATA[Does the country’s manufacturing success leave space for anyone else?]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/21/the-other-china-shock</link>
+      <guid isPermaLink="false">aaf8639e-40ef-4619-8371-7b4514d53972</guid>
+      <pubDate>Thu, 21 May 2026 09:25:53 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The insurers on the hook for war in Iran]]>
+      </title>
+      <description>
+        <![CDATA[Some have been hammered; even those who haven’t might be soon]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/21/the-insurers-on-the-hook-for-war-in-iran</link>
+      <guid isPermaLink="false">fb1093a4-c8c0-4311-8d26-840a262c5f75</guid>
+      <pubDate>Thu, 21 May 2026 09:19:48 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Economics lessons from Home Depot]]>
+      </title>
+      <description>
+        <![CDATA[What the world’s biggest DIY store says about American housing]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/20/economics-lessons-from-home-depot</link>
+      <guid isPermaLink="false">5aaeffbc-d227-4e73-9973-c0767e9dc2a1</guid>
+      <pubDate>Wed, 20 May 2026 18:14:46 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Investors fear another surge in inflation]]>
+      </title>
+      <description>
+        <![CDATA[So why aren’t more buying inflation-protected bonds?]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/19/investors-fear-another-surge-in-inflation</link>
+      <guid isPermaLink="false">592259b5-384d-42ca-a4cc-6ca35b4a2d82</guid>
+      <pubDate>Tue, 19 May 2026 19:36:34 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Where expat escapees from Dubai end up]]>
+      </title>
+      <description>
+        <![CDATA[Will they ever return?]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/18/where-expat-escapees-from-dubai-end-up</link>
+      <guid isPermaLink="false">a9de1b2c-77e9-4abf-8002-85140e09d82d</guid>
+      <pubDate>Mon, 18 May 2026 20:38:24 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How much is Donald Trump costing America’s economy? ]]>
+      </title>
+      <description>
+        <![CDATA[We calculate the drag on growth from fitful presidential policymaking]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/18/how-much-is-donald-trump-costing-americas-economy</link>
+      <guid isPermaLink="false">27235a5f-1ba1-47a2-84ee-cbc65616751a</guid>
+      <pubDate>Mon, 18 May 2026 18:43:57 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How to share the AI windfall]]>
+      </title>
+      <description>
+        <![CDATA[Are taxes enough?]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/14/how-to-share-the-ai-windfall</link>
+      <guid isPermaLink="false">4d1c1130-68ea-4ea5-8a07-22a01ba41666</guid>
+      <pubDate>Thu, 14 May 2026 09:01:50 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The jobs apocalypse: a (very) short history]]>
+      </title>
+      <description>
+        <![CDATA[Mass unemployment induced by AI would be unprecedented]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/14/the-jobs-apocalypse-a-very-short-history</link>
+      <guid isPermaLink="false">b8d1336a-5694-4fee-b609-7b68759bde12</guid>
+      <pubDate>Thu, 14 May 2026 08:58:08 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Is AI putting graduates out of work already?]]>
+      </title>
+      <description>
+        <![CDATA[If you are studying coding, we might have some bad news]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/13/is-ai-putting-graduates-out-of-work-already</link>
+      <guid isPermaLink="false">8eaa2b10-5ad1-45d5-bcf3-095aa5f6355c</guid>
+      <pubDate>Wed, 13 May 2026 18:44:01 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How the world has avoided an oil catastrophe so far]]>
+      </title>
+      <description>
+        <![CDATA[The great commodity-market mystery is deepening]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/12/how-the-world-has-avoided-an-oil-catastrophe-so-far</link>
+      <guid isPermaLink="false">caf0da10-b5cd-4639-9b37-a9c93d7e9ba1</guid>
+      <pubDate>Tue, 12 May 2026 21:15:08 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Index rebalancing is now the biggest event in markets]]>
+      </title>
+      <description>
+        <![CDATA[But profiting from it is another matter]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/12/index-rebalancing-is-now-the-biggest-event-in-markets</link>
+      <guid isPermaLink="false">cbdf4c87-57c6-4e64-bd50-ae6d0fadec41</guid>
+      <pubDate>Tue, 12 May 2026 19:05:21 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[China wants more robots but not fewer workers]]>
+      </title>
+      <description>
+        <![CDATA[A human-first approach to automation]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/11/china-wants-more-robots-but-not-fewer-workers</link>
+      <guid isPermaLink="false">ad9a9300-0974-48f0-8fa9-79615b859a82</guid>
+      <pubDate>Mon, 11 May 2026 17:15:55 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[America is experiencing a productivity miracle]]>
+      </title>
+      <description>
+        <![CDATA[AI hasn’t—yet—got much to do with it]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/11/america-is-experiencing-a-productivity-miracle</link>
+      <guid isPermaLink="false">26217734-5556-4ab9-9e5d-d852c0e1bf0f</guid>
+      <pubDate>Mon, 11 May 2026 16:50:23 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The myth of the petrodollar ]]>
+      </title>
+      <description>
+        <![CDATA[America’s currency supremacy runs deeper than oil]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/07/the-myth-of-the-petrodollar</link>
+      <guid isPermaLink="false">3c2e0730-d517-4b9b-9f47-2d13204fcd98</guid>
+      <pubDate>Thu, 07 May 2026 10:29:11 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[DeepSeek and Alibaba rescue China’s office landlords]]>
+      </title>
+      <description>
+        <![CDATA[Technology firms are reviving (a few) Chinese commercial-property markets]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/07/deepseek-and-alibaba-rescue-chinas-office-landlords</link>
+      <guid isPermaLink="false">fa0bd91c-3ce4-4b58-be14-3add8903bf4c</guid>
+      <pubDate>Thu, 07 May 2026 10:19:56 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[UniCredit’s lowball bid for Commerzbank causes consternation]]>
+      </title>
+      <description>
+        <![CDATA[A bad-tempered battle for a big German bank]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/07/unicredits-lowball-bid-for-commerzbank-causes-consternation</link>
+      <guid isPermaLink="false">c5bd51d7-2e7f-427a-9dc1-eb7470f6fc61</guid>
+      <pubDate>Thu, 07 May 2026 10:19:27 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Donald Trump’s foreign policy gets a muscular finance arm]]>
+      </title>
+      <description>
+        <![CDATA[The Development Finance Corporation’s loan book may soon rival the World Bank’s]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/07/donald-trumps-foreign-policy-gets-a-muscular-finance-arm</link>
+      <guid isPermaLink="false">80902133-de3c-4441-a2c5-b068de5ac250</guid>
+      <pubDate>Thu, 07 May 2026 10:12:19 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Can Bill Ackman save the closed-end fund?]]>
+      </title>
+      <description>
+        <![CDATA[An outspoken financier wants to build a modern-day Berkshire Hathaway]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/05/can-bill-ackman-save-the-closed-end-fund</link>
+      <guid isPermaLink="false">612f43f7-3a8b-44d3-9fc9-56ec6cca196e</guid>
+      <pubDate>Tue, 05 May 2026 19:59:27 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The EU wants to unshackle its economy. For real this time]]>
+      </title>
+      <description>
+        <![CDATA[Eurocrats are belatedly developing a healthy distaste for red tape]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/04/the-eu-wants-to-unshackle-its-economy-for-real-this-time</link>
+      <guid isPermaLink="false">be36f486-0776-4439-a8f8-f13955d0b6d7</guid>
+      <pubDate>Mon, 04 May 2026 19:47:42 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Bad government statistics can cost the economy billions]]>
+      </title>
+      <description>
+        <![CDATA[A new study tries to put a number on the value of reliable numbers]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/05/04/bad-government-statistics-can-cost-the-economy-billions</link>
+      <guid isPermaLink="false">2c6e3662-5733-4102-923e-0c65e0000354</guid>
+      <pubDate>Mon, 04 May 2026 18:21:33 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Can countries grow richer by exporting people, not goods?]]>
+      </title>
+      <description>
+        <![CDATA[That depends where those people end up]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/30/can-countries-grow-richer-by-exporting-people-not-goods</link>
+      <guid isPermaLink="false">4ee3c87f-cd2c-4ffd-8d2c-ba77f2560f6d</guid>
+      <pubDate>Thu, 30 Apr 2026 09:40:15 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[India’s weak currency reflects deeper problems than the Iran war]]>
+      </title>
+      <description>
+        <![CDATA[It highlights a persistent inability to draw in foreign investors]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/30/indias-weak-currency-reflects-deeper-problems-than-the-iran-war</link>
+      <guid isPermaLink="false">48017aa0-c912-4f7e-8612-338050d293d6</guid>
+      <pubDate>Thu, 30 Apr 2026 09:38:15 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How Kalshi can help the Federal Reserve]]>
+      </title>
+      <description>
+        <![CDATA[Prediction markets may be a win for central banking]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/30/how-kalshi-can-help-the-federal-reserve</link>
+      <guid isPermaLink="false">7c1e8b59-524b-46c8-980b-91af7b103433</guid>
+      <pubDate>Thu, 30 Apr 2026 09:29:30 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[A global fight over banking rules is just getting started]]>
+      </title>
+      <description>
+        <![CDATA[Co-operation on the financial system will be the casualty]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/28/a-global-fight-over-banking-rules-is-just-getting-started</link>
+      <guid isPermaLink="false">285004ed-0c49-423b-9359-1bf709c7fecc</guid>
+      <pubDate>Tue, 28 Apr 2026 17:39:57 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[San Francisco, AI capital of the world, is an economic laggard]]>
+      </title>
+      <description>
+        <![CDATA[Artificial intelligence is booming. Its heartland is not]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/26/san-francisco-ai-capital-of-the-world-is-an-economic-laggard</link>
+      <guid isPermaLink="false">688d2c72-0b02-42b4-afd0-eb33d261f0e3</guid>
+      <pubDate>Sun, 26 Apr 2026 16:23:37 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Will Kevin Warsh Trumpify the Federal Reserve?]]>
+      </title>
+      <description>
+        <![CDATA[The incoming Fed chair says he wants regime change. But a revolution is unlikely]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/26/will-kevin-warsh-trumpify-the-federal-reserve</link>
+      <guid isPermaLink="false">230e0243-038c-45ae-82ba-a101869917db</guid>
+      <pubDate>Sun, 26 Apr 2026 13:17:44 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Wanted: a new finance writer]]>
+      </title>
+      <description>
+        <![CDATA[An opportunity to join the staff of The Economist]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/23/wanted-a-new-finance-writer</link>
+      <guid isPermaLink="false">8620661d-a7c9-4bda-a4c1-f8b1f091d130</guid>
+      <pubDate>Thu, 23 Apr 2026 16:45:12 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Has the World Bank performed a U-turn on industrial policy?]]>
+      </title>
+      <description>
+        <![CDATA[Interventionists who think so should read its new report more closely]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/23/has-the-world-bank-performed-a-u-turn-on-industrial-policy</link>
+      <guid isPermaLink="false">b1bf7b5d-1439-4eca-a660-9f59a2332463</guid>
+      <pubDate>Thu, 23 Apr 2026 09:16:41 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Renewables are shining. The Iran war amplifies their appeal]]>
+      </title>
+      <description>
+        <![CDATA[Two new reports are a must-read of energy-starved governments]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/23/renewables-are-shining-the-iran-war-amplifies-their-appeal</link>
+      <guid isPermaLink="false">8907fef1-afd8-4eb8-bd97-71f174a10855</guid>
+      <pubDate>Thu, 23 Apr 2026 09:16:25 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Xi Jinping wants a powerful currency. America’s war has helped]]>
+      </title>
+      <description>
+        <![CDATA[More countries are starting to use China’s payment infrastructure]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/23/xi-jinping-wants-a-powerful-currency-americas-war-has-helped</link>
+      <guid isPermaLink="false">dbf7cddf-a4c1-4fcd-b57b-d6d531d011c4</guid>
+      <pubDate>Thu, 23 Apr 2026 09:15:53 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Chinamaxxing is starting to catch on, in China]]>
+      </title>
+      <description>
+        <![CDATA[It’s a boon for the tourist trade]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/23/chinamaxxing-is-starting-to-catch-on-in-china</link>
+      <guid isPermaLink="false">15213770-565a-4d97-86fe-d5bab2495653</guid>
+      <pubDate>Thu, 23 Apr 2026 09:15:39 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Global energy markets are on the verge of a disaster]]>
+      </title>
+      <description>
+        <![CDATA[Scenarios now range from bad to awful]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/21/global-energy-markets-are-on-the-verge-of-a-disaster</link>
+      <guid isPermaLink="false">94dffc00-cbba-4b30-a820-a7d3924a21f4</guid>
+      <pubDate>Tue, 21 Apr 2026 20:46:14 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The stablecoin market has got too stable]]>
+      </title>
+      <description>
+        <![CDATA[Rapid growth in dollar-backed crypto has stalled]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/21/the-stablecoin-market-has-got-too-stable</link>
+      <guid isPermaLink="false">25f6e526-5a16-4b54-b677-4af03725c2b4</guid>
+      <pubDate>Tue, 21 Apr 2026 19:10:20 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[American corporate profits keep shrugging off global tumult]]>
+      </title>
+      <description>
+        <![CDATA[Earnings expectations are through the roof]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/20/american-corporate-profits-keep-shrugging-off-global-tumult</link>
+      <guid isPermaLink="false">eb9a95d7-1273-4ea3-97b7-9552e04e3b32</guid>
+      <pubDate>Mon, 20 Apr 2026 19:49:36 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Hormuz is (apparently) unblocked. Energy markets remain a mess]]>
+      </title>
+      <description>
+        <![CDATA[Mines, mistrust and missing ships will keep markets tight for months]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/17/hormuz-is-apparently-unblocked-energy-markets-remain-a-mess</link>
+      <guid isPermaLink="false">b2f5d2a5-0540-46b8-bbdb-e6214bae6c97</guid>
+      <pubDate>Fri, 17 Apr 2026 19:42:15 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Global imbalances are back. Who’s to blame?]]>
+      </title>
+      <description>
+        <![CDATA[The suspects look familiar]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/16/global-imbalances-are-back-whos-to-blame</link>
+      <guid isPermaLink="false">d9e06cb9-e28a-42ee-8f51-99cadcd76751</guid>
+      <pubDate>Thu, 16 Apr 2026 09:58:29 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Pakistan’s deft diplomacy is an economic blessing. And a curse]]>
+      </title>
+      <description>
+        <![CDATA[It allows the country’s rulers to put off necessary reforms]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/16/pakistans-deft-diplomacy-is-an-economic-blessing-and-a-curse</link>
+      <guid isPermaLink="false">0e71b39b-50f1-4fa1-820e-9b980d6095ca</guid>
+      <pubDate>Thu, 16 Apr 2026 09:58:04 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[War will drain the Gulf’s $6trn treasure chest]]>
+      </title>
+      <description>
+        <![CDATA[The conflict complicates life for the custodians of Middle Eastern oil fortunes]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/15/war-will-drain-the-gulfs-6trn-treasure-chest</link>
+      <guid isPermaLink="false">72dcaf11-3d7f-4bed-adcb-1a83d41b68da</guid>
+      <pubDate>Wed, 15 Apr 2026 13:37:58 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How to build a portfolio when bonds fail to buffer stocks]]>
+      </title>
+      <description>
+        <![CDATA[The classic hedge has fallen apart, but don’t dump it just yet]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/14/how-to-build-a-portfolio-when-bonds-fail-to-buffer-stocks</link>
+      <guid isPermaLink="false">46b8c35a-de4c-4b39-8eec-be05155b849d</guid>
+      <pubDate>Tue, 14 Apr 2026 17:12:12 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The tech jobs bust is real. Don’t blame AI (yet)]]>
+      </title>
+      <description>
+        <![CDATA[Why technology firms are shedding workers]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/13/the-tech-jobs-bust-is-real-dont-blame-ai-yet</link>
+      <guid isPermaLink="false">2c8c93e0-bccf-4923-a664-2f2935948147</guid>
+      <pubDate>Mon, 13 Apr 2026 13:19:44 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[America’s next Fed chair is caught in a vice]]>
+      </title>
+      <description>
+        <![CDATA[Inflation was heating up even before the war in Iran]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/12/americas-next-fed-chair-is-caught-in-a-vice</link>
+      <guid isPermaLink="false">f875345d-42e6-4ac4-87f6-f52527b78eea</guid>
+      <pubDate>Sun, 12 Apr 2026 14:43:26 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[One neat trick to end extreme poverty]]>
+      </title>
+      <description>
+        <![CDATA[An age-old problem might have a surprisingly simple solution]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/09/one-neat-trick-to-end-extreme-poverty</link>
+      <guid isPermaLink="false">3beeb601-b2d0-4164-8c48-6d4b1039fd53</guid>
+      <pubDate>Thu, 09 Apr 2026 10:03:52 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Can the secondary market allay private-credit fears?]]>
+      </title>
+      <description>
+        <![CDATA[In the short run, a bit. In the long run, a lot more]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/09/can-the-secondary-market-allay-private-credit-fears</link>
+      <guid isPermaLink="false">a7873e58-0c64-4fa2-bf9f-da1cde697ebf</guid>
+      <pubDate>Thu, 09 Apr 2026 10:03:33 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The latest Italian banking whodunnit has it all]]>
+      </title>
+      <description>
+        <![CDATA[A a coup, a conspiracy and even a (possibly unrelated) corpse]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/09/the-latest-italian-banking-whodunnit-has-it-all</link>
+      <guid isPermaLink="false">8d5692af-8fcb-4393-940e-a538ce4de276</guid>
+      <pubDate>Thu, 09 Apr 2026 10:03:24 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[South Korea’s AI industrial policy meets the energy shock]]>
+      </title>
+      <description>
+        <![CDATA[The collision will not be pretty]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/09/south-koreas-ai-industrial-policy-meets-the-energy-shock</link>
+      <guid isPermaLink="false">00b01535-f2ef-4122-ba1e-bc34441cf7d5</guid>
+      <pubDate>Thu, 09 Apr 2026 10:03:13 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The third Gulf war will scar energy markets for a long time yet]]>
+      </title>
+      <description>
+        <![CDATA[Residual risks and ruined infrastructure will keep prices high]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/08/the-third-gulf-war-will-scar-energy-markets-for-a-long-time-yet</link>
+      <guid isPermaLink="false">8db0f293-e9be-4b6f-aa61-9bcd24d78011</guid>
+      <pubDate>Wed, 08 Apr 2026 21:55:04 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Bye, bye to the Trump trades]]>
+      </title>
+      <description>
+        <![CDATA[Markets are calling time on many Donald-adjacent bets]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/07/bye-bye-to-the-trump-trades</link>
+      <guid isPermaLink="false">0ab7b197-ce7d-4370-a11d-517ae63bd021</guid>
+      <pubDate>Tue, 07 Apr 2026 18:35:51 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How the Iran war has sowed panic among farmers]]>
+      </title>
+      <description>
+        <![CDATA[Soaring prices for fertiliser and fuel could cause a global food shock]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/07/how-the-iran-war-has-sowed-panic-among-farmers</link>
+      <guid isPermaLink="false">7fe6e4e7-1860-48ce-bcb8-072127bf796a</guid>
+      <pubDate>Tue, 07 Apr 2026 15:12:06 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[As Iran’s civilian economy crumbles, its military economy grows stronger]]>
+      </title>
+      <description>
+        <![CDATA[War has split the country in two ]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/06/as-irans-civilian-economy-crumbles-its-military-economy-grows-stronger</link>
+      <guid isPermaLink="false">da99a3a9-fc4f-416a-a133-17a1349239cc</guid>
+      <pubDate>Mon, 06 Apr 2026 19:45:06 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Inflation or recession? The tug of war in bond markets ]]>
+      </title>
+      <description>
+        <![CDATA[Governments’ borrowing costs are being pulled in opposite directions]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/05/inflation-or-recession-the-tug-of-war-in-bond-markets</link>
+      <guid isPermaLink="false">11152c2d-424d-440f-a26f-3428e5bd03d3</guid>
+      <pubDate>Sun, 05 Apr 2026 08:17:54 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[“Liberation Day” has reshaped trade—but not as Donald Trump hoped ]]>
+      </title>
+      <description>
+        <![CDATA[In many ways, global commerce has strengthened ]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/01/liberation-day-has-reshaped-trade-but-not-as-donald-trump-hoped</link>
+      <guid isPermaLink="false">1820ff61-8471-46dc-b71b-0774d9077e8b</guid>
+      <pubDate>Wed, 01 Apr 2026 11:00:11 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Can a country get too rich?]]>
+      </title>
+      <description>
+        <![CDATA[Norway shows the potential pitfalls of uncommon prosperity]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/04/01/can-a-country-get-too-rich</link>
+      <guid isPermaLink="false">28cb8966-302a-4384-a698-31159ec85269</guid>
+      <pubDate>Wed, 01 Apr 2026 10:59:08 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Coal is back in fashion]]>
+      </title>
+      <description>
+        <![CDATA[An LNG crunch is good news for the world’s dirtiest fuel]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/31/coal-is-back-in-fashion</link>
+      <guid isPermaLink="false">63aa76fd-97e8-4d1d-b57e-16913ee0f9ea</guid>
+      <pubDate>Tue, 31 Mar 2026 17:27:53 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[After Iran, gold is looking less glittery ]]>
+      </title>
+      <description>
+        <![CDATA[Is the yellow metal the new crypto? ]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/30/after-iran-gold-is-looking-less-glittery</link>
+      <guid isPermaLink="false">a598b3fa-cb9d-4c5c-976e-01262c4e5108</guid>
+      <pubDate>Mon, 30 Mar 2026 15:54:52 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How Iran is making a mint from Donald Trump’s war]]>
+      </title>
+      <description>
+        <![CDATA[China is helping the Revolutionary Guards profit from Iranian crude]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/29/how-iran-is-making-a-mint-from-donald-trumps-war</link>
+      <guid isPermaLink="false">a0925fa6-6228-4115-add3-6c69c3199163</guid>
+      <pubDate>Sun, 29 Mar 2026 11:44:15 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The decline and fall of the Roman currency empire]]>
+      </title>
+      <description>
+        <![CDATA[The fate of ancient coins offers uncomfortable lessons about dollar dominance]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/26/the-decline-and-fall-of-the-roman-currency-empire</link>
+      <guid isPermaLink="false">120a339b-e85f-40fe-8f09-c45c250f78ab</guid>
+      <pubDate>Thu, 26 Mar 2026 10:18:37 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Christine Lagarde’s sober tone on the Gulf war energy shock]]>
+      </title>
+      <description>
+        <![CDATA[Our interview with the ECB’s president]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/26/christine-lagardes-sober-tone-on-the-gulf-war-energy-shock</link>
+      <guid isPermaLink="false">31d98144-05c8-463f-923d-a906eb67d558</guid>
+      <pubDate>Thu, 26 Mar 2026 10:17:23 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Markets are gripped by an alarming cognitive dissonance]]>
+      </title>
+      <description>
+        <![CDATA[Investors all seem to think everyone else is wrong]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/24/markets-are-gripped-by-an-alarming-cognitive-dissonance</link>
+      <guid isPermaLink="false">c8eaf135-9653-4fa9-b986-23cbd94d1a15</guid>
+      <pubDate>Tue, 24 Mar 2026 19:14:39 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[China’s new masterplan for its tech economy in 2030 and beyond]]>
+      </title>
+      <description>
+        <![CDATA[The Communist Party’s technological ambition is breathtaking]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/24/chinas-new-masterplan-for-its-tech-economy-in-2030-and-beyond</link>
+      <guid isPermaLink="false">9b2b723a-95fb-4c27-a091-ee0ae8710756</guid>
+      <pubDate>Tue, 24 Mar 2026 14:12:18 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How high could global inflation go?]]>
+      </title>
+      <description>
+        <![CDATA[With luck, the Iran war won’t cause a recession. But the surge in energy prices will push up the cost of living]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/23/how-high-could-global-inflation-go</link>
+      <guid isPermaLink="false">3534fb75-ad50-41b6-9cb8-8a37a19ef995</guid>
+      <pubDate>Mon, 23 Mar 2026 20:37:50 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Westerners are fleeing their countries in record numbers]]>
+      </title>
+      <description>
+        <![CDATA[This will have economic consequences for the places they flee and their destinations]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/22/westerners-are-fleeing-their-countries-in-record-numbers</link>
+      <guid isPermaLink="false">edc3ea48-74c2-47ef-b2aa-5b8e20619875</guid>
+      <pubDate>Sun, 22 Mar 2026 10:41:41 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Even the best-case scenario for energy markets is disastrous]]>
+      </title>
+      <description>
+        <![CDATA[Whatever happens, high prices will outlive the Iran war]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/22/even-the-best-case-scenario-for-energy-markets-is-disastrous</link>
+      <guid isPermaLink="false">b0f16f4a-5cef-4557-ace2-99e85abcfc78</guid>
+      <pubDate>Sun, 22 Mar 2026 10:15:15 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[America may be a petrostate. But the energy shock still hurts]]>
+      </title>
+      <description>
+        <![CDATA[And further angers economically frustrated citizens  ]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/19/america-may-be-a-petrostate-but-the-energy-shock-still-hurts</link>
+      <guid isPermaLink="false">0f64cc95-9af6-4d0a-a4ab-7cdc4bed3796</guid>
+      <pubDate>Thu, 19 Mar 2026 11:21:03 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Which country is the biggest loser from the energy shock?]]>
+      </title>
+      <description>
+        <![CDATA[We rank the poor world’s exposure and buffers]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/19/which-country-is-the-biggest-loser-from-the-energy-shock</link>
+      <guid isPermaLink="false">af929633-a281-4571-a24e-93d50e88c6ad</guid>
+      <pubDate>Thu, 19 Mar 2026 11:18:58 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The new economics of sex work]]>
+      </title>
+      <description>
+        <![CDATA[As the sex economy grows, it deserves serious analysis]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/19/the-new-economics-of-sex-work</link>
+      <guid isPermaLink="false">00c7cc50-addd-4eae-8833-6945156b57c0</guid>
+      <pubDate>Thu, 19 Mar 2026 11:16:43 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[What if Donald Trump decided to ban oil exports?]]>
+      </title>
+      <description>
+        <![CDATA[Trying to keep prices low that way could backfire spectacularly]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/18/what-if-donald-trump-decided-to-ban-oil-exports</link>
+      <guid isPermaLink="false">685c1ad2-fc3c-4f17-b58c-d9547bd4fcf6</guid>
+      <pubDate>Wed, 18 Mar 2026 20:54:20 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Will South Korea’s epic bull market survive the energy shock?]]>
+      </title>
+      <description>
+        <![CDATA[Probably, but investors should brace for more volatility]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/17/will-south-koreas-epic-bull-market-survive-the-energy-shock</link>
+      <guid isPermaLink="false">e629da5f-ca37-42b1-809d-5c718d942fe4</guid>
+      <pubDate>Tue, 17 Mar 2026 19:14:10 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[China cannot escape the energy shock]]>
+      </title>
+      <description>
+        <![CDATA[Despite renewables and reserves, it will suffer]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/17/china-cannot-escape-the-energy-shock</link>
+      <guid isPermaLink="false">3517d53b-6171-4470-ab5a-4e58e37390fe</guid>
+      <pubDate>Tue, 17 Mar 2026 18:58:22 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The Iran war is roiling commodities far beyond oil]]>
+      </title>
+      <description>
+        <![CDATA[Shortages of fuels and chemicals threaten industries from farming to pharmaceuticals]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/16/the-iran-war-is-roiling-commodities-far-beyond-oil</link>
+      <guid isPermaLink="false">04727bb4-bf3a-4145-ac2a-0bf6153ead0a</guid>
+      <pubDate>Mon, 16 Mar 2026 22:34:40 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Why investors won’t know what to make of AI for a while]]>
+      </title>
+      <description>
+        <![CDATA[Markets always struggle to price technological revolutions]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/12/why-investors-wont-know-what-to-make-of-ai-for-a-while</link>
+      <guid isPermaLink="false">540bce26-64f4-454a-a976-cef74dbc616c</guid>
+      <pubDate>Thu, 12 Mar 2026 15:11:08 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Liquefied natural gas: the overlooked economic chokepoint ]]>
+      </title>
+      <description>
+        <![CDATA[Alternatives to Gulf supplies are scarce]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/11/liquefied-natural-gas-the-overlooked-economic-chokepoint</link>
+      <guid isPermaLink="false">ec0696e2-56f3-46a9-ace4-10d20f6431a5</guid>
+      <pubDate>Wed, 11 Mar 2026 12:06:58 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Donald Trump’s options to cool oil prices are sorely limited]]>
+      </title>
+      <description>
+        <![CDATA[He says he has a plan. It would need to be very cunning]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/10/donald-trumps-options-to-cool-oil-prices-are-sorely-limited</link>
+      <guid isPermaLink="false">5df65e85-af18-4c0e-b0c9-e17a6f71f1f3</guid>
+      <pubDate>Tue, 10 Mar 2026 21:55:49 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Time to buy the most rubbish stocks you can find]]>
+      </title>
+      <description>
+        <![CDATA[The dash for trash]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/10/time-to-buy-the-most-rubbish-stocks-you-can-find</link>
+      <guid isPermaLink="false">d046ded8-3b53-4295-9a18-2aa1427c7f5a</guid>
+      <pubDate>Tue, 10 Mar 2026 21:46:38 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The Iran energy shock reverberates across financial markets]]>
+      </title>
+      <description>
+        <![CDATA[For investors, the war is like the invasion of Ukraine all over again]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/09/the-iran-energy-shock-reverberates-across-financial-markets</link>
+      <guid isPermaLink="false">9e0de7fc-bc67-434a-9314-4ea92a90a506</guid>
+      <pubDate>Mon, 09 Mar 2026 19:49:06 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The Iran war puts Asia in an energy panic]]>
+      </title>
+      <description>
+        <![CDATA[Stranded Gulf supplies are choking off the region’s economies]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/08/the-iran-war-puts-asia-in-an-energy-panic</link>
+      <guid isPermaLink="false">1a246078-7b90-4da6-b3aa-8a881122f5d0</guid>
+      <pubDate>Sun, 08 Mar 2026 17:48:39 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Would America be in recession without the super-rich?]]>
+      </title>
+      <description>
+        <![CDATA[American anxieties are K-shaped. The economy is more like a slash-mark]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/08/would-america-be-in-recession-without-the-super-rich</link>
+      <guid isPermaLink="false">9aed7544-c8fe-429e-9298-f1d1c2b7604f</guid>
+      <pubDate>Sun, 08 Mar 2026 12:36:30 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[To understand why countries grow, look at their firms]]>
+      </title>
+      <description>
+        <![CDATA[The third way in development economics]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/05/to-understand-why-countries-grow-look-at-their-firms</link>
+      <guid isPermaLink="false">59939834-cdf7-4ac5-b640-c2ecc6421fb1</guid>
+      <pubDate>Thu, 05 Mar 2026 10:36:23 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[India’s economy is not as big as economists thought]]>
+      </title>
+      <description>
+        <![CDATA[But it is growing faster]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/05/indias-economy-is-not-as-big-as-economists-thought</link>
+      <guid isPermaLink="false">3b552966-b0c8-4cf5-8383-b4d18ee18eef</guid>
+      <pubDate>Thu, 05 Mar 2026 10:33:42 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Americans’ electricity bills are up. Don’t blame AI]]>
+      </title>
+      <description>
+        <![CDATA[Were it not for data centres, prices might be even higher]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/05/americans-electricity-bills-are-up-dont-blame-ai</link>
+      <guid isPermaLink="false">7efdc278-a933-4295-8e7e-fcb4c460f75d</guid>
+      <pubDate>Thu, 05 Mar 2026 10:31:41 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[European pensions are a $30trn missed opportunity]]>
+      </title>
+      <description>
+        <![CDATA[If only more countries went Dutch]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/04/european-pensions-are-a-30trn-missed-opportunity</link>
+      <guid isPermaLink="false">2e67eaf5-e4bb-42d3-99d7-11df1e2e8ca8</guid>
+      <pubDate>Wed, 04 Mar 2026 22:58:03 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Why war isn’t always good for defence stocks ]]>
+      </title>
+      <description>
+        <![CDATA[They win only if governments want just enough weapons—but not too many]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/03/why-war-isnt-always-good-for-defence-stocks</link>
+      <guid isPermaLink="false">6feb40fc-9960-445f-af9a-16590b270cd0</guid>
+      <pubDate>Tue, 03 Mar 2026 20:19:26 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The nightmare war scenario is becoming reality in energy markets]]>
+      </title>
+      <description>
+        <![CDATA[The longer the war in the Gulf, the harsher the global economic fallout]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/03/the-nightmare-war-scenario-is-becoming-reality-in-energy-markets</link>
+      <guid isPermaLink="false">7045cb17-a3ce-4440-b742-4521e2184e7f</guid>
+      <pubDate>Tue, 03 Mar 2026 20:15:57 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[War in Iran could cause the biggest oil shock in years]]>
+      </title>
+      <description>
+        <![CDATA[Prices have surged—and may stay high for a while]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/03/01/war-in-iran-could-cause-the-biggest-oil-shock-in-years</link>
+      <guid isPermaLink="false">d1946dba-4766-4249-91a1-d7d712ffbfd8</guid>
+      <pubDate>Sun, 01 Mar 2026 12:28:02 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[America’s trade chaos is just beginning]]>
+      </title>
+      <description>
+        <![CDATA[Tariff wrangling will stretch through the rest of Donald Trump’s term, and beyond]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/26/americas-trade-chaos-is-just-beginning</link>
+      <guid isPermaLink="false">f7607d88-c2ff-4243-8f52-3e9377adc96e</guid>
+      <pubDate>Thu, 26 Feb 2026 10:37:01 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Protectionists dislike trade and migration. And capital flows?]]>
+      </title>
+      <description>
+        <![CDATA[The amount of money crossing borders has flattened off—but not because of capital controls]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/26/protectionists-dislike-trade-and-migration-and-capital-flows</link>
+      <guid isPermaLink="false">212bbc4b-ea5e-4339-85d4-dd7bf85ebc32</guid>
+      <pubDate>Thu, 26 Feb 2026 10:36:29 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Why Chinese people spend so much on food ]]>
+      </title>
+      <description>
+        <![CDATA[A 21st-century test of a 19th-century observation]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/26/why-chinese-people-spend-so-much-on-food</link>
+      <guid isPermaLink="false">55ffd7e6-6bab-47f5-b93c-06ebe6f00200</guid>
+      <pubDate>Thu, 26 Feb 2026 10:31:23 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[America’s welfare state is more European than you think ]]>
+      </title>
+      <description>
+        <![CDATA[State-level policies are making up for stingy federal provision]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/25/americas-welfare-state-is-more-european-than-you-think</link>
+      <guid isPermaLink="false">771a1267-5633-48f4-a2e0-84c3c3de8f4f</guid>
+      <pubDate>Wed, 25 Feb 2026 22:55:06 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[A viral research note on AI gets its economics wrong]]>
+      </title>
+      <description>
+        <![CDATA[Too much of a good thing]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/25/a-viral-research-note-on-ai-gets-its-economics-wrong</link>
+      <guid isPermaLink="false">01a063f2-5cdc-45b4-8f82-9e0eedc94c8e</guid>
+      <pubDate>Wed, 25 Feb 2026 22:21:46 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The AI productivity boom is not here (yet)]]>
+      </title>
+      <description>
+        <![CDATA[Artificial intelligence is improving fast. Its effect on output, not so much]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/22/the-ai-productivity-boom-is-not-here-yet</link>
+      <guid isPermaLink="false">160f151b-2ec0-4c63-806d-2f2e38ead54a</guid>
+      <pubDate>Sun, 22 Feb 2026 12:41:33 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Markets are churning furiously beneath the surface]]>
+      </title>
+      <description>
+        <![CDATA[AI is prompting investors to reassess every business model under the sun]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/22/markets-are-churning-furiously-beneath-the-surface</link>
+      <guid isPermaLink="false">d3db7759-dc62-46da-b848-080561d7f1aa</guid>
+      <pubDate>Sun, 22 Feb 2026 12:29:01 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Donald Trump answers a Supreme Court rebuke with new tariff threats]]>
+      </title>
+      <description>
+        <![CDATA[The immediate economic impact will be more uncertainty]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/20/donald-trump-answers-a-supreme-court-rebuke-with-new-tariff-threats</link>
+      <guid isPermaLink="false">18e6307e-48a7-4394-a8cc-657b11b10168</guid>
+      <pubDate>Fri, 20 Feb 2026 17:52:47 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The EU is thrashing out a more muscular set of economic policies ]]>
+      </title>
+      <description>
+        <![CDATA[The bloc is done playing nicely]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/19/the-eu-is-thrashing-out-a-more-muscular-set-of-economic-policies</link>
+      <guid isPermaLink="false">429531f8-e6b2-4441-998b-8eabd20308ea</guid>
+      <pubDate>Thu, 19 Feb 2026 10:52:50 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Did America’s war on poverty fail?]]>
+      </title>
+      <description>
+        <![CDATA[Deprivation has fallen dramatically—but not necessarily because of the welfare state]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/19/did-americas-war-on-poverty-fail</link>
+      <guid isPermaLink="false">15ae3d76-b3ec-4338-84ed-355e482d285e</guid>
+      <pubDate>Thu, 19 Feb 2026 10:52:23 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Prediction markets are rife with insider betting]]>
+      </title>
+      <description>
+        <![CDATA[That does not mean regulators should stamp it out]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/19/prediction-markets-are-rife-with-insider-betting</link>
+      <guid isPermaLink="false">7a6acb17-5cef-461f-9c9a-dafbc797a10d</guid>
+      <pubDate>Thu, 19 Feb 2026 10:33:12 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How big is the prize of reopening Russia?]]>
+      </title>
+      <description>
+        <![CDATA[The Kremlin is promising $12trn-worth of deals to Donald Trump’s administration]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/17/how-big-is-the-prize-of-reopening-russia</link>
+      <guid isPermaLink="false">9027502d-9585-48be-97d2-418f9049c16a</guid>
+      <pubDate>Tue, 17 Feb 2026 20:30:52 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The financialisation of AI is just beginning]]>
+      </title>
+      <description>
+        <![CDATA[Get ready for a new wave of securities, hedges and collateral]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/17/the-financialisation-of-ai-is-just-beginning</link>
+      <guid isPermaLink="false">5cb4fdb0-df7f-47fa-bf34-c6b0318c2426</guid>
+      <pubDate>Tue, 17 Feb 2026 19:16:31 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Donald Trump’s schemes to juice the economy]]>
+      </title>
+      <description>
+        <![CDATA[Watch out for sneaky stimulus]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/15/donald-trumps-schemes-to-juice-the-economy</link>
+      <guid isPermaLink="false">eda9ec2e-f3a1-4158-b265-e80d34bfb8d3</guid>
+      <pubDate>Sun, 15 Feb 2026 18:08:19 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Ethnic minorities are driving America’s startup boom]]>
+      </title>
+      <description>
+        <![CDATA[The covid-19 pandemic set entrepreneurial spirits surging—for some]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/12/ethnic-minorities-are-driving-americas-startup-boom</link>
+      <guid isPermaLink="false">56638d76-1c93-4c4b-8f3a-335ab33759b2</guid>
+      <pubDate>Thu, 12 Feb 2026 10:37:30 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Why China’s central bank won’t save the country from deflation]]>
+      </title>
+      <description>
+        <![CDATA[It’s not about the exchange rate any more]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/12/why-chinas-central-bank-wont-save-the-country-from-deflation</link>
+      <guid isPermaLink="false">bf998336-cd0e-4d04-b9d2-596a6f25e044</guid>
+      <pubDate>Thu, 12 Feb 2026 10:34:11 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Chinese homebuyers are enraged by shoddy building standards]]>
+      </title>
+      <description>
+        <![CDATA[Crooked walls and broken promises are harming China’s property market]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/12/chinese-homebuyers-are-enraged-by-shoddy-building-standards</link>
+      <guid isPermaLink="false">5b89b113-5908-477c-b928-c8431f79d2a1</guid>
+      <pubDate>Thu, 12 Feb 2026 10:33:19 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How to put a price on a human life]]>
+      </title>
+      <description>
+        <![CDATA[As ghoulish as it sounds, it is far better than the alternative]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/12/how-to-put-a-price-on-a-human-life</link>
+      <guid isPermaLink="false">aa8ab56f-63f7-445a-95e3-717f62d21b7f</guid>
+      <pubDate>Thu, 12 Feb 2026 10:32:07 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[What drives the wage gap between men and women?]]>
+      </title>
+      <description>
+        <![CDATA[Surprise: it’s still motherhood]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/11/what-drives-the-wage-gap-between-men-and-women</link>
+      <guid isPermaLink="false">488b351a-84bd-44d9-999b-5e26ec2c03bb</guid>
+      <pubDate>Wed, 11 Feb 2026 17:27:08 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Who wrangled the best trade deal from Donald Trump?]]>
+      </title>
+      <description>
+        <![CDATA[The agreements look one-sided. Their consequences may not be]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/10/who-wrangled-the-best-trade-deal-from-donald-trump</link>
+      <guid isPermaLink="false">cddf6d74-192e-4806-8871-c3987d401430</guid>
+      <pubDate>Tue, 10 Feb 2026 19:16:31 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The coldest crypto winter yet]]>
+      </title>
+      <description>
+        <![CDATA[An asset class that is all about vibes suddenly has awful vibes]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/10/the-coldest-crypto-winter-yet</link>
+      <guid isPermaLink="false">e4206d94-cdf1-4f00-8595-e91c365de735</guid>
+      <pubDate>Tue, 10 Feb 2026 18:50:48 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How to hedge a bubble, AI edition]]>
+      </title>
+      <description>
+        <![CDATA[Protecting your portfolio from a crash looks harder than ever]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/08/how-to-hedge-a-bubble-ai-edition</link>
+      <guid isPermaLink="false">21667d15-4d47-4a35-87e9-5b9733c1e888</guid>
+      <pubDate>Sun, 08 Feb 2026 14:23:50 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Hong Kong is getting its financial mojo back]]>
+      </title>
+      <description>
+        <![CDATA[The hub is attracting more deals. And more Beijing-style politics]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/05/hong-kong-is-getting-its-financial-mojo-back</link>
+      <guid isPermaLink="false">558cb472-231f-4cfa-b95e-866d6af9f98b</guid>
+      <pubDate>Thu, 05 Feb 2026 10:32:30 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Untangling the ideas of Donald Trump’s Fed nominee]]>
+      </title>
+      <description>
+        <![CDATA[What is Warshonomics?]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/05/untangling-the-ideas-of-donald-trumps-fed-nominee</link>
+      <guid isPermaLink="false">80fc9483-e771-4336-bfd9-06ea0d9b17cc</guid>
+      <pubDate>Thu, 05 Feb 2026 10:30:05 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Why the dollar may have much further to fall]]>
+      </title>
+      <description>
+        <![CDATA[It is hard to be a safe haven when trouble starts at home]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/05/why-the-dollar-may-have-much-further-to-fall</link>
+      <guid isPermaLink="false">f9c8642e-9b95-4110-8b35-1e66dfad2839</guid>
+      <pubDate>Thu, 05 Feb 2026 10:28:18 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Can emerging markets’ stellar run continue?]]>
+      </title>
+      <description>
+        <![CDATA[There is a lot more going for them than “sell America” ]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/04/can-emerging-markets-stellar-run-continue</link>
+      <guid isPermaLink="false">63a23c5e-1ecb-45d5-83b5-1730aadf04b9</guid>
+      <pubDate>Wed, 04 Feb 2026 18:41:56 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[America and India strike a long-awaited trade truce]]>
+      </title>
+      <description>
+        <![CDATA[Will it last?]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/02/america-and-india-strike-a-long-awaited-trade-truce</link>
+      <guid isPermaLink="false">a365fb0e-24f6-4ed5-a5af-da8926f769b5</guid>
+      <pubDate>Mon, 02 Feb 2026 23:33:06 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[AI is not the only threat menacing big tech]]>
+      </title>
+      <description>
+        <![CDATA[Are Meta and Google ads really recession-proof?]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/02/ai-is-not-the-only-threat-menacing-big-tech</link>
+      <guid isPermaLink="false">341f0b91-9e40-4c97-a638-f09cc7ea5aba</guid>
+      <pubDate>Mon, 02 Feb 2026 19:34:55 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Has America hit “peak tariff”? ]]>
+      </title>
+      <description>
+        <![CDATA[Uncle Sam’s take may go downhill from here]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/02/01/has-america-hit-peak-tariff</link>
+      <guid isPermaLink="false">b5c28a60-efc6-4caa-8411-61b352f081a3</guid>
+      <pubDate>Sun, 01 Feb 2026 11:20:08 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[What will Kevin Warsh’s Federal Reserve look like?]]>
+      </title>
+      <description>
+        <![CDATA[Donald Trump’s nominee was an inflation hawk—until he wasn’t]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/30/what-will-kevin-warshs-federal-reserve-look-like</link>
+      <guid isPermaLink="false">405b408a-c69a-482a-ac09-587a5dc6804e</guid>
+      <pubDate>Fri, 30 Jan 2026 17:17:34 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The fate of Japan’s $6trn foreign portfolio rattles global markets]]>
+      </title>
+      <description>
+        <![CDATA[The knock-on effects of a sell-off in Japanese-held foreign investments would be far-reaching]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/29/the-fate-of-japans-6trn-foreign-portfolio-rattles-global-markets</link>
+      <guid isPermaLink="false">5d459e48-aba6-408b-a303-b5d70163e13a</guid>
+      <pubDate>Thu, 29 Jan 2026 10:00:58 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Why is the yen still so weak?]]>
+      </title>
+      <description>
+        <![CDATA[Newly alluring yields on Japanese bonds have not propped up the currency]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/29/why-is-the-yen-still-so-weak</link>
+      <guid isPermaLink="false">52ff57a4-59bb-4e1b-908c-537f8e74f6b0</guid>
+      <pubDate>Thu, 29 Jan 2026 10:00:51 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Our Big Mac index carries an Asian warning]]>
+      </title>
+      <description>
+        <![CDATA[It isn’t just Japan: other currencies also look cheap]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/29/our-big-mac-index-carries-an-asian-warning</link>
+      <guid isPermaLink="false">1ea42994-055c-41d4-a6f2-2779566c2d97</guid>
+      <pubDate>Thu, 29 Jan 2026 10:00:43 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Just how debased is the dollar?]]>
+      </title>
+      <description>
+        <![CDATA[Not nearly as much as it could be]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/28/just-how-debased-is-the-dollar</link>
+      <guid isPermaLink="false">76e94a39-c2c6-4ec7-b2ca-189469d5268f</guid>
+      <pubDate>Wed, 28 Jan 2026 23:18:33 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The West and Ukraine are capsizing Russia’s shadow fleet]]>
+      </title>
+      <description>
+        <![CDATA[And sinking its oil revenues in the process]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/27/the-west-and-ukraine-are-capsizing-russias-shadow-fleet</link>
+      <guid isPermaLink="false">3e983fab-455f-42ce-b356-e774e7d949df</guid>
+      <pubDate>Tue, 27 Jan 2026 20:23:51 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[What is driving gold’s relentless rally? ]]>
+      </title>
+      <description>
+        <![CDATA[The ancient asset is attracting new investors]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/27/what-is-driving-golds-relentless-rally</link>
+      <guid isPermaLink="false">983d55eb-8202-4f3c-8f33-327f432c8e15</guid>
+      <pubDate>Tue, 27 Jan 2026 12:15:35 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Why AI won’t wipe out white-collar jobs ]]>
+      </title>
+      <description>
+        <![CDATA[The technology will expand their scope and raise their value]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/26/why-ai-wont-wipe-out-white-collar-jobs</link>
+      <guid isPermaLink="false">80827f95-75d0-4699-ab1c-e4d8b25a8475</guid>
+      <pubDate>Mon, 26 Jan 2026 20:16:25 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Can America’s bond market keep defying the vigilantes?]]>
+      </title>
+      <description>
+        <![CDATA[Donald Trump’s threats over Greenland are the latest test]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/22/can-americas-bond-market-keep-defying-the-vigilantes</link>
+      <guid isPermaLink="false">a032e73e-6673-4e72-95be-dec169087081</guid>
+      <pubDate>Thu, 22 Jan 2026 14:07:39 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[An audacious new book about a “precocious” country]]>
+      </title>
+      <description>
+        <![CDATA[There is no such thing as “the” Indian growth model]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/22/an-audacious-new-book-about-a-precocious-country</link>
+      <guid isPermaLink="false">df59677c-3229-4d9d-ad93-60dd8697585e</guid>
+      <pubDate>Thu, 22 Jan 2026 10:36:10 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[National job stereotypes need updating]]>
+      </title>
+      <description>
+        <![CDATA[Unemployment rates in rich countries are becoming topsy-turvy]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/22/national-job-stereotypes-need-updating</link>
+      <guid isPermaLink="false">98195985-e69e-4836-ad07-e6f803a01424</guid>
+      <pubDate>Thu, 22 Jan 2026 10:34:29 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The ascent of India’s economy]]>
+      </title>
+      <description>
+        <![CDATA[It has benefited from a slice of luck, a commitment to economic reform and a shove from Donald Trump]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/22/the-ascent-of-indias-economy</link>
+      <guid isPermaLink="false">1673eba7-a720-4055-96ad-68d6c1563a51</guid>
+      <pubDate>Thu, 22 Jan 2026 10:34:06 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[American decay versus American dynamism]]>
+      </title>
+      <description>
+        <![CDATA[Only a decline in corporate America’s vigour will dent the country’s dominance of financial markets]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/21/american-decay-versus-american-dynamism</link>
+      <guid isPermaLink="false">40d903c1-f089-46ee-817a-75ed06c12a03</guid>
+      <pubDate>Wed, 21 Jan 2026 20:20:41 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Japan’s bond-market tremble reflects a fiscal-monetary clash]]>
+      </title>
+      <description>
+        <![CDATA[As investors worry about budgetary laxity, the central bank prepares for more rate hikes]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/21/japans-bond-market-tremble-reflects-a-fiscal-monetary-clash</link>
+      <guid isPermaLink="false">4262cbf8-9ae1-4ec0-9426-63fb97c361bf</guid>
+      <pubDate>Wed, 21 Jan 2026 17:31:27 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Denmark braces for Donald Trump’s Greenland tariffs]]>
+      </title>
+      <description>
+        <![CDATA[The economy is well prepared, but more exposed than it used to be]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/20/denmark-braces-for-donald-trumps-greenland-tariffs</link>
+      <guid isPermaLink="false">58e2b0de-2684-4260-9300-9416df6ae873</guid>
+      <pubDate>Tue, 20 Jan 2026 18:25:26 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Donald Trump’s Greenland tariffs are no great blow to Europe]]>
+      </title>
+      <description>
+        <![CDATA[An escalating trade war would be another matter, however]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/19/donald-trumps-greenland-tariffs-are-no-great-blow-to-europe</link>
+      <guid isPermaLink="false">e1cb3c7f-75de-4db5-896f-338ed7cf4f10</guid>
+      <pubDate>Mon, 19 Jan 2026 21:31:52 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[China hits its GDP target—in a weird way]]>
+      </title>
+      <description>
+        <![CDATA[Strong exports make up for weak investment]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/19/china-hits-its-gdp-target-in-a-weird-way</link>
+      <guid isPermaLink="false">a9678ded-2ca7-4f9a-ab85-2e90203ffb24</guid>
+      <pubDate>Mon, 19 Jan 2026 15:02:41 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Why America’s bond market just keeps winning ]]>
+      </title>
+      <description>
+        <![CDATA[Vigilantes have shrugged off ballooning debt and attacks on the Fed ]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/18/why-americas-bond-market-just-keeps-winning</link>
+      <guid isPermaLink="false">82e1f3e2-90ee-4407-8797-72db7571f03a</guid>
+      <pubDate>Sun, 18 Jan 2026 11:18:18 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The economics of regime change]]>
+      </title>
+      <description>
+        <![CDATA[Lessons from history for Venezuela and Iran]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/15/the-economics-of-regime-change</link>
+      <guid isPermaLink="false">e73b46f3-2e2b-43cd-b9a5-de88d1032939</guid>
+      <pubDate>Thu, 15 Jan 2026 10:28:46 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Jerome Powell punches back]]>
+      </title>
+      <description>
+        <![CDATA[The administration’s latest attack on America’s central bank has not gone well]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/14/jerome-powell-punches-back</link>
+      <guid isPermaLink="false">b8489c4b-95ab-4973-8e39-629f511a0ace</guid>
+      <pubDate>Wed, 14 Jan 2026 22:18:38 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Donald Trump’s crusade against usury reaches Wall Street ]]>
+      </title>
+      <description>
+        <![CDATA[His fight against high interest rates could get messy ]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/14/donald-trumps-crusade-against-usury-reaches-wall-street</link>
+      <guid isPermaLink="false">c790f862-268d-46ea-92fb-de233495477b</guid>
+      <pubDate>Wed, 14 Jan 2026 22:09:39 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Is passive investment inflating a stockmarket bubble?]]>
+      </title>
+      <description>
+        <![CDATA[A widely circulated working paper suggests so]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/14/is-passive-investment-inflating-a-stockmarket-bubble</link>
+      <guid isPermaLink="false">c04895f6-cd6a-44dc-8cd6-36f1683063ba</guid>
+      <pubDate>Wed, 14 Jan 2026 21:02:41 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[It’s not just the Fed. Politics looms over central banks everywhere]]>
+      </title>
+      <description>
+        <![CDATA[But can the public stomach higher inflation?]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/14/its-not-just-the-fed-politics-looms-over-central-banks-everywhere</link>
+      <guid isPermaLink="false">faa1f0aa-968a-475b-b07f-cca781a9bfbb</guid>
+      <pubDate>Wed, 14 Jan 2026 18:19:02 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The Trump administration threatens the Fed with a criminal cudgel]]>
+      </title>
+      <description>
+        <![CDATA[The president denies all knowledge. A bizarre fight could get nasty]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/12/jerome-powell-says-donald-trump-has-launched-a-criminal-investigation-against-the-fed</link>
+      <guid isPermaLink="false">2a5690cb-014b-411e-b059-7690a8eee16d</guid>
+      <pubDate>Mon, 12 Jan 2026 04:34:13 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Pessimism is the world’s main economic problem]]>
+      </title>
+      <description>
+        <![CDATA[Gloomy expectations are starting to matter more than the data]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/11/pessimism-is-the-worlds-main-economic-problem</link>
+      <guid isPermaLink="false">f4f71bd9-2770-47c4-8772-a6635c37811a</guid>
+      <pubDate>Sun, 11 Jan 2026 17:41:22 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[What “Pluribus” reveals about economics]]>
+      </title>
+      <description>
+        <![CDATA[A hit Apple TV show offers useful lessons]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/08/what-pluribus-reveals-about-economics</link>
+      <guid isPermaLink="false">20922fbd-3ca3-40d0-8d46-a35f04b3cb63</guid>
+      <pubDate>Thu, 08 Jan 2026 11:56:32 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Vietnam’s growth is fast—but fragile]]>
+      </title>
+      <description>
+        <![CDATA[The economy is unduly reliant on a handful of conglomerates]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/08/vietnams-growth-is-fast-but-fragile</link>
+      <guid isPermaLink="false">7418399b-2f86-4ba2-b1da-d01e44207ac8</guid>
+      <pubDate>Thu, 08 Jan 2026 10:30:05 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Why Europe’s biggest pension funds are dumping government bonds]]>
+      </title>
+      <description>
+        <![CDATA[Dutch reforms will push up borrowing costs across the continent]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/08/why-europes-biggest-pension-funds-are-dumping-government-bonds</link>
+      <guid isPermaLink="false">421e0f24-9d09-439b-a9e9-45341b523fab</guid>
+      <pubDate>Thu, 08 Jan 2026 10:27:47 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Venezuela’s astoundingly messy debts are about to get messier]]>
+      </title>
+      <description>
+        <![CDATA[Oil majors, hedge funds, Chinese lenders—all have a stake]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/07/venezuelas-astoundingly-messy-debts-are-about-to-get-messier</link>
+      <guid isPermaLink="false">560cfa18-1a4a-4293-a9fd-641b0721b0a7</guid>
+      <pubDate>Wed, 07 Jan 2026 19:36:40 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Is it better to rent or buy?]]>
+      </title>
+      <description>
+        <![CDATA[Much depends on long-term interest rates]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/07/is-it-better-to-rent-or-buy</link>
+      <guid isPermaLink="false">63fdf768-d2a6-4ade-b2e6-eb216109c919</guid>
+      <pubDate>Wed, 07 Jan 2026 12:42:46 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[America’s missing manufacturing renaissance ]]>
+      </title>
+      <description>
+        <![CDATA[Donald Trump’s tariffs have hurt the factories they were meant to protect]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/06/americas-missing-manufacturing-renaissance</link>
+      <guid isPermaLink="false">538bb85c-8534-438a-a6dd-cd47f333e59c</guid>
+      <pubDate>Tue, 06 Jan 2026 17:10:37 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[An American oil empire is a deeply flawed idea]]>
+      </title>
+      <description>
+        <![CDATA[Donald Trump’s ambitions are expansive. His plans are limited]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2026/01/04/an-american-oil-empire-is-a-deeply-flawed-idea</link>
+      <guid isPermaLink="false">f0852430-9311-4960-94a5-8108f6bfe1fa</guid>
+      <pubDate>Sun, 04 Jan 2026 12:38:53 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Investors head into 2026 remarkably optimistic]]>
+      </title>
+      <description>
+        <![CDATA[Few expect a crash in the year to come]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/30/investors-head-into-2026-remarkably-optimistic</link>
+      <guid isPermaLink="false">43dfa1ff-d473-488a-981c-5339066f8cbb</guid>
+      <pubDate>Tue, 30 Dec 2025 13:48:47 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[China’s property woes could last until 2030]]>
+      </title>
+      <description>
+        <![CDATA[Despite the best efforts of its social-media censors]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/30/chinas-property-woes-could-last-until-2030</link>
+      <guid isPermaLink="false">09d9c50d-cbbd-4e62-9cd8-6db0621d90f1</guid>
+      <pubDate>Tue, 30 Dec 2025 13:48:47 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[RedBird, a small firm doing big media deals  ]]>
+      </title>
+      <description>
+        <![CDATA[Its wingspan stretches from Hollywood to AC Milan ]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/30/redbird-a-small-firm-doing-big-media-deals</link>
+      <guid isPermaLink="false">2688b035-dc40-4b25-b8b5-a6ef19d85681</guid>
+      <pubDate>Tue, 30 Dec 2025 13:48:47 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[America’s economy looks set to accelerate]]>
+      </title>
+      <description>
+        <![CDATA[A monetary-fiscal loosening is coming ]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/30/americas-economy-looks-set-to-accelerate</link>
+      <guid isPermaLink="false">bc8b1034-d448-458c-a311-3658fabc80e0</guid>
+      <pubDate>Tue, 30 Dec 2025 13:48:47 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Forget affordability. Europe has an availability crisis]]>
+      </title>
+      <description>
+        <![CDATA[Tight regulation is largely to blame]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/30/forget-affordability-europe-has-an-availability-crisis</link>
+      <guid isPermaLink="false">b94f48ee-aad8-4103-9a94-95917f098f51</guid>
+      <pubDate>Tue, 30 Dec 2025 11:42:29 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Why fewer Americans are giving than before]]>
+      </title>
+      <description>
+        <![CDATA[The decline of philanthropy is not just about Donald Trump ]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/23/why-fewer-americans-are-giving-than-before</link>
+      <guid isPermaLink="false">460c8842-e324-4094-af66-6600e7edb1b2</guid>
+      <pubDate>Tue, 23 Dec 2025 11:45:05 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[The five biggest market developments of 2025]]>
+      </title>
+      <description>
+        <![CDATA[Looking back on a rollercoaster year for investors]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/21/the-five-biggest-market-developments-of-2025</link>
+      <guid isPermaLink="false">bac6c8d7-b006-409c-8dd2-5d7cb9a446a0</guid>
+      <pubDate>Sun, 21 Dec 2025 13:18:27 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How to interpret the pain at the edge of America’s labour market]]>
+      </title>
+      <description>
+        <![CDATA[In the past it has foretold wider weakness. This time may be different]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/21/how-to-interpret-the-pain-at-the-edge-of-americas-labour-market</link>
+      <guid isPermaLink="false">77b564cf-9e9c-4892-92b1-1586ca5920ec</guid>
+      <pubDate>Sun, 21 Dec 2025 13:03:31 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Watch who you’re calling childless]]>
+      </title>
+      <description>
+        <![CDATA[Women in America are having as many babies over their lifetimes as they did two decades ago]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/18/watch-who-youre-calling-childless</link>
+      <guid isPermaLink="false">784a952c-6dd0-4b54-9496-aa8d89839173</guid>
+      <pubDate>Thu, 18 Dec 2025 10:42:36 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Meet the American investors rushing into Congo]]>
+      </title>
+      <description>
+        <![CDATA[They are taking on war, corruption and China]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/18/meet-the-american-investors-rushing-into-congo</link>
+      <guid isPermaLink="false">5290db32-c5de-4fc8-9242-eb87cfda26a1</guid>
+      <pubDate>Thu, 18 Dec 2025 10:40:59 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[This Christmas, raise a glass to concentrated market returns ]]>
+      </title>
+      <description>
+        <![CDATA[A surprisingly large share of companies lag far behind their former greatness]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/17/this-christmas-raise-a-glass-to-concentrated-market-returns</link>
+      <guid isPermaLink="false">0830b226-8b8b-47c8-9110-db87001aceb5</guid>
+      <pubDate>Wed, 17 Dec 2025 19:14:48 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Where America’s most prominent short-sellers are placing their bets]]>
+      </title>
+      <description>
+        <![CDATA[We interview three financial sleuths]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/16/where-americas-most-prominent-short-sellers-are-placing-their-bets</link>
+      <guid isPermaLink="false">ee161c9d-14a7-41c6-a737-8c9484defcf1</guid>
+      <pubDate>Tue, 16 Dec 2025 18:44:59 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Crypto’s real threat to banks ]]>
+      </title>
+      <description>
+        <![CDATA[The industry is supplanting Wall Street’s privileged position on the American right]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/15/cryptos-real-threat-to-banks</link>
+      <guid isPermaLink="false">f73ec8e8-6608-4776-a13e-901960555439</guid>
+      <pubDate>Mon, 15 Dec 2025 19:44:49 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Germany has a lawyer problem]]>
+      </title>
+      <description>
+        <![CDATA[Its endless bureaucratic rules trap would-be reformers]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/11/germany-has-a-lawyer-problem</link>
+      <guid isPermaLink="false">9e6921e0-35cc-4c52-8edf-08363c13f3ff</guid>
+      <pubDate>Thu, 11 Dec 2025 11:14:59 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[What a stiff drink says about China’s economy]]>
+      </title>
+      <description>
+        <![CDATA[The baijiu business is the latest to be struck by “involution”]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/11/what-a-stiff-drink-says-about-chinas-economy</link>
+      <guid isPermaLink="false">4b0d4726-453f-4037-99a2-10ea9f1ed6e6</guid>
+      <pubDate>Thu, 11 Dec 2025 11:12:31 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[America’s bond market is quiet—almost too quiet]]>
+      </title>
+      <description>
+        <![CDATA[Scott Bessent has a cunning plan]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/11/americas-bond-market-is-quiet-almost-too-quiet</link>
+      <guid isPermaLink="false">fc6db7b9-9bde-4a22-bf57-9e2074ae0676</guid>
+      <pubDate>Thu, 11 Dec 2025 11:10:02 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Wall Street is drooling over bank mergers]]>
+      </title>
+      <description>
+        <![CDATA[The world’s most fragmented financial industry faces dramatic change]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/11/wall-street-is-drooling-over-bank-mergers</link>
+      <guid isPermaLink="false">7650539f-9933-4a84-b25d-2c4af580239d</guid>
+      <pubDate>Thu, 11 Dec 2025 11:07:13 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Asia’s inexpensive AI stocks should worry American investors]]>
+      </title>
+      <description>
+        <![CDATA[Tech mania looks very different in Japan, South Korea and Taiwan]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/10/asias-inexpensive-ai-stocks-should-worry-american-investors</link>
+      <guid isPermaLink="false">e6424670-36cb-40c9-99de-9c2510c522f5</guid>
+      <pubDate>Wed, 10 Dec 2025 19:18:39 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Which economy did best in 2025?]]>
+      </title>
+      <description>
+        <![CDATA[Our annual ranking returns]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/07/which-economy-did-best-in-2025</link>
+      <guid isPermaLink="false">b547391d-aeaa-47a6-b21e-768ad39918b3</guid>
+      <pubDate>Sun, 07 Dec 2025 15:34:39 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[AI misinformation may have paradoxical consequences]]>
+      </title>
+      <description>
+        <![CDATA[To understand why, consider the side-blotched lizard]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/04/ai-misinformation-may-have-paradoxical-consequences</link>
+      <guid isPermaLink="false">2bc870f9-1eac-4e5a-bc54-d2bae979376f</guid>
+      <pubDate>Thu, 04 Dec 2025 10:25:14 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Can golden toilets fix China’s economy?]]>
+      </title>
+      <description>
+        <![CDATA[Communist Party officials think so]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/04/can-golden-toilets-fix-chinas-economy</link>
+      <guid isPermaLink="false">3bb573ac-a230-4016-b8f0-4eb349b018de</guid>
+      <pubDate>Thu, 04 Dec 2025 10:24:50 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Bitcoin has plunged. Strategy Inc is an early victim]]>
+      </title>
+      <description>
+        <![CDATA[It holds 3% of the world’s total supply]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/04/bitcoin-has-plunged-strategy-inc-is-an-early-victim</link>
+      <guid isPermaLink="false">999dfe5d-40c4-4bdb-9edc-05a7cd56c00c</guid>
+      <pubDate>Thu, 04 Dec 2025 10:24:41 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[American sanctions are putting Russia under pressure]]>
+      </title>
+      <description>
+        <![CDATA[In time, though, its tankers will find new routes]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/04/american-sanctions-are-putting-russia-under-pressure</link>
+      <guid isPermaLink="false">761b6a5d-d308-4454-b853-86639d3b5874</guid>
+      <pubDate>Thu, 04 Dec 2025 10:24:26 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Stockholm is Europe’s new capital of capital]]>
+      </title>
+      <description>
+        <![CDATA[And with Sweden embarking on a borrowing spree, it is a bond trader’s paradise]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/03/stockholm-is-europes-new-capital-of-capital</link>
+      <guid isPermaLink="false">b6653919-e356-4778-9c07-886f193b546f</guid>
+      <pubDate>Wed, 03 Dec 2025 20:06:58 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Which Kevin Hassett would lead the Federal Reserve?]]>
+      </title>
+      <description>
+        <![CDATA[He was once a right-of-centre tax expert. He has become a partisan hack]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/03/which-kevin-hassett-would-lead-the-federal-reserve</link>
+      <guid isPermaLink="false">abebb69e-8095-4890-b32c-0c3d5bf4e5e1</guid>
+      <pubDate>Wed, 03 Dec 2025 19:26:16 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How to spot a bubble bursting]]>
+      </title>
+      <description>
+        <![CDATA[Forget valuations. Look out for search-engine hits and fund managers getting fired]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/12/01/how-to-spot-a-bubble-bursting</link>
+      <guid isPermaLink="false">0c8ba5b9-1b46-42e1-a271-eb69b60c3bda</guid>
+      <pubDate>Mon, 01 Dec 2025 19:49:24 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Why worries about American job losses are overstated]]>
+      </title>
+      <description>
+        <![CDATA[Bosses, investors, policymakers—all are fearful of a jobs-pocalypse]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/11/30/why-worries-about-american-job-losses-are-overstated</link>
+      <guid isPermaLink="false">f9d4ea3c-7599-47b4-8176-21435fe51f1a</guid>
+      <pubDate>Sun, 30 Nov 2025 15:27:52 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Self-driving cars will transform urban economies]]>
+      </title>
+      <description>
+        <![CDATA[A robotaxi boom is coming. The impacts might be broader than you expect]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/11/27/self-driving-cars-will-transform-urban-economies</link>
+      <guid isPermaLink="false">7a829e67-7583-4125-af57-5f37123ba1d9</guid>
+      <pubDate>Thu, 27 Nov 2025 11:41:03 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[China’s property market is (somehow) worsening]]>
+      </title>
+      <description>
+        <![CDATA[Government remedies are not up to the job]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/11/27/chinas-property-market-is-somehow-worsening</link>
+      <guid isPermaLink="false">afae694f-1e30-4c8a-ad6e-36d093af52fa</guid>
+      <pubDate>Thu, 27 Nov 2025 11:37:22 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[Narendra Modi plans to free up India’s giant labour force]]>
+      </title>
+      <description>
+        <![CDATA[Socialist employment restrictions will be swept away]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/11/27/narendra-modi-plans-to-free-up-indias-giant-labour-force</link>
+      <guid isPermaLink="false">c86e8bbe-5cec-4e62-bac4-8edc1d6fd26c</guid>
+      <pubDate>Thu, 27 Nov 2025 11:14:11 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[One weird trick to solve the affordability crisis]]>
+      </title>
+      <description>
+        <![CDATA[If voters dislike big numbers, there is a purely nominal fix]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/11/27/one-weird-trick-to-solve-the-affordability-crisis</link>
+      <guid isPermaLink="false">cb001d3a-83e1-41d7-8608-af2ea31d4c68</guid>
+      <pubDate>Thu, 27 Nov 2025 10:47:18 +0000</pubDate>
+    </item>
+    <item>
+      <title>
+        <![CDATA[How to short the bubbliest firms]]>
+      </title>
+      <description>
+        <![CDATA[Private markets present fearsome challenges]]>
+      </description>
+      <link>https://www.economist.com/finance-and-economics/2025/11/26/how-to-short-the-bubbliest-firms</link>
+      <guid isPermaLink="false">88a42c96-e9dc-40ad-bab1-420d0eee6faa</guid>
+      <pubDate>Wed, 26 Nov 2025 21:30:35 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

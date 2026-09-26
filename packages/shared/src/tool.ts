@@ -71,11 +71,24 @@ const ETF: ToolDescriptor = {
   tags: ['ETF', '折溢价', '规模', '跟踪指数', '场内'],
 };
 
+const NEWS: ToolDescriptor = {
+  id: 'news',
+  name: '财经信息流',
+  summary: '全球英文信源 · 当日中文简报 · 引用回链',
+  question: '全球英文财经媒体今天发生了什么？用中文给我讲清楚。',
+  status: 'ready',
+  version: '0.1.0',
+  // 条目由每 10 分钟一次的抓取任务滚动入库，简报按需/每日生成
+  dataFreshness: 'realtime',
+  tags: ['新闻', 'RSS', 'AI 简报', '财经媒体', '政策'],
+};
+
 export const TOOL_CATALOG = {
   qdii: QDII,
   usd: USD,
   fx: FX,
   etf: ETF,
+  news: NEWS,
 } as const;
 
 export const TOOL_DESCRIPTORS: readonly ToolDescriptor[] = Object.values(TOOL_CATALOG);

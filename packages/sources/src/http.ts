@@ -26,6 +26,24 @@ export interface HttpClientOptions {
 export interface RequestOptions {
   headers?: Record<string, string>;
   timeoutMs?: number;
+  /** 条件请求：`If-None-Match`（RSS 轮询绝大多数轮次应当只花一个 304） */
+  ifNoneMatch?: string | null;
+  /** 条件请求：`If-Modified-Since` */
+  ifModifiedSince?: string | null;
+  /**
+   * 允许 `304 Not Modified` 作为成功响应返回（`text` 为空串）。
+   * 不开这个开关时 304 与其它非 2xx 一样抛 `UpstreamError` ——
+   * 免得没打算做条件请求的调用方被一个空响应体骗过去。
+   */
+  allowNotModified?: boolean;
+}
+
+/** 带状态码与响应头的原始响应（条件请求需要读 `ETag` / `Last-Modified`） */
+export interface RawResponse {
+  status: number;
+  /** 键已小写化 */
+  headers: Record<string, string>;
+  text: string;
 }
 
 export const DEFAULT_USER_AGENT =
@@ -162,6 +180,11 @@ export class HttpClient {
   }
 
   async getText(url: string, options: RequestOptions = {}): Promise<string> {
+    return (await this.getRaw(url, options)).text;
+  }
+
+  /** 需要状态码/响应头的调用方（RSS 条件请求）走这个；`getText` 是它的便捷包装 */
+  async getRaw(url: string, options: RequestOptions = {}): Promise<RawResponse> {
     const host = new URL(url).host;
     const timeoutMs = options.timeoutMs ?? this.options.timeoutMs;
 
@@ -169,27 +192,53 @@ export class HttpClient {
     try {
       await this.throttle(host);
       const startedAt = Date.now();
-      const text = await this.withRetry(async () => {
+      const result = await this.withRetry(async () => {
+        const headers: Record<string, string> = {
+          'User-Agent': DEFAULT_USER_AGENT,
+          ...options.headers,
+        };
+        if (options.ifNoneMatch !== undefined && options.ifNoneMatch !== null) {
+          headers['If-None-Match'] = options.ifNoneMatch;
+        }
+        if (options.ifModifiedSince !== undefined && options.ifModifiedSince !== null) {
+          headers['If-Modified-Since'] = options.ifModifiedSince;
+        }
+
         const response = await fetch(url, {
-          headers: { 'User-Agent': DEFAULT_USER_AGENT, ...options.headers },
+          headers,
           signal: AbortSignal.timeout(timeoutMs),
           redirect: 'follow',
         });
 
-        if (!response.ok) {
+        const notModified = response.status === 304;
+        if (!response.ok && !(notModified && options.allowNotModified === true)) {
           throw new UpstreamError(`上游返回 HTTP ${response.status}`, {
             url,
             status: response.status,
           });
         }
-        return this.readCapped(response, url);
+
+        const responseHeaders: Record<string, string> = {};
+        for (const [key, value] of response.headers) responseHeaders[key.toLowerCase()] = value;
+
+        return {
+          status: response.status,
+          headers: responseHeaders,
+          // 304 没有响应体；显式返回空串而不是去读一个不存在的 body
+          text: notModified ? '' : await this.readCapped(response, url),
+        };
       }, url);
 
       this.options.logger?.debug(
-        { url, bytes: Buffer.byteLength(text), elapsedMs: Date.now() - startedAt },
+        {
+          url,
+          status: result.status,
+          bytes: Buffer.byteLength(result.text),
+          elapsedMs: Date.now() - startedAt,
+        },
         '上游请求完成',
       );
-      return text;
+      return result;
     } finally {
       this.semaphore.release();
     }

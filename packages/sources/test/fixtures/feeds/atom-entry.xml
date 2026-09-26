@@ -1,0 +1,32 @@
+<!-- fixture: atom-entry
+     采集日期: 2026-09-26（**合成样例**，非真实抓取）
+     原始 URL: 无（按 RFC 4287 构造）
+     格式: Atom 1.0
+     用途: 首版 15 个信源都是 RSS/RDF，但解析器必须支持 Atom ——
+           换信源时不能重新设计解析层，所以这里固定一份可解析的 Atom 样例。
+           覆盖点：自闭合 <link href rel="alternate"/>、<id> 兜底链接、
+           <published>/<updated> 两套时间、CDATA 摘要、命名空间。
+-->
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <title>Example Finance Wire</title>
+  <link href="https://example.org/feed" rel="self" type="application/atom+xml"/>
+  <updated>2026-09-25T09:00:00Z</updated>
+  <entry>
+    <title><![CDATA[Central bank holds rate, signals one cut this year]]></title>
+    <link href="https://example.org/markets/central-bank-holds-rate" rel="alternate" type="text/html"/>
+    <id>urn:uuid:11c5a2f0-0f2b-4a5e-9d0f-000000000001</id>
+    <published>2026-09-25T08:03:00Z</published>
+    <updated>2026-09-25T08:41:00Z</updated>
+    <author><name>Example Wire</name></author>
+    <summary type="html">&lt;p&gt;Policymakers kept the benchmark rate unchanged and signalled a single reduction before year end.&lt;/p&gt;</summary>
+  </entry>
+  <entry>
+    <title>Yen slides after comments from finance minister</title>
+    <link href="https://example.org/markets/yen-slides" rel="self" type="text/html"/>
+    <link href="https://example.org/markets/yen-slides-amp" rel="replies" type="text/html"/>
+    <id>https://example.org/markets/yen-slides</id>
+    <updated>2026-09-25T07:12:00Z</updated>
+    <content type="text">&lt;p&gt;The currency weakened against the dollar after remarks in Tokyo.&lt;/p&gt;</content>
+  </entry>
+</feed>

@@ -1,0 +1,268 @@
+<!-- fixture: nikkei-asia
+     采集日期: 2026-09-26
+     原始 URL: https://asia.nikkei.com/rss/feed/nar
+     格式: RSS 1.0 / RDF（无 pubDate）
+     用途: packages/sources/src/feeds/rss.test.ts（上游改版时用同一 URL 重采、diff、更新解析逻辑）
+-->
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns="http://purl.org/rss/1.0/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <channel rdf:about="https://asia.nikkei.com/rss/feed/nar" xml:lang="en-GB">
+    <title>Nikkei Asia</title>
+    <link>https://asia.nikkei.com/</link>
+    <description/>
+    <items>
+      <rdf:Seq>
+        <rdf:li resource="https://asia.nikkei.com/spotlight/trump-xi-summit/trump-xi-summit-how-the-chinese-leader-s-trip-to-washington-unfolded"/>
+        <rdf:li resource="https://asia.nikkei.com/spotlight/trump-xi-summit/pomp-tariffs-and-ai-5-things-to-know-about-the-trump-xi-summit"/>
+        <rdf:li resource="https://asia.nikkei.com/business/consumer/japan-s-kokuyo-charms-china-s-students-with-stylish-notebooks"/>
+        <rdf:li resource="https://asia.nikkei.com/photos/through-the-lens-trump-xi-summit"/>
+        <rdf:li resource="https://asia.nikkei.com/business/markets/currencies/trump-remarks-on-weak-yen-to-takaichi-raise-speculation-on-policy-impact"/>
+        <rdf:li resource="https://asia.nikkei.com/spotlight/supply-chain/japan-herbal-remedy-makers-seek-to-reduce-china-from-supply-chain"/>
+        <rdf:li resource="https://asia.nikkei.com/spotlight/trump-xi-summit/xi-s-human-control-or-trump-s-super-intelligence-what-s-next-for-ai"/>
+        <rdf:li resource="https://asia.nikkei.com/business/travel-leisure/okinawa-theme-park-junglia-logs-loss-for-first-year-amid-weak-attendance"/>
+        <rdf:li resource="https://asia.nikkei.com/spotlight/big-in-asia/indonesia-coffee-trade-wilts-under-brunt-of-climate-change"/>
+        <rdf:li resource="https://asia.nikkei.com/spotlight/work/sony-chip-unit-orders-8-000-workers-back-to-office-for-physical-ai-push"/>
+        <rdf:li resource="https://asia.nikkei.com/politics/international-relations/summits-in-a-new-york-minute-riding-along-with-takaichi-s-un-visit"/>
+        <rdf:li resource="https://asia.nikkei.com/business/companies/gree-haier-see-profits-fall-as-chinese-appliance-brands-face-overseas-test"/>
+        <rdf:li resource="https://asia.nikkei.com/business/materials/surge-in-chinese-chemical-imports-puts-japan-s-industry-on-alert"/>
+        <rdf:li resource="https://asia.nikkei.com/business/markets/currencies/us-japan-finance-chiefs-discuss-yen-after-trump-raises-concerns-in-summit"/>
+        <rdf:li resource="https://asia.nikkei.com/business/automobiles/electric-vehicles/toyota-s-china-ev-push-leaves-japanese-suppliers-in-the-cold"/>
+        <rdf:li resource="https://asia.nikkei.com/opinion/china-now-holds-the-whip-hand-over-trump"/>
+        <rdf:li resource="https://asia.nikkei.com/economy/japan-to-move-cfius-style-foreign-investment-review-filings-online"/>
+        <rdf:li resource="https://asia.nikkei.com/business/technology/artificial-intelligence/ai-pioneer-schmidhuber-to-join-japan-s-sakana-ai-as-science-adviser"/>
+        <rdf:li resource="https://asia.nikkei.com/business/consumer/mbappe-sponsor-on-chases-apple-style-discipline-with-automated-shoe-factories"/>
+        <rdf:li resource="https://asia.nikkei.com/business/technology/artificial-intelligence/ai-data-centers-increasingly-built-on-gpu-collateral-other-novel-financing"/>
+        <rdf:li resource="https://asia.nikkei.com/spotlight/trump-xi-summit/trump-remarks-on-china-as-wwii-ally-raise-eyebrows-in-japan"/>
+        <rdf:li resource="https://asia.nikkei.com/spotlight/trump-xi-summit/taiwan-says-xi-distorted-facts-to-trump-as-analysts-read-between-lines"/>
+        <rdf:li resource="https://asia.nikkei.com/business/food-beverage/vietnam-to-revise-food-safety-law-reining-delivery-apps-like-shopee-grab"/>
+        <rdf:li resource="https://asia.nikkei.com/business/markets/global-bond-sell-off-intensifies-hitting-housing-markets"/>
+        <rdf:li resource="https://asia.nikkei.com/opinion/the-us-needs-a-new-taiwan-policy-beyond-strategic-ambiguity"/>
+        <rdf:li resource="https://asia.nikkei.com/politics/philippine-president-marcos-pardons-drug-convict-mary-jane-veloso2"/>
+        <rdf:li resource="https://asia.nikkei.com/editor-s-picks/editor-in-chief-s-picks/editor-s-choice-another-trump-xi-ambiguous-summit"/>
+        <rdf:li resource="https://asia.nikkei.com/business/automobiles/china-s-auto-industry-reaches-consolidation-tipping-point"/>
+        <rdf:li resource="https://asia.nikkei.com/business/automobiles/suzuki-aims-to-halve-vehicle-development-time-to-stay-on-china-s-tail"/>
+        <rdf:li resource="https://asia.nikkei.com/politics/defense/houthi-threat-tests-pakistan-s-mecca-defense-pact-commitment"/>
+        <rdf:li resource="https://asia.nikkei.com/spotlight/work/the-high-cost-of-visiting-home-filipino-workers-dilemma-in-lebanon"/>
+        <rdf:li resource="https://asia.nikkei.com/economy/natural-disasters/nepal-struggles-to-raise-5bn-for-flood-recovery-as-global-aid-retreats"/>
+        <rdf:li resource="https://asia.nikkei.com/spotlight/trump-xi-summit/xi-urges-limits-on-us-china-rivalry-calls-for-human-control-of-ai"/>
+        <rdf:li resource="https://asia.nikkei.com/spotlight/trump-xi-summit/chinese-ceos-travel-to-washington-despite-summit-invite-uncertainty"/>
+        <rdf:li resource="https://asia.nikkei.com/business/energy/iran-war-takes-southeast-asia-s-renewable-plans-to-new-heights"/>
+        <rdf:li resource="https://asia.nikkei.com/spotlight/trump-xi-summit/xi-draws-crowds-of-chinese-welcomers-to-washington-s-waldorf-astoria"/>
+        <rdf:li resource="https://asia.nikkei.com/business/finance/mufg-bank-to-work-with-japan-s-jaxa-on-human-spaceflight-r-d"/>
+        <rdf:li resource="https://asia.nikkei.com/business/finance/overseas-investment-fund-entries-to-japan-quadruple-over-4-years"/>
+        <rdf:li resource="https://asia.nikkei.com/spotlight/policy-asia/australia-steps-up-pressure-on-social-networks-to-unplug-kids"/>
+        <rdf:li resource="https://asia.nikkei.com/opinion/india-has-the-weapons.-now-it-needs-the-network"/>
+        <rdf:li resource="https://asia.nikkei.com/business/automobiles/toyota-supplier-toyoda-gosei-to-build-indian-auto-parts-plant"/>
+        <rdf:li resource="https://asia.nikkei.com/business/markets/property/osaka-s-entertainment-ambitions-for-former-expo-site-draw-few-takers"/>
+        <rdf:li resource="https://asia.nikkei.com/business/markets/bonds/japan-struggles-to-find-way-to-fund-takaichi-budget-with-no-new-deficit-bonds"/>
+        <rdf:li resource="https://asia.nikkei.com/politics/white-house-reinstates-access-to-cnn-ms-now-and-politico"/>
+        <rdf:li resource="https://asia.nikkei.com/business/energy/sky-high-diesel-prices-keep-climbing-as-us-weighs-export-ban"/>
+        <rdf:li resource="https://asia.nikkei.com/business/finance/softbank-group-plans-record-sales-of-high-yield-bonds-to-invest-in-openai"/>
+        <rdf:li resource="https://asia.nikkei.com/business/markets/property/existing-condo-prices-in-central-tokyo-down-for-4th-straight-month"/>
+        <rdf:li resource="https://asia.nikkei.com/business/markets/how-ponzi-stock-scheme-in-turkey-collapsed-4-things-to-know"/>
+        <rdf:li resource="https://asia.nikkei.com/business/markets/ipo/india-s-nse-bourse-closes-higher-after-country-s-biggest-ipo-of-the-year"/>
+        <rdf:li resource="https://asia.nikkei.com/spotlight/iran-tensions/iran-war/saudi-aramco-chief-says-any-interruption-can-be-fixed-within-days"/>
+      </rdf:Seq>
+    </items>
+  </channel>
+  <item rdf:about="https://asia.nikkei.com/spotlight/trump-xi-summit/trump-xi-summit-how-the-chinese-leader-s-trip-to-washington-unfolded">
+    <title><![CDATA[Trump-Xi summit: How the Chinese leader's trip to Washington unfolded]]></title>
+    <link>https://asia.nikkei.com/spotlight/trump-xi-summit/trump-xi-summit-how-the-chinese-leader-s-trip-to-washington-unfolded</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/spotlight/trump-xi-summit/pomp-tariffs-and-ai-5-things-to-know-about-the-trump-xi-summit">
+    <title><![CDATA[Pomp, tariffs and AI: 5 things to know about the Trump-Xi summit]]></title>
+    <link>https://asia.nikkei.com/spotlight/trump-xi-summit/pomp-tariffs-and-ai-5-things-to-know-about-the-trump-xi-summit</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/consumer/japan-s-kokuyo-charms-china-s-students-with-stylish-notebooks">
+    <title><![CDATA[Japan's Kokuyo charms China's students with stylish notebooks]]></title>
+    <link>https://asia.nikkei.com/business/consumer/japan-s-kokuyo-charms-china-s-students-with-stylish-notebooks</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/photos/through-the-lens-trump-xi-summit">
+    <title><![CDATA[Through the lens: Trump-Xi summit]]></title>
+    <link>https://asia.nikkei.com/photos/through-the-lens-trump-xi-summit</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/markets/currencies/trump-remarks-on-weak-yen-to-takaichi-raise-speculation-on-policy-impact">
+    <title><![CDATA[Trump remarks on weak yen to Takaichi raise speculation on policy impact]]></title>
+    <link>https://asia.nikkei.com/business/markets/currencies/trump-remarks-on-weak-yen-to-takaichi-raise-speculation-on-policy-impact</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/spotlight/supply-chain/japan-herbal-remedy-makers-seek-to-reduce-china-from-supply-chain">
+    <title><![CDATA[Japan herbal remedy makers seek to reduce China from supply chain]]></title>
+    <link>https://asia.nikkei.com/spotlight/supply-chain/japan-herbal-remedy-makers-seek-to-reduce-china-from-supply-chain</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/spotlight/trump-xi-summit/xi-s-human-control-or-trump-s-super-intelligence-what-s-next-for-ai">
+    <title><![CDATA[Xi's human control or Trump's 'super intelligence': What's next for AI?]]></title>
+    <link>https://asia.nikkei.com/spotlight/trump-xi-summit/xi-s-human-control-or-trump-s-super-intelligence-what-s-next-for-ai</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/travel-leisure/okinawa-theme-park-junglia-logs-loss-for-first-year-amid-weak-attendance">
+    <title><![CDATA[Okinawa theme park Junglia logs loss for first year amid weak attendance]]></title>
+    <link>https://asia.nikkei.com/business/travel-leisure/okinawa-theme-park-junglia-logs-loss-for-first-year-amid-weak-attendance</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/spotlight/big-in-asia/indonesia-coffee-trade-wilts-under-brunt-of-climate-change">
+    <title><![CDATA[Indonesia coffee trade wilts under brunt of climate change]]></title>
+    <link>https://asia.nikkei.com/spotlight/big-in-asia/indonesia-coffee-trade-wilts-under-brunt-of-climate-change</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/spotlight/work/sony-chip-unit-orders-8-000-workers-back-to-office-for-physical-ai-push">
+    <title><![CDATA[Sony chip unit orders 8,000 workers back to office for physical AI push]]></title>
+    <link>https://asia.nikkei.com/spotlight/work/sony-chip-unit-orders-8-000-workers-back-to-office-for-physical-ai-push</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/politics/international-relations/summits-in-a-new-york-minute-riding-along-with-takaichi-s-un-visit">
+    <title><![CDATA[Summits in a New York minute: Riding along with Takaichi's UN visit]]></title>
+    <link>https://asia.nikkei.com/politics/international-relations/summits-in-a-new-york-minute-riding-along-with-takaichi-s-un-visit</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/companies/gree-haier-see-profits-fall-as-chinese-appliance-brands-face-overseas-test">
+    <title><![CDATA[Gree, Haier see profits fall as Chinese appliance brands face overseas test]]></title>
+    <link>https://asia.nikkei.com/business/companies/gree-haier-see-profits-fall-as-chinese-appliance-brands-face-overseas-test</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/materials/surge-in-chinese-chemical-imports-puts-japan-s-industry-on-alert">
+    <title><![CDATA[Surge in Chinese chemical imports puts Japan's industry on alert]]></title>
+    <link>https://asia.nikkei.com/business/materials/surge-in-chinese-chemical-imports-puts-japan-s-industry-on-alert</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/markets/currencies/us-japan-finance-chiefs-discuss-yen-after-trump-raises-concerns-in-summit">
+    <title><![CDATA[US, Japan finance chiefs discuss yen after Trump raises concerns in summit]]></title>
+    <link>https://asia.nikkei.com/business/markets/currencies/us-japan-finance-chiefs-discuss-yen-after-trump-raises-concerns-in-summit</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/automobiles/electric-vehicles/toyota-s-china-ev-push-leaves-japanese-suppliers-in-the-cold">
+    <title><![CDATA[Toyota's China EV push leaves Japanese suppliers in the cold]]></title>
+    <link>https://asia.nikkei.com/business/automobiles/electric-vehicles/toyota-s-china-ev-push-leaves-japanese-suppliers-in-the-cold</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/opinion/china-now-holds-the-whip-hand-over-trump">
+    <title><![CDATA[China now holds the whip hand over Trump]]></title>
+    <link>https://asia.nikkei.com/opinion/china-now-holds-the-whip-hand-over-trump</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/economy/japan-to-move-cfius-style-foreign-investment-review-filings-online">
+    <title><![CDATA[Japan to move CFIUS-style foreign investment review filings online]]></title>
+    <link>https://asia.nikkei.com/economy/japan-to-move-cfius-style-foreign-investment-review-filings-online</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/technology/artificial-intelligence/ai-pioneer-schmidhuber-to-join-japan-s-sakana-ai-as-science-adviser">
+    <title><![CDATA[AI pioneer Schmidhuber to join Japan's Sakana AI as science adviser]]></title>
+    <link>https://asia.nikkei.com/business/technology/artificial-intelligence/ai-pioneer-schmidhuber-to-join-japan-s-sakana-ai-as-science-adviser</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/consumer/mbappe-sponsor-on-chases-apple-style-discipline-with-automated-shoe-factories">
+    <title><![CDATA[Mbappe sponsor On chases Apple-style 'discipline' with automated shoe factories]]></title>
+    <link>https://asia.nikkei.com/business/consumer/mbappe-sponsor-on-chases-apple-style-discipline-with-automated-shoe-factories</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/technology/artificial-intelligence/ai-data-centers-increasingly-built-on-gpu-collateral-other-novel-financing">
+    <title><![CDATA[AI data centers increasingly built on GPU collateral, other novel financing]]></title>
+    <link>https://asia.nikkei.com/business/technology/artificial-intelligence/ai-data-centers-increasingly-built-on-gpu-collateral-other-novel-financing</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/spotlight/trump-xi-summit/trump-remarks-on-china-as-wwii-ally-raise-eyebrows-in-japan">
+    <title><![CDATA[Trump remarks on China as WWII 'ally' raise eyebrows in Japan]]></title>
+    <link>https://asia.nikkei.com/spotlight/trump-xi-summit/trump-remarks-on-china-as-wwii-ally-raise-eyebrows-in-japan</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/spotlight/trump-xi-summit/taiwan-says-xi-distorted-facts-to-trump-as-analysts-read-between-lines">
+    <title><![CDATA[Taiwan says Xi 'distorted facts' to Trump as analysts read between lines]]></title>
+    <link>https://asia.nikkei.com/spotlight/trump-xi-summit/taiwan-says-xi-distorted-facts-to-trump-as-analysts-read-between-lines</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/food-beverage/vietnam-to-revise-food-safety-law-reining-delivery-apps-like-shopee-grab">
+    <title><![CDATA[Vietnam to revise food safety law, reining delivery apps like Shopee, Grab]]></title>
+    <link>https://asia.nikkei.com/business/food-beverage/vietnam-to-revise-food-safety-law-reining-delivery-apps-like-shopee-grab</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/markets/global-bond-sell-off-intensifies-hitting-housing-markets">
+    <title><![CDATA[Global bond sell-off intensifies, hitting housing markets]]></title>
+    <link>https://asia.nikkei.com/business/markets/global-bond-sell-off-intensifies-hitting-housing-markets</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/opinion/the-us-needs-a-new-taiwan-policy-beyond-strategic-ambiguity">
+    <title><![CDATA[The US needs a new Taiwan policy beyond strategic ambiguity]]></title>
+    <link>https://asia.nikkei.com/opinion/the-us-needs-a-new-taiwan-policy-beyond-strategic-ambiguity</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/politics/philippine-president-marcos-pardons-drug-convict-mary-jane-veloso2">
+    <title><![CDATA[Philippine President Marcos pardons drug convict Mary Jane Veloso]]></title>
+    <link>https://asia.nikkei.com/politics/philippine-president-marcos-pardons-drug-convict-mary-jane-veloso2</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/editor-s-picks/editor-in-chief-s-picks/editor-s-choice-another-trump-xi-ambiguous-summit">
+    <title><![CDATA[Editor's Choice: Another Trump-Xi ambiguous summit]]></title>
+    <link>https://asia.nikkei.com/editor-s-picks/editor-in-chief-s-picks/editor-s-choice-another-trump-xi-ambiguous-summit</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/automobiles/china-s-auto-industry-reaches-consolidation-tipping-point">
+    <title><![CDATA[China's auto industry reaches consolidation tipping point]]></title>
+    <link>https://asia.nikkei.com/business/automobiles/china-s-auto-industry-reaches-consolidation-tipping-point</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/automobiles/suzuki-aims-to-halve-vehicle-development-time-to-stay-on-china-s-tail">
+    <title><![CDATA[Suzuki aims to halve vehicle development time to stay on China's tail]]></title>
+    <link>https://asia.nikkei.com/business/automobiles/suzuki-aims-to-halve-vehicle-development-time-to-stay-on-china-s-tail</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/politics/defense/houthi-threat-tests-pakistan-s-mecca-defense-pact-commitment">
+    <title><![CDATA[Houthi threat tests Pakistan's Mecca defense pact commitment]]></title>
+    <link>https://asia.nikkei.com/politics/defense/houthi-threat-tests-pakistan-s-mecca-defense-pact-commitment</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/spotlight/work/the-high-cost-of-visiting-home-filipino-workers-dilemma-in-lebanon">
+    <title><![CDATA[The high cost of visiting home: Filipino workers' dilemma in Lebanon]]></title>
+    <link>https://asia.nikkei.com/spotlight/work/the-high-cost-of-visiting-home-filipino-workers-dilemma-in-lebanon</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/economy/natural-disasters/nepal-struggles-to-raise-5bn-for-flood-recovery-as-global-aid-retreats">
+    <title><![CDATA[Nepal struggles to raise $5bn for flood recovery as global aid retreats]]></title>
+    <link>https://asia.nikkei.com/economy/natural-disasters/nepal-struggles-to-raise-5bn-for-flood-recovery-as-global-aid-retreats</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/spotlight/trump-xi-summit/xi-urges-limits-on-us-china-rivalry-calls-for-human-control-of-ai">
+    <title><![CDATA[Xi urges limits on US-China rivalry, calls for human control of AI]]></title>
+    <link>https://asia.nikkei.com/spotlight/trump-xi-summit/xi-urges-limits-on-us-china-rivalry-calls-for-human-control-of-ai</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/spotlight/trump-xi-summit/chinese-ceos-travel-to-washington-despite-summit-invite-uncertainty">
+    <title><![CDATA[Chinese CEOs travel to Washington despite summit invite uncertainty]]></title>
+    <link>https://asia.nikkei.com/spotlight/trump-xi-summit/chinese-ceos-travel-to-washington-despite-summit-invite-uncertainty</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/energy/iran-war-takes-southeast-asia-s-renewable-plans-to-new-heights">
+    <title><![CDATA[Iran war takes Southeast Asia's renewable plans to new heights]]></title>
+    <link>https://asia.nikkei.com/business/energy/iran-war-takes-southeast-asia-s-renewable-plans-to-new-heights</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/spotlight/trump-xi-summit/xi-draws-crowds-of-chinese-welcomers-to-washington-s-waldorf-astoria">
+    <title><![CDATA[Xi draws crowds of Chinese welcomers to Washington's Waldorf Astoria]]></title>
+    <link>https://asia.nikkei.com/spotlight/trump-xi-summit/xi-draws-crowds-of-chinese-welcomers-to-washington-s-waldorf-astoria</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/finance/mufg-bank-to-work-with-japan-s-jaxa-on-human-spaceflight-r-d">
+    <title><![CDATA[MUFG Bank to work with Japan's JAXA on human spaceflight R&D]]></title>
+    <link>https://asia.nikkei.com/business/finance/mufg-bank-to-work-with-japan-s-jaxa-on-human-spaceflight-r-d</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/finance/overseas-investment-fund-entries-to-japan-quadruple-over-4-years">
+    <title><![CDATA[Overseas investment fund entries to Japan quadruple over 4 years]]></title>
+    <link>https://asia.nikkei.com/business/finance/overseas-investment-fund-entries-to-japan-quadruple-over-4-years</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/spotlight/policy-asia/australia-steps-up-pressure-on-social-networks-to-unplug-kids">
+    <title><![CDATA[Australia steps up pressure on social networks to unplug kids]]></title>
+    <link>https://asia.nikkei.com/spotlight/policy-asia/australia-steps-up-pressure-on-social-networks-to-unplug-kids</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/opinion/india-has-the-weapons.-now-it-needs-the-network">
+    <title><![CDATA[India has the weapons. Now it needs the network]]></title>
+    <link>https://asia.nikkei.com/opinion/india-has-the-weapons.-now-it-needs-the-network</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/automobiles/toyota-supplier-toyoda-gosei-to-build-indian-auto-parts-plant">
+    <title><![CDATA[Toyota supplier Toyoda Gosei to build Indian auto parts plant]]></title>
+    <link>https://asia.nikkei.com/business/automobiles/toyota-supplier-toyoda-gosei-to-build-indian-auto-parts-plant</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/markets/property/osaka-s-entertainment-ambitions-for-former-expo-site-draw-few-takers">
+    <title><![CDATA[Osaka's entertainment ambitions for former Expo site draw few takers]]></title>
+    <link>https://asia.nikkei.com/business/markets/property/osaka-s-entertainment-ambitions-for-former-expo-site-draw-few-takers</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/markets/bonds/japan-struggles-to-find-way-to-fund-takaichi-budget-with-no-new-deficit-bonds">
+    <title><![CDATA[Japan struggles to find way to fund Takaichi budget with no new deficit bonds]]></title>
+    <link>https://asia.nikkei.com/business/markets/bonds/japan-struggles-to-find-way-to-fund-takaichi-budget-with-no-new-deficit-bonds</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/politics/white-house-reinstates-access-to-cnn-ms-now-and-politico">
+    <title><![CDATA[White House reinstates access to CNN, MS NOW and Politico]]></title>
+    <link>https://asia.nikkei.com/politics/white-house-reinstates-access-to-cnn-ms-now-and-politico</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/energy/sky-high-diesel-prices-keep-climbing-as-us-weighs-export-ban">
+    <title><![CDATA[Sky-high diesel prices keep climbing as US weighs export ban]]></title>
+    <link>https://asia.nikkei.com/business/energy/sky-high-diesel-prices-keep-climbing-as-us-weighs-export-ban</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/finance/softbank-group-plans-record-sales-of-high-yield-bonds-to-invest-in-openai">
+    <title><![CDATA[SoftBank Group plans record sales of high-yield bonds to invest in OpenAI]]></title>
+    <link>https://asia.nikkei.com/business/finance/softbank-group-plans-record-sales-of-high-yield-bonds-to-invest-in-openai</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/markets/property/existing-condo-prices-in-central-tokyo-down-for-4th-straight-month">
+    <title><![CDATA[Existing condo prices in central Tokyo down for 4th straight month]]></title>
+    <link>https://asia.nikkei.com/business/markets/property/existing-condo-prices-in-central-tokyo-down-for-4th-straight-month</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/markets/how-ponzi-stock-scheme-in-turkey-collapsed-4-things-to-know">
+    <title><![CDATA[How 'Ponzi' stock scheme in Turkey collapsed: 4 things to know]]></title>
+    <link>https://asia.nikkei.com/business/markets/how-ponzi-stock-scheme-in-turkey-collapsed-4-things-to-know</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/business/markets/ipo/india-s-nse-bourse-closes-higher-after-country-s-biggest-ipo-of-the-year">
+    <title><![CDATA[India's NSE bourse closes higher after country's biggest IPO of the year]]></title>
+    <link>https://asia.nikkei.com/business/markets/ipo/india-s-nse-bourse-closes-higher-after-country-s-biggest-ipo-of-the-year</link>
+  </item>
+  <item rdf:about="https://asia.nikkei.com/spotlight/iran-tensions/iran-war/saudi-aramco-chief-says-any-interruption-can-be-fixed-within-days">
+    <title><![CDATA[Saudi Aramco chief says any interruption can be fixed 'within days']]></title>
+    <link>https://asia.nikkei.com/spotlight/iran-tensions/iran-war/saudi-aramco-chief-says-any-interruption-can-be-fixed-within-days</link>
+  </item>
+</rdf:RDF>

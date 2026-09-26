@@ -3,6 +3,8 @@ import {
   ETF_MARKETS as CORE_ETF_MARKETS,
   ETF_PREMIUM_LEVELS as CORE_ETF_PREMIUM_LEVELS,
   FX_DIRECTIONS as CORE_FX_DIRECTIONS,
+  NEWS_CATEGORIES as CORE_NEWS_CATEGORIES,
+  NEWS_SECTION_KEYS as CORE_NEWS_SECTION_KEYS,
   USD_KINDS as CORE_USD_KINDS,
   CURRENCY_VALUES,
   ETF_SORT_KEYS,
@@ -22,13 +24,18 @@ import {
   EtfConfigUpdateSchema,
   FX_INTERVALS,
   FX_RANGES,
+  NEWS_SOURCE_IDS,
+  NEWS_SUMMARY_JSON_SCHEMA,
+  NewsSummaryPayloadSchema,
   PURCHASE_STATUSES,
   REDEEM_STATUSES,
   FX_DIRECTIONS as SHARED_FX_DIRECTIONS,
+  NEWS_CATEGORIES as SHARED_NEWS_CATEGORIES,
+  NEWS_SECTION_KEYS as SHARED_NEWS_SECTION_KEYS,
   USD_KINDS as SHARED_USD_KINDS,
   TOOL_CATALOG,
 } from '@funds-helper/shared';
-import { ETF_SPOT_SOURCE_IDS } from '@funds-helper/sources';
+import { ETF_SPOT_SOURCE_IDS, FEED_CATEGORIES, FEEDS } from '@funds-helper/sources';
 import { describe, expect, it } from 'vitest';
 import { createServerTools } from './tools/registry.ts';
 
@@ -126,11 +133,12 @@ describe('工具注册表与 shared 目录', () => {
 
   it('注册表里的描述符与 shared 目录指向同一个对象（服务端启动时的一致性断言）', () => {
     const tools = createServerTools();
-    expect(tools).toHaveLength(4);
+    expect(tools).toHaveLength(5);
     expect(tools[0]?.descriptor).toBe(TOOL_CATALOG.qdii);
     expect(tools[1]?.descriptor).toBe(TOOL_CATALOG.usd);
     expect(tools[2]?.descriptor).toBe(TOOL_CATALOG.fx);
     expect(tools[3]?.descriptor).toBe(TOOL_CATALOG.etf);
+    expect(tools[4]?.descriptor).toBe(TOOL_CATALOG.news);
   });
 
   it('每个工具都声明了 5 段式 cron 的定时任务', () => {
@@ -139,15 +147,29 @@ describe('工具注册表与 shared 目录', () => {
     const usdJobs = tools[1]?.jobs?.({} as never) ?? [];
     const fxJobs = tools[2]?.jobs?.({} as never) ?? [];
     const etfJobs = tools[3]?.jobs?.({} as never) ?? [];
+    const newsJobs = tools[4]?.jobs?.({} as never) ?? [];
 
     expect(qdiiJobs.map((job) => job.name)).toEqual(['qdii.snapshot', 'qdii.premium']);
     expect(usdJobs.map((job) => job.name)).toEqual(['usd.snapshot']);
     expect(fxJobs.map((job) => job.name)).toEqual(['fx.daily']);
     expect(etfJobs.map((job) => job.name)).toEqual(['etf.snapshot', 'etf.feeders', 'etf.periods']);
+    expect(newsJobs.map((job) => job.name)).toEqual(['news.fetch', 'news.summary']);
 
-    for (const job of [...qdiiJobs, ...usdJobs, ...fxJobs, ...etfJobs]) {
+    for (const job of [...qdiiJobs, ...usdJobs, ...fxJobs, ...etfJobs, ...newsJobs]) {
       expect(job.cron.split(' ')).toHaveLength(5);
     }
+  });
+
+  it('news.fetch 每 10 分钟一跳且启动补跑；news.summary 每天 08:30 且**不**启动补跑', () => {
+    const newsJobs = createServerTools()[4]?.jobs?.({} as never) ?? [];
+    const fetchJob = newsJobs.find((job) => job.name === 'news.fetch');
+    const summaryJob = newsJobs.find((job) => job.name === 'news.summary');
+
+    expect(fetchJob?.cron).toBe('*/10 * * * *');
+    expect(fetchJob?.runOnBoot).toBe(true);
+    // 简报有历史可展示，重启后补跑纯属烧配额
+    expect(summaryJob?.cron).toBe('30 8 * * *');
+    expect(summaryJob?.runOnBoot).toBe(false);
   });
 
   it('ETF 快照只在交易时段跑（场内行情收盘后不再变化）', () => {
@@ -167,5 +189,78 @@ describe('工具注册表与 shared 目录', () => {
     const periodsJob = etfJobs.find((job) => job.name === 'etf.periods');
     expect(periodsJob?.cron).toBe('0 4 * * 1');
     expect(periodsJob?.runOnBoot).toBe(true);
+  });
+});
+
+describe('news 工具的口径一致性', () => {
+  it('core 与 shared 的分组取值完全一致（含顺序）', () => {
+    expect([...CORE_NEWS_CATEGORIES]).toEqual([...SHARED_NEWS_CATEGORIES]);
+    expect([...FEED_CATEGORIES]).toEqual([...SHARED_NEWS_CATEGORIES]);
+  });
+
+  it('shared 的信源 id 清单与 sources 注册表逐字相同（前端靠它清洗 URL 参数）', () => {
+    expect([...NEWS_SOURCE_IDS]).toEqual(FEEDS.map((feed) => feed.id));
+    expect(new Set(NEWS_SOURCE_IDS).size).toBe(NEWS_SOURCE_IDS.length);
+  });
+
+  it('core 与 shared 的简报分区键完全一致（前端分区渲染靠它）', () => {
+    expect([...CORE_NEWS_SECTION_KEYS]).toEqual([...SHARED_NEWS_SECTION_KEYS]);
+  });
+
+  it('信源注册表：只有注册表里的地址会被请求（SSRF 验收断言）', () => {
+    for (const feed of FEEDS) {
+      expect(feed.url).toMatch(/^https:\/\//);
+      expect(FEED_CATEGORIES).toContain(feed.category);
+      expect(feed.cadenceSec).toBeGreaterThanOrEqual(60);
+    }
+    // 任何请求参数里的 URL 都不会被当成信源地址
+    expect(FEEDS.some((feed) => feed.url.includes('127.0.0.1'))).toBe(false);
+  });
+
+  it('response_format 的 JSON schema 与 Zod schema 同步（严格模式靠它生效）', () => {
+    const schema = NEWS_SUMMARY_JSON_SCHEMA as {
+      required?: string[];
+      properties?: Record<string, unknown>;
+    };
+    expect(schema.required).toEqual(['headline', 'sections', 'risk', 'watch']);
+    const sections = schema.properties?.sections as { required?: string[] };
+    expect(sections.required).toEqual([...SHARED_NEWS_SECTION_KEYS]);
+
+    // 按 JSON schema 造的合法样例必须能过 Zod（否则模型“合规”但服务端拒收）
+    const sample = {
+      headline: '今日要闻',
+      sections: {
+        macro: [{ text: '维持利率不变', refs: [1] }],
+        markets: [],
+        companies: [],
+        asia: [],
+      },
+      risk: [],
+      watch: ['下周 CPI'],
+    };
+    expect(NewsSummaryPayloadSchema.safeParse(sample).success).toBe(true);
+    // 缺 section / refs 是字符串 / 枚举外的分区 id 都必须被挡住
+    expect(NewsSummaryPayloadSchema.safeParse({ ...sample, sections: { macro: [] } }).success).toBe(
+      false,
+    );
+    expect(
+      NewsSummaryPayloadSchema.safeParse({
+        ...sample,
+        sections: { ...sample.sections, bogus: [] },
+      }).success,
+    ).toBe(false);
+    expect(
+      NewsSummaryPayloadSchema.safeParse({
+        ...sample,
+        sections: { ...sample.sections, macro: [{ text: 'x', refs: '1' }] },
+      }).success,
+    ).toBe(false);
+  });
+
+  it('15 个信源全部登记在册，且都能对上一份 fixture', () => {
+    expect(FEEDS).toHaveLength(15);
+    const fixtures = new Set(FEEDS.map((feed) => feed.fixture));
+    expect(fixtures.size).toBe(FEEDS.length); // 一个信源一份 fixture，不共用
+    for (const feed of FEEDS) expect(feed.fixture.endsWith('.xml')).toBe(true);
   });
 });

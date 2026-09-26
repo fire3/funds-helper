@@ -21,6 +21,25 @@ import {
   type FxRange,
   type FxRefreshResponse,
   FxRefreshResponseSchema,
+  type NewsAiConfigUpdate,
+  type NewsConfigResponse,
+  NewsConfigResponseSchema,
+  type NewsConfigTestResponse,
+  NewsConfigTestResponseSchema,
+  type NewsFeedResponse,
+  NewsFeedResponseSchema,
+  type NewsGenerateRequest,
+  type NewsGenerateResponse,
+  NewsGenerateResponseSchema,
+  type NewsRefreshResponse,
+  NewsRefreshResponseSchema,
+  type NewsSourcesResponse,
+  NewsSourcesResponseSchema,
+  type NewsSummaryHistoryResponse,
+  NewsSummaryHistoryResponseSchema,
+  type NewsSummaryResponse,
+  NewsSummaryResponseSchema,
+  type NewsWindow,
   type QdiiChangesResponse,
   QdiiChangesResponseSchema,
   type QdiiDatasetResponse,
@@ -210,4 +229,69 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ spotSource }),
     }),
+
+  // ---- news：信息流与 AI 每日简报 ----
+
+  /** 分页信息流：**服务端筛选 + 游标分页**（条目几个月就是几万行，不能全量返回） */
+  getNewsFeed: (params: {
+    range: string;
+    categories?: readonly string[];
+    sources?: readonly string[];
+    q?: string;
+    cursor?: string | null;
+    limit?: number;
+  }): Promise<NewsFeedResponse> => {
+    const search = new URLSearchParams({ range: params.range });
+    if (params.categories && params.categories.length > 0) {
+      search.set('cat', params.categories.join(','));
+    }
+    if (params.sources && params.sources.length > 0) search.set('src', params.sources.join(','));
+    if (params.q !== undefined && params.q.trim() !== '') search.set('q', params.q.trim());
+    if (params.cursor != null) search.set('cursor', params.cursor);
+    search.set('limit', String(params.limit ?? 100));
+    return request(`/api/tools/news/feed?${search.toString()}`, NewsFeedResponseSchema);
+  },
+
+  getNewsSources: (): Promise<NewsSourcesResponse> =>
+    request('/api/tools/news/sources', NewsSourcesResponseSchema),
+
+  getNewsSummary: (window: NewsWindow): Promise<NewsSummaryResponse> =>
+    request(`/api/tools/news/summary?window=${window}`, NewsSummaryResponseSchema),
+
+  getNewsSummaryHistory: (window: NewsWindow): Promise<NewsSummaryHistoryResponse> =>
+    request(`/api/tools/news/summary/history?window=${window}`, NewsSummaryHistoryResponseSchema),
+
+  /** 生成简报：服务端按陈旧规则决定是否真的调模型（`reused: true` = 返回缓存） */
+  generateNewsSummary: (body: NewsGenerateRequest): Promise<NewsGenerateResponse> =>
+    request('/api/tools/news/summaries/generate', NewsGenerateResponseSchema, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    }),
+
+  getNewsConfig: (): Promise<NewsConfigResponse> =>
+    request('/api/tools/news/config', NewsConfigResponseSchema),
+
+  updateNewsConfig: (body: NewsAiConfigUpdate): Promise<NewsConfigResponse> =>
+    request('/api/tools/news/config', NewsConfigResponseSchema, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    }),
+
+  updateNewsPrompt: (
+    key: string,
+    body: { name?: string; systemPrompt?: string; userTemplate?: string },
+  ): Promise<NewsConfigResponse> =>
+    request(`/api/tools/news/prompts/${encodeURIComponent(key)}`, NewsConfigResponseSchema, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    }),
+
+  testNewsConfig: (): Promise<NewsConfigTestResponse> =>
+    request('/api/tools/news/config/test', NewsConfigTestResponseSchema, { method: 'POST' }),
+
+  refreshNews: (): Promise<NewsRefreshResponse> =>
+    request('/api/tools/news/refresh', NewsRefreshResponseSchema, { method: 'POST' }),
 };

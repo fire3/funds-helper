@@ -343,6 +343,143 @@ async function main() {
     );
   }
 
+  // ---- 财经信息流（真实 RSS：15 个英文信源，见 docs/design/news-tool.md）----
+  check('工具清单包含 news', health.body?.tools?.some((tool) => tool.id === 'news') === true);
+
+  const newsRefreshResponse = await fetch(`${BASE}/api/tools/news/refresh`, { method: 'POST' });
+  const newsRefresh = await newsRefreshResponse.json().catch(() => null);
+  check(
+    'POST /api/tools/news/refresh 抓到真实 RSS',
+    newsRefreshResponse.ok && (newsRefresh?.fetched ?? 0) > 0,
+    newsRefreshResponse.ok
+      ? `due=${newsRefresh?.due} ok=${newsRefresh?.fetched} fail=${newsRefresh?.failed} new=${newsRefresh?.inserted}`
+      : JSON.stringify(newsRefresh),
+  );
+
+  const newsSources = await getJson('/api/tools/news/sources');
+  check(
+    'GET /api/tools/news/sources 返回 15 个信源',
+    newsSources.status === 200 && (newsSources.body?.sources?.length ?? 0) === 15,
+    `HTTP ${newsSources.status} sources=${newsSources.body?.sources?.length ?? 0}`,
+  );
+  // 网络层失败（DNS/超时/被墙）没有 HTTP 状态码 → last_status 为 null、last_error 有值；
+  // 这类失败同样要留痕，否则「上游还好吗」这个问题在界面上无从回答。
+  const newsAttempted = (newsSources.body?.sources ?? []).filter(
+    (source) => source.lastFetchedAt !== null,
+  );
+  check(
+    '信源健康状态留痕（尝试过的信源都有抓取时间，并留下状态码或错误）',
+    newsAttempted.length > 0 &&
+      newsAttempted.every(
+        (source) =>
+          (source.lastStatus !== null || source.lastError !== null) &&
+          typeof source.nextFetchAt === 'string',
+      ),
+    `上一轮 ${newsSources.body?.lastRun?.okFeeds ?? 0} 成 / ${newsSources.body?.lastRun?.failFeeds ?? 0} 败` +
+      (newsAttempted.some((source) => source.lastStatus === null)
+        ? '（含网络层失败：无 HTTP 状态码，last_error 有值）'
+        : ''),
+  );
+  // 能直连几个信源**取决于所在网络**（有的环境要代理、有的不要），所以这里只提示不断言：
+  // Node 的 fetch 默认不读 HTTP(S)_PROXY，需要代理时用 NODE_USE_ENV_PROXY=1 启动（见 .env.example）
+  const newsOk = newsSources.body?.lastRun?.okFeeds ?? 0;
+  const newsFail = newsSources.body?.lastRun?.failFeeds ?? 0;
+  if (newsFail > 0) {
+    console.log(
+      `  · 信源 ${newsOk} 成 / ${newsFail} 败：网络层失败（无 HTTP 状态码）通常是需要代理 —— ` +
+        'NODE_USE_ENV_PROXY=1 pnpm smoke 可复测；HTTP 403/429 则是站点在限流（会自动退避）',
+    );
+  }
+
+  // 取 200 条做内容断言：排序键是 COALESCE(published_at, fetched_at)，
+  // 上游没给发布时间的条目（Nikkei 整个 feed 都没有）会按抓取时刻浮到最前面，
+  // 只看第一页 50 条可能全是它们 —— 断言要覆盖足够大的一批才稳。
+  const newsFeed = await getJson('/api/tools/news/feed?range=all&limit=200');
+  const newsItems = newsFeed.body?.items ?? [];
+  check('GET /api/tools/news/feed 正常', newsFeed.status === 200, `HTTP ${newsFeed.status}`);
+  check('信息流条目数 > 0', newsItems.length > 0, `${newsItems.length} 条`);
+  check(
+    'publishedAt 不全是 null（上游没给时间的条目不伪造，但也不能全都没有）',
+    newsItems.some((item) => item.publishedAt !== null),
+    `${newsItems.filter((item) => item.publishedAt !== null).length}/${newsItems.length} 条有发布时间`,
+  );
+  check(
+    '条目链接全部来自注册表信源的 http(s) 地址',
+    newsItems.every((item) => /^https?:\/\//.test(item.url)),
+    `${newsItems.length} 条`,
+  );
+  check(
+    '摘要已剥离 HTML（喂给模型与展示的都必须是纯文本）',
+    newsItems.every((item) => item.summary === null || !/<[a-z/][^>]*>/i.test(item.summary)),
+    `${newsItems.filter((item) => item.summary !== null).length} 条带摘要`,
+  );
+
+  // 游标分页单独用小页宽验：limit=50 时第一页就到底了，没有第二页可翻
+  const newsPage1 = await getJson('/api/tools/news/feed?range=all&limit=5');
+  const newsCursor = newsPage1.body?.nextCursor ?? null;
+  const newsPage2 =
+    newsCursor === null
+      ? { status: 0, body: { items: [] } }
+      : await getJson(
+          `/api/tools/news/feed?range=all&limit=5&cursor=${encodeURIComponent(newsCursor)}`,
+        );
+  check(
+    '游标分页可翻页且不与第一页重叠',
+    newsCursor !== null &&
+      newsPage2.status === 200 &&
+      (newsPage2.body?.items?.length ?? 0) > 0 &&
+      (newsPage1.body?.items ?? []).every(
+        (item) => !(newsPage2.body?.items ?? []).some((other) => other.id === item.id),
+      ),
+    `page1=${newsPage1.body?.items?.length ?? 0} page2=${newsPage2.body?.items?.length ?? 0}`,
+  );
+
+  const newsConfig = await getJson('/api/tools/news/config');
+  check(
+    'GET /api/tools/news/config 正常且**不回传 apiKey 明文**',
+    newsConfig.status === 200 &&
+      !('apiKey' in (newsConfig.body?.ai ?? {})) &&
+      (newsConfig.body?.prompts ?? []).length === 3,
+    `prompts=${(newsConfig.body?.prompts ?? []).map((prompt) => prompt.key).join(',')} 今日 ${newsConfig.body?.usage?.used}/${newsConfig.body?.usage?.limit}`,
+  );
+
+  const newsSummary = await fetch(`${BASE}/api/tools/news/summary?window=today`);
+  check(
+    '未生成过简报时返回 404（而不是空简报）',
+    newsSummary.status === 404,
+    `HTTP ${newsSummary.status}`,
+  );
+
+  // AI 部分**不进默认冒烟**：会消耗真实配额，且依赖用户的 key。
+  // 配置了 AI_BASE_URL 才跑，否则明确打印跳过原因（见 docs/design/news-tool.md §12）。
+  if (process.env.AI_BASE_URL && process.env.AI_MODEL) {
+    const generateResponse = await fetch(`${BASE}/api/tools/news/summaries/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ window: 'today', force: true }),
+    });
+    const generate = await generateResponse.json().catch(() => null);
+    check(
+      'POST /summaries/generate 产出结构化简报（消耗 1 次真实额度）',
+      generateResponse.ok && generate?.summary?.status === 'success',
+      generateResponse.ok
+        ? `itemCount=${generate?.summary?.itemCount} dropped=${generate?.summary?.droppedCount} citations=${generate?.summary?.citations} tokens=${generate?.summary?.promptTokens}+${generate?.summary?.completionTokens}`
+        : JSON.stringify(generate?.error ?? generate),
+    );
+    const payload = generate?.summary?.payload;
+    check(
+      '简报 payload 分区齐全且引用条目已回填',
+      Boolean(payload?.headline) &&
+        ['macro', 'markets', 'companies', 'asia'].every((key) =>
+          Array.isArray(payload?.sections?.[key]),
+        ) &&
+        Object.values(payload?.items ?? {}).every((item) => /^https?:\/\//.test(item.url)),
+      `headline=${payload?.headline ?? '--'} 引用=${Object.keys(payload?.items ?? {}).length} 条`,
+    );
+  } else {
+    console.log('  · 未配置 AI_BASE_URL / AI_MODEL，跳过 AI 简报冒烟（不消耗真实额度）');
+  }
+
   // ---- 错误处理 ----
   const badCode = await fetch(`${BASE}/api/tools/qdii/funds/abc`);
   check('非法基金代码返回 400', badCode.status === 400, `HTTP ${badCode.status}`);

@@ -18,6 +18,15 @@ export function testConfig(overrides: Partial<AppConfig> = {}): AppConfig {
     staleWindowSec: 21_600,
     // 测试默认与产品默认一致：ETF 行情优先东财（个股测试可用 overrides 改成新浪）
     etfEastmoneyEnabled: true,
+    // news 工具：默认不配模型（未配置时生成简报必须报 400，而不是拿空地址打网络）
+    newsAiBaseUrl: '',
+    newsAiApiKey: '',
+    newsAiModel: '',
+    newsAiTemperature: 0.3,
+    newsAiMaxTokens: 4000,
+    newsAiMaxInputTokens: 60_000,
+    newsAiDailyLimit: 10,
+    newsItemRetentionDays: 180,
     webDistPath: '/nonexistent-web-dist',
     serveStatic: false,
     ...overrides,

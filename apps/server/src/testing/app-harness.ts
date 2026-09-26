@@ -1,5 +1,5 @@
 import type { Db } from '@funds-helper/db';
-import type { PurchaseSnapshotRow } from '@funds-helper/sources';
+import type { HttpClient, PurchaseSnapshotRow } from '@funds-helper/sources';
 import { buildApp } from '../app.ts';
 import type { AppConfig } from '../config.ts';
 import { createQdiiTool } from '../tools/qdii/index.ts';
@@ -27,6 +27,8 @@ export interface HarnessOptions {
   rows?: PurchaseSnapshotRow[];
   /** 用同一个假数据源与「当前时间」构造被测工具；默认只注册 QDII 工具 */
   buildTools?: (deps: { source: FakeQdiiSource; now: () => number }) => ServerTool[];
+  /** 注入受限 HTTP 客户端（news 这类直接打上游 RSS 的工具用它替身） */
+  http?: HttpClient;
 }
 
 /**
@@ -48,6 +50,7 @@ export async function createHarness(options: HarnessOptions = {}): Promise<Harne
     tools,
     db: testDb(),
     serveStatic: false,
+    ...(options.http === undefined ? {} : { http: options.http }),
   });
 
   return {

@@ -47,6 +47,23 @@ export const AppConfigSchema = z.object({
    * 运行时配置优先于它（见 `tools/etf/service.ts` 的 `spotSourcePreference`）。
    */
   etfEastmoneyEnabled: envBool(true),
+  /**
+   * `news` 工具的 AI 配置**默认值**（运行时 `app_setting` 优先，改完不重启）。
+   *
+   * 环境变量只是「没有运行时配置时」的兜底：`AI_API_KEY` 一旦写进 `.env` 就不再需要
+   * 在界面上重复填；界面上填过的值存 `app_setting`，优先级高于这里。
+   * 未配置时 `baseUrl` 为空串 —— 生成简报会明确报 400，而不是拿着空地址去打网络。
+   */
+  newsAiBaseUrl: z.string().default(''),
+  newsAiApiKey: z.string().default(''),
+  newsAiModel: z.string().default(''),
+  newsAiTemperature: z.coerce.number().min(0).max(2).default(0.3),
+  newsAiMaxTokens: z.coerce.number().int().min(256).max(32_000).default(4000),
+  newsAiMaxInputTokens: z.coerce.number().int().positive().default(60_000),
+  /** 每天最多几次 AI 调用（含「测试连接」）—— 克制的硬护栏 */
+  newsAiDailyLimit: z.coerce.number().int().min(1).max(100).default(10),
+  /** 信息流条目保留期：`news.fetch` 任务顺带清理，防表无限膨胀 */
+  newsItemRetentionDays: z.coerce.number().int().positive().default(180),
   /** 前端构建产物目录；存在即由本服务托管静态资源 */
   webDistPath: z.string().default(''),
   /**
@@ -79,6 +96,14 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
       memoryCacheTtlSec: env.MEMORY_CACHE_TTL_SEC,
       staleWindowSec: env.STALE_WINDOW_SEC,
       etfEastmoneyEnabled: env.ETF_EASTMONEY_ENABLED,
+      newsAiBaseUrl: env.AI_BASE_URL,
+      newsAiApiKey: env.AI_API_KEY,
+      newsAiModel: env.AI_MODEL,
+      newsAiTemperature: env.AI_TEMPERATURE,
+      newsAiMaxTokens: env.AI_MAX_TOKENS,
+      newsAiMaxInputTokens: env.AI_MAX_INPUT_TOKENS,
+      newsAiDailyLimit: env.AI_DAILY_LIMIT,
+      newsItemRetentionDays: env.NEWS_ITEM_RETENTION_DAYS,
       // 默认指向 apps/web/dist —— 生产环境下由本服务同时托管 API 与前端
       webDistPath: env.WEB_DIST_PATH ?? new URL('../../web/dist', import.meta.url).pathname,
       serveStatic: env.SERVE_STATIC,

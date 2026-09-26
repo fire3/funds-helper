@@ -9,6 +9,7 @@ import { SQL as QDII_CHANGE_DEDUP } from './0008-qdii-change-dedup.ts';
 import { SQL as ETF_FEEDER_FUND } from './0009-etf-feeder-fund.ts';
 import { SQL as ETF_FEEDER_FUND_PK } from './0010-etf-feeder-fund-pk.ts';
 import { SQL as ETF_HOTSPOT } from './0011-etf-hotspot.ts';
+import { SQL as NEWS } from './0012-news.ts';
 
 export interface Migration {
   id: string;
@@ -33,4 +34,5 @@ export const MIGRATIONS: readonly Migration[] = [
   { id: '0009-etf-feeder-fund', sql: ETF_FEEDER_FUND },
   { id: '0010-etf-feeder-fund-pk', sql: ETF_FEEDER_FUND_PK },
   { id: '0011-etf-hotspot', sql: ETF_HOTSPOT },
+  { id: '0012-news', sql: NEWS },
 ];

@@ -12,5 +12,6 @@
 export * from './eastmoney/index.ts';
 export * from './errors.ts';
 export * from './etf/spot.ts';
+export * from './feeds/index.ts';
 export * from './http.ts';
 export * from './sina/index.ts';

@@ -1,0 +1,157 @@
+<!-- fixture: yahoo-finance
+     采集日期: 2026-09-26
+     原始 URL: https://feeds.finance.yahoo.com/rss/2.0/headline?s=%5EGSPC&region=US&lang=en-US
+     格式: RSS 2.0（首次请求 429，退避后重采）
+     用途: packages/sources/src/feeds/rss.test.ts（上游改版时用同一 URL 重采、diff、更新解析逻辑）
+-->
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rss version="2.0">
+    <channel>
+        <copyright>Copyright (c) 2026 Yahoo Inc. All rights reserved.</copyright>
+        <description>Latest Financial News for ^GSPC</description>
+        <image>
+            <height>45</height>
+            <link>http://finance.yahoo.com/q/h?s=^GSPC</link>
+            <title>Yahoo! Finance: ^GSPC News</title>
+            <url>https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png</url>
+            <width>144</width>
+        </image>
+        <item>
+            <description>Over the last six months, Ollie’s shares have sunk to $82.75, producing a disappointing 9.1% loss - a stark contrast to the S&amp;P 500’s 16.9% gain. This may have investors wondering how to approach the situation.</description>
+            <guid isPermaLink="false">0d249f18-5f3c-3a44-803c-849be28a929a</guid>
+            <link>https://finance.yahoo.com/markets/stocks/articles/ollies-olli-buy-sell-hold-013637482.html?.tsrc=rss</link>
+            <pubDate>Sat, 26 Sep 2026 01:36:37 +0000</pubDate>
+            <title>Ollie's (OLLI): Buy, Sell, or Hold Post Q2 Earnings?</title>
+        </item>
+        <item>
+            <description>Despite all that volatility over the past few days, the stock market put together a decent week.  The Nasdaq Composite rose 0.5%.  The S&amp;P 500 rose 1.2% to snap a two-week streak, while the Nasdaq rallied 2.1%.</description>
+            <guid isPermaLink="false">e66c14a2-65ef-3823-bc4a-0c137ce613fb</guid>
+            <link>https://finance.yahoo.com/m/e66c14a2-65ef-3823-bc4a-0c137ce613fb/review-%26-preview%3A-snapping.html?.tsrc=rss</link>
+            <pubDate>Fri, 25 Sep 2026 23:55:00 +0000</pubDate>
+            <title>Review &amp; Preview: Snapping the Streak</title>
+        </item>
+        <item>
+            <description>Iran pitched a seven-day roadmap to end conflict with the U.S., the New York Times reported.</description>
+            <guid isPermaLink="false">d956a31e-fe41-3529-94c4-8f2553a8ef61</guid>
+            <link>https://stocktwits.com/news-articles/markets/equity/s-and-p-500-dow-nasdaq-end-week-higher-on-chipmaker-strength-easing-oil-amid-signs-of-easing-us-iran-conflict-meta-cost-msft-crwd-skhy-in-focus/cZMOFkXRBOV?.tsrc=rss</link>
+            <pubDate>Fri, 25 Sep 2026 22:51:48 +0000</pubDate>
+            <title>S&amp;P 500, Dow, Nasdaq End Week Higher On Chipmaker Strength, Easing Oil Amid Signs Of Easing US-Iran Conflict — META, COST, MSFT, CRWD, SKHY In Focus</title>
+        </item>
+        <item>
+            <description>In the latest trading session, Pacific Biosciences of California (PACB) closed at $1.62, marking a +2.53% move from the previous day.</description>
+            <guid isPermaLink="false">fb938da4-c161-3d4c-943c-9d3b71369c79</guid>
+            <link>https://finance.yahoo.com/markets/stocks/articles/pacific-biosciences-california-pacb-beats-211503793.html?.tsrc=rss</link>
+            <pubDate>Fri, 25 Sep 2026 21:15:03 +0000</pubDate>
+            <title>Pacific Biosciences of California (PACB) Beats Stock Market Upswing: What Investors Need to Know</title>
+        </item>
+        <item>
+            <description>T. Rowe Price (TROW) closed at $105.51 in the latest trading session, marking a +1.19% move from the prior day.</description>
+            <guid isPermaLink="false">f36ab58b-03c2-3712-abc4-6e53a7d74d27</guid>
+            <link>https://finance.yahoo.com/markets/stocks/articles/t-rowe-price-trow-surpasses-211503047.html?.tsrc=rss</link>
+            <pubDate>Fri, 25 Sep 2026 21:15:03 +0000</pubDate>
+            <title>T. Rowe Price (TROW) Surpasses Market Returns: Some Facts Worth Knowing</title>
+        </item>
+        <item>
+            <description>Pagaya Technologies Ltd. (PGY) concluded the recent trading session at $17.62, signifying a -5.88% move from its prior day's close.</description>
+            <guid isPermaLink="false">96673d22-fe03-3649-9d6c-795533c30b29</guid>
+            <link>https://finance.yahoo.com/markets/stocks/articles/pagaya-technologies-ltd-pgy-stock-211502241.html?.tsrc=rss</link>
+            <pubDate>Fri, 25 Sep 2026 21:15:02 +0000</pubDate>
+            <title>Pagaya Technologies Ltd. (PGY) Stock Dips While Market Gains: Key Facts</title>
+        </item>
+        <item>
+            <description>This semiconductor ETF continues to look ripe for more gains.</description>
+            <guid isPermaLink="false">02710dd2-5912-331d-8ead-8991e179b67c</guid>
+            <link>https://www.fool.com/investing/2026/09/25/if-i-could-only-add-1-etf-to-my-portfolio-this-yea/?.tsrc=rss</link>
+            <pubDate>Sat, 26 Sep 2026 01:35:00 +0000</pubDate>
+            <title>If I Could Only Add 1 ETF to My Portfolio This Year, Here's Exactly What I'd Buy</title>
+        </item>
+        <item>
+            <description>Since March 2026, Moelis has been in a holding pattern, posting a small return of 3.5% while floating around $57.25. The stock also fell short of the S&amp;P 500’s 16.9% gain during that period.</description>
+            <guid isPermaLink="false">35c7456e-88d2-3c0e-b2be-d0922d25c9ac</guid>
+            <link>https://finance.yahoo.com/markets/stocks/articles/3-reasons-sell-mc-1-011237708.html?.tsrc=rss</link>
+            <pubDate>Sat, 26 Sep 2026 01:12:37 +0000</pubDate>
+            <title>3 Reasons to Sell MC and 1 Stock to Buy Instead</title>
+        </item>
+        <item>
+            <description>Over the past six months, Matador Resources’s shares (currently trading at $52.49) have posted a disappointing 14% loss, well below the S&amp;P 500’s 16.9% gain. This might have investors contemplating their next move.</description>
+            <guid isPermaLink="false">ba019dad-da0f-34d4-b87c-90db8a17fa1c</guid>
+            <link>https://finance.yahoo.com/markets/stocks/articles/3-reasons-fans-matador-resources-010437804.html?.tsrc=rss</link>
+            <pubDate>Sat, 26 Sep 2026 01:04:37 +0000</pubDate>
+            <title>3 Reasons We’re Fans of Matador Resources (MTDR)</title>
+        </item>
+        <item>
+            <description>Champion Homes has followed the market’s trajectory closely, rising in tandem with the S&amp;P 500 over the past six months. The stock has climbed by 13.3% to $85.71 per share while the index has gained 16.9%.</description>
+            <guid isPermaLink="false">fc32d40a-0ef7-32da-b23e-bb18a171a14e</guid>
+            <link>https://finance.yahoo.com/markets/stocks/articles/3-reasons-avoid-sky-1-004037182.html?.tsrc=rss</link>
+            <pubDate>Sat, 26 Sep 2026 00:40:37 +0000</pubDate>
+            <title>3 Reasons to Avoid SKY and 1 Stock to Buy Instead</title>
+        </item>
+        <item>
+            <description>Global Industrial has had an impressive run over the past six months as its shares have beaten the S&amp;P 500 by 12.4%. The stock now trades at $41.23, marking a 29.3% gain. This was partly due to its solid quarterly results, and the run-up might have investors contemplating their next move.</description>
+            <guid isPermaLink="false">38a8d140-23f9-3dc0-a798-408a908322b9</guid>
+            <link>https://finance.yahoo.com/markets/stocks/articles/3-reasons-avoid-gic-1-003237489.html?.tsrc=rss</link>
+            <pubDate>Sat, 26 Sep 2026 00:32:37 +0000</pubDate>
+            <title>3 Reasons to Avoid GIC and 1 Stock to Buy Instead</title>
+        </item>
+        <item>
+            <description>Enact Holdings has followed the market’s trajectory closely, rising in tandem with the S&amp;P 500 over the past six months. The stock has climbed by 17.3% to $47.26 per share while the index has gained 16.9%.</description>
+            <guid isPermaLink="false">9fff3de5-81c4-320e-a71d-75de2e3817cc</guid>
+            <link>https://finance.yahoo.com/markets/stocks/articles/3-reasons-avoid-act-1-001637012.html?.tsrc=rss</link>
+            <pubDate>Sat, 26 Sep 2026 00:16:37 +0000</pubDate>
+            <title>3 Reasons to Avoid ACT and 1 Stock to Buy Instead</title>
+        </item>
+        <item>
+            <description>A $10,000 holding in Twist Bioscience (TWST) a year ago is worth about $66,600 today. The same sum in the S&amp;P 500 would be worth about $11,700. The company sells made-to-order DNA to drug makers and research labs. Its sales grow fast, but it still loses money. The price now counts on that growth lasting and the losses ending. How much has to go right for that price to hold.</description>
+            <guid isPermaLink="false">5dfefdbf-0e02-3a03-a7ae-1f50ffc0abe8</guid>
+            <link>https://www.trefis.com/articles/616634/what-needs-to-be-true-to-buy-twist-bioscience-stock-now/2026-09-25?.tsrc=rss</link>
+            <pubDate>Fri, 25 Sep 2026 22:29:37 +0000</pubDate>
+            <title>What Needs To Be True To Buy Twist Bioscience Stock Now?</title>
+        </item>
+        <item>
+            <description>Most of Bloom Energy's customers never own the power equipment they use. You probably expect the story to be AI data center demand, which is real. But demand is not what investors have missed. The shares fell 13.8% in three months as the S&amp;P 500 rose 5.0%. So who does pay Bloom Energy (BE) for its equipment.</description>
+            <guid isPermaLink="false">04bca26c-596b-3c87-9940-5699638f9a0e</guid>
+            <link>https://www.trefis.com/articles/616641/is-bloom-energy-stocks-drop-a-chance-to-buy/2026-09-25?.tsrc=rss</link>
+            <pubDate>Fri, 25 Sep 2026 21:55:06 +0000</pubDate>
+            <title>Is Bloom Energy Stock's Drop A Chance To Buy?</title>
+        </item>
+        <item>
+            <description>In the latest trading session, Dynatrace (DT) closed at $57.95, marking a -1.24% move from the previous day.</description>
+            <guid isPermaLink="false">4c22f520-3b24-3375-afd2-f11b01b24fbe</guid>
+            <link>https://finance.yahoo.com/markets/stocks/articles/dynatrace-dt-stock-slides-market-211502526.html?.tsrc=rss</link>
+            <pubDate>Fri, 25 Sep 2026 21:15:02 +0000</pubDate>
+            <title>Dynatrace (DT) Stock Slides as Market Rises: Facts to Know Before You Trade</title>
+        </item>
+        <item>
+            <description>Smaller companies naturally tend to have less cash on hand and less access to financing.  There are concerns about the potential slowdown in artificial intelligence development, but AI and tech are where the most earnings growth is.  The macroeconomic backdrop is another headwind for small-caps, DeBusschere writes, as history shows they have typically lagged behind large-caps at the beginning of interest-rate hike cycles.</description>
+            <guid isPermaLink="false">de7b83a3-09f2-3fac-9d3d-fe18e58e3cf5</guid>
+            <link>https://finance.yahoo.com/m/de7b83a3-09f2-3fac-9d3d-fe18e58e3cf5/small-cap-stocks-are.html?.tsrc=rss</link>
+            <pubDate>Sat, 26 Sep 2026 00:13:00 +0000</pubDate>
+            <title>Small-Cap Stocks Are Struggling. The Case for Going Even Smaller.</title>
+        </item>
+        <item>
+            <description>The Evercore ISI technical analyst sees semiconductor and AI infrastructure stocks as buyable after their summer decline, but says a sustained rise in the 10-year Treasury yield above 5% would challenge his bullish case.</description>
+            <guid isPermaLink="false">69831457-fd25-39ed-be69-1ae51338cd70</guid>
+            <link>https://www.thestreet.com/investing/why-richard-ross-is-buying-semiconductors-after-the-ai-pullback?.tsrc=rss</link>
+            <pubDate>Fri, 25 Sep 2026 23:23:33 +0000</pubDate>
+            <title>Why Richard Ross is buying semiconductors after the AI pullback</title>
+        </item>
+        <item>
+            <description>The battle between real estate listing giants Compass and Zillow heated up on two fronts recently.  First, a federal judge in Chicago earlier this month sent part of Zillow’s antitrust case against Compass and Illinois multi-listing provider Midwest Real Estate Data (MRED) to arbitration.  Zillow alleges that MRED and Compass teamed up to force Zillow—by cutting Zillow’s access to listings—to abandon its standards.</description>
+            <guid isPermaLink="false">217d7932-6539-3c13-a76f-cfeb403ccb32</guid>
+            <link>https://finance.yahoo.com/m/217d7932-6539-3c13-a76f-cfeb403ccb32/inside-the-war-between-real.html?.tsrc=rss</link>
+            <pubDate>Fri, 25 Sep 2026 23:06:00 +0000</pubDate>
+            <title>Inside The War Between Real Estate’s Compass and Zillow</title>
+        </item>
+        <item>
+            <description>On Sept. 25, 2026, analysts weighed in, with BNP Paribas cutting its price target to $268, keeping investor focus on near-term earnings expectations.</description>
+            <guid isPermaLink="false">e1aceb67-dd8f-378b-9627-f8a2679c3647</guid>
+            <link>https://www.fool.com/coverage/stock-market-today/2026/09/25/stock-market-today-sept-25-tesla-stock-under-pressure-despite-plans-to-ramp-semi-truck-production/?.tsrc=rss</link>
+            <pubDate>Fri, 25 Sep 2026 21:17:38 +0000</pubDate>
+            <title>Stock Market Today, Sept. 25: Tesla Stock Under Pressure Despite Plans to Ramp Semi Truck Production</title>
+        </item>
+        <language>en-US</language>
+        <lastBuildDate>Sat, 26 Sep 2026 02:37:53 +0000</lastBuildDate>
+        <link>http://finance.yahoo.com/q/h?s=^GSPC</link>
+        <title>Yahoo! Finance: ^GSPC News</title>
+    </channel>
+</rss>

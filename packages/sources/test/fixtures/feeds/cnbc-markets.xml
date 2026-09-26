@@ -1,0 +1,324 @@
+<!-- fixture: cnbc-markets
+     采集日期: 2026-09-26
+     原始 URL: https://www.cnbc.com/id/100003114/device/rss/rss.html
+     格式: RSS 2.0
+     用途: packages/sources/src/feeds/rss.test.ts（上游改版时用同一 URL 重采、diff、更新解析逻辑）
+-->
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:metadata="http://search.cnbc.com/rss/2.0/modules/siteContentMetadata" version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <atom:link rel="self" type="application/rss+xml" href="https://www.cnbc.com/id/100003114/device/rss/rss.html"/>
+    <language>en-us</language>
+    <ttl>60</ttl>
+    <title>US Top News and Analysis</title>
+    <feed_asset>
+      <id>100003114</id>
+      <type>franchise</type>
+      <subtype>section</subtype>
+      <seo>https://www.cnbc.com/us-top-news-and-analysis/</seo>
+    </feed_asset>
+    <lastBuildDate>Fri, 25 Sep 2026 22:32 GMT</lastBuildDate>
+    <pubDate>Fri, 25 Sep 2026 22:32 GMT</pubDate>
+    <link>https://www.cnbc.com/us-top-news-and-analysis/</link>
+    <description><![CDATA[CNBC is the world leader in business news and real-time financial market coverage. Find fast, actionable information.]]></description>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/trump-xi-summit-takeaways.html</link>
+      <guid isPermaLink="false">108367410</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108367410</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>Trump, Xi wrap state visit centered on spectacle over substance. Here are the top takeaways</title>
+      <description><![CDATA[President Trump and Chinese leader Xi went heavy on the ceremony and light on deliverables as they danced around Taiwan and Iran during two days in Washington.]]></description>
+      <pubDate>Fri, 25 Sep 2026 21:38:38 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/flights-storm-new-york-boston-east-coast.html</link>
+      <guid isPermaLink="false">108368010</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108368010</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>Airlines waive change fees ahead of nor&apos;easter as flight delays trickle in</title>
+      <description><![CDATA[Flight disruptions were minimal for Saturday as of Friday morning.]]></description>
+      <pubDate>Fri, 25 Sep 2026 19:59:45 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/ceo-who-posted-lake-america-sweatshirt-photos-has-left-the-company.html</link>
+      <guid isPermaLink="false">108367861</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108367861</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>CEO who posted &apos;Lake America&apos; sweatshirt photos is no longer with the company</title>
+      <description><![CDATA[Smith on Sept. 11 had posted an allegedly AI-edited photo on Facebook of her family dressed in "Lake America" sweatshirts.]]></description>
+      <pubDate>Fri, 25 Sep 2026 13:32:57 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/pentagon-anthropic-ai-risk-appeals-court.html</link>
+      <guid isPermaLink="false">108368142</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108368142</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>U.S. appeals court upholds Pentagon designation of Anthropic as supply chain risk</title>
+      <description><![CDATA[In a 2-1 decision, a federal appeals court upheld the Department of Defense's blacklisting of Anthropic.]]></description>
+      <pubDate>Fri, 25 Sep 2026 17:19:19 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/appeals-court-rules-states-can-regulate-sports-prediction-markets.html</link>
+      <guid isPermaLink="false">108368344</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108368344</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>Appeals court rules that states can regulate Kalshi’s sports prediction markets, dealing another legal blow to platforms</title>
+      <description><![CDATA[The decision is the second in less than a month by an appeals court that states have a role in regulating sports-related event contracts.]]></description>
+      <pubDate>Fri, 25 Sep 2026 23:28:42 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/monster-coca-cola-rob-gehring.html</link>
+      <guid isPermaLink="false">108368346</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108368346</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>Coca-Cola hires Rob Gehring from Monster Energy to run its North American operations</title>
+      <description><![CDATA[Coca-Cola is trying to maintain growth as consumers face higher gas and grocery prices.]]></description>
+      <pubDate>Fri, 25 Sep 2026 21:02:20 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/ai-jobs-recent-graduates-college-degrees.html</link>
+      <guid isPermaLink="false">108367686</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108367686</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>How recent grads and college students should be thinking about AI, the CV, and the job market</title>
+      <description><![CDATA[It is getting harder for college students and recent graduates to be seen in the job market as AI is used as a hiring tool and demanded by employers as a skill.]]></description>
+      <pubDate>Fri, 25 Sep 2026 20:52:09 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/24/history-shows-financial-calamities-occur-when-rates-rise-rapidly-like-this-something-always-breaks.html</link>
+      <guid isPermaLink="false">108367480</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108367480</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>History shows financial calamities occur when rates rise rapidly like this: &apos;Something always breaks&apos;</title>
+      <description><![CDATA[The 10-year Treasury note yield is spiking to levels not seen in years, and that may be a bad omen for financial markets.]]></description>
+      <pubDate>Thu, 24 Sep 2026 20:57:11 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/us-iran-trump-hormuz-.html</link>
+      <guid isPermaLink="false">108367880</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108367880</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>Iran offers to reopen Strait of Hormuz within 7 days and restart nuclear talks</title>
+      <description><![CDATA[The remarks came as the Houthis launched a new wave of missile and drone attacks at Saudi targets Friday morning.]]></description>
+      <pubDate>Fri, 25 Sep 2026 13:45:18 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/-metas-powerful-breakout-sets-up-a-unique-trading-strategy-says-mike-khouw.html</link>
+      <guid isPermaLink="false">108368237</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108368237</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title> Meta&apos;s &apos;powerful breakout&apos; sets up a unique trading strategy, says Mike Khouw</title>
+      <description><![CDATA[With a brilliant hardware funnel and an options market pricing in juicy short-term premiums, Meta looks primed for a powerful breakout into 2027. ]]></description>
+      <pubDate>Fri, 25 Sep 2026 17:57:14 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/saudi-arabia-oil-iran-war-pipeline-strait-hormuz-red-sea-houthis.html</link>
+      <guid isPermaLink="false">108368110</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108368110</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>Saudi Arabia crude oil exports hit highest level since Iran war began despite pipeline outage</title>
+      <description><![CDATA[Saudi exports are rising despite escalating attacks on its infrastructure from Iran-backed militants in Yemen and Iraq.]]></description>
+      <pubDate>Fri, 25 Sep 2026 18:46:23 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/oil-falls-as-potential-diplomatic-solution-to-iran-conflict-arises.html</link>
+      <guid isPermaLink="false">108367838</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108367838</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>U.S. crude oil falls nearly 8% for the week after Tehran and Washington hold talks at the U.N.</title>
+      <description><![CDATA[Iran has asked the U.S. to meet the same conditions laid out in the June 17 memorandum of understanding, Iran's foreign minister said.]]></description>
+      <pubDate>Fri, 25 Sep 2026 19:38:31 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/kevin-warsh-fed-interest-rates-balance-sheet.html</link>
+      <guid isPermaLink="false">108366952</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108366952</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>Warsh&apos;s regime change at the Fed pushes ahead – and meets resistance</title>
+      <description><![CDATA[Fed Chairman Kevin Warsh is driving rapid change in some areas, while his emerging policy framework suggests further rate hikes remain possible.]]></description>
+      <pubDate>Fri, 25 Sep 2026 10:30:01 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/house-midterms-toss-ups-campaign-cash-incumbents.html</link>
+      <guid isPermaLink="false">108365117</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108365117</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>See which incumbents have the biggest cash advantage in the tightest U.S. House races</title>
+      <description><![CDATA[Incumbents hold commanding cash advantages in many of the U.S. House 2026 midterm election races expected to help decide control of Congress.]]></description>
+      <pubDate>Fri, 25 Sep 2026 18:10:20 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/trump-bessent-ai-czar.html</link>
+      <guid isPermaLink="false">108368200</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108368200</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>Trump says Scott Bessent won&apos;t be AI czar</title>
+      <description><![CDATA[President Donald Trump said Treasury Secretary Bessent doesn't want to be what the president is calling the "Super Intelligence czar."]]></description>
+      <pubDate>Fri, 25 Sep 2026 17:28:32 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/what-we-want-to-see-next-week-from-one-of-jim-cramers-6-stocks-to-buy.html</link>
+      <guid isPermaLink="false">108368191</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108368191</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>What we want to see next week from one of Jim Cramer&apos;s 6 stocks to buy</title>
+      <description><![CDATA[Micron has all the leverage heading into earnings as memory supply constraints persist. But how long will this favorable cycle last?]]></description>
+      <pubDate>Fri, 25 Sep 2026 19:40:44 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/nih-cuts-delayed-a-cancer-trial-patients-lost-time-they-didnt-have.html</link>
+      <guid isPermaLink="false">108366868</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108366868</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>NIH funding cuts delayed a promising childhood brain cancer trial. Patients lost time they didn&apos;t have</title>
+      <description><![CDATA[A delayed clinical trial underscores the stakes of federal research funding cuts for children with DIPG, a deadly brain tumor with few treatment options.]]></description>
+      <pubDate>Fri, 25 Sep 2026 16:43:02 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/china-us-xi-trump-visit-panda-student-visa-.html</link>
+      <guid isPermaLink="false">108367831</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108367831</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>Atlanta is getting pandas: China&apos;s Xi revives a longtime diplomatic strategy at summit with U.S.</title>
+      <description><![CDATA[Chinese President Xi Jinping promised two giant pandas to Zoo Atlanta, reviving Beijing's decades-old charm offensive.]]></description>
+      <pubDate>Fri, 25 Sep 2026 01:12:19 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/iced-coffee-job-interview.html</link>
+      <guid isPermaLink="false">108367580</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108367580</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>The iced coffee debate reflects &apos;everything wrong with hiring right now,&apos; says career expert</title>
+      <description><![CDATA[Iced coffee is at the center of an intergenerational hiring debate taking place across the internet. A career expert says it reflects a broken job market.]]></description>
+      <pubDate>Fri, 25 Sep 2026 17:50:49 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/microsoft-copilot-ai-coding-anthropic.html</link>
+      <guid isPermaLink="false">108367275</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108367275</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>Microsoft packages business AI in single app as it tries to compete with Anthropic</title>
+      <description><![CDATA[With Microsoft still searching for a winning AI strategy, the company its updating its Copilot app to combine more capabilities.]]></description>
+      <pubDate>Fri, 25 Sep 2026 15:51:25 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/treasury-yield-buy-bonds.html</link>
+      <guid isPermaLink="false">108367689</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108367689</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>10-year Treasury yield hit a 19-year high—and some investors see opportunity to buy bonds</title>
+      <description><![CDATA[The 10-year Treasury yield hit its highest level since 2007. Here’s what higher yields can mean for bond investors and borrowers.]]></description>
+      <pubDate>Fri, 25 Sep 2026 16:40:09 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/study-estate-planning-heirs-legal-battles.html</link>
+      <guid isPermaLink="false">108366856</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108366856</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>New study reveals the estate-planning choices that are likely to pit heirs against each other</title>
+      <description><![CDATA[The study identified contested trust disputes by examining thousands of civil filings that were scheduled to come before San Francisco Superior Court.]]></description>
+      <pubDate>Fri, 25 Sep 2026 15:01:50 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/top-10-things-to-watch-in-the-stock-market-friday.html</link>
+      <guid isPermaLink="false">108368019</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108368019</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>Top 10 things to watch in the stock market Friday</title>
+      <description><![CDATA[Stocks are heading for a higher open, and the S&P 500 and Nasdaq are poised to post winning weeks.]]></description>
+      <pubDate>Fri, 25 Sep 2026 13:09:58 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/the-tech-download-trump-xi-ai-talks.html</link>
+      <guid isPermaLink="false">108367951</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108367951</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>Trump and Xi dined with AI&apos;s biggest names. Here&apos;s what we know about tech talks so far</title>
+      <description><![CDATA[AI was a key topic during Trump-Xi talks on Thursday, after safety concerns shot to the top of the global geopolitical agenda in recent weeks.]]></description>
+      <pubDate>Fri, 25 Sep 2026 14:43:23 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/china-exports-surplus-trade-tariffs-.html</link>
+      <guid isPermaLink="false">108367927</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108367927</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>China saw &apos;surprise&apos; jump in U.S. orders ahead of Trump-Xi summit, private survey shows</title>
+      <description><![CDATA[A private survey shows a rebound in China's exports to the U.S. as companies position for continued stability between the world's two largest economies.]]></description>
+      <pubDate>Fri, 25 Sep 2026 10:25:01 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/novo-eli-lilly-obesity-drugs.html</link>
+      <guid isPermaLink="false">108367453</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108367453</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>Novo is betting on its next chapter as Eli Lilly gains more ground in GLP-1s</title>
+      <description><![CDATA[As Novo works to turn itself around, some analysts say Lilly has advantages that could help it maintain its position at the top of the obesity drug market. ]]></description>
+      <pubDate>Fri, 25 Sep 2026 12:51:39 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/24/meta-mark-zuckerberg-muse-charm-openai-agent.html</link>
+      <guid isPermaLink="false">108367513</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108367513</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>Meta gets to consumer AI device market before OpenAI, but Zuckerberg&apos;s strategy remains unproven</title>
+      <description><![CDATA[Meta CEO Mark Zuckerberg's new Muse Charm device is intended to put his company ahead of rivals like OpenAI and Google in AI agents and consumer hardware.]]></description>
+      <pubDate>Thu, 24 Sep 2026 23:07:54 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/russia-ukraine-war-nato-denmark-putin.html</link>
+      <guid isPermaLink="false">108367908</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108367908</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>Russia could attack a NATO country within months, Danish intelligence warns</title>
+      <description><![CDATA[The new threat assessment joins a growing chorus of Russia warnings from top European security officials and lawmakers in recent days.]]></description>
+      <pubDate>Fri, 25 Sep 2026 13:00:55 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/25/treasury-yields-bonds-debt.html</link>
+      <guid isPermaLink="false">108367922</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108367922</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>10-year Treasury yield is little changed to end a volatile week</title>
+      <description><![CDATA[The 10-year Treasury note yield was relatively unchanged on Friday after recent selling pressure intensified.]]></description>
+      <pubDate>Fri, 25 Sep 2026 20:17:09 GMT</pubDate>
+    </item>
+    <item>
+      <link>https://www.cnbc.com/2026/09/24/30-year-fixed-mortgage-rate-spikes-thursday-to-7point45percent.html</link>
+      <guid isPermaLink="false">108367776</guid>
+      <metadata:type>cnbcnewsstory</metadata:type>
+      <metadata:id>108367776</metadata:id>
+      <metadata:sponsored>false</metadata:sponsored>
+      <title>30-year fixed mortgage rate jumps sharply Thursday to 7.45%</title>
+      <description><![CDATA[The 30-year fixed rate surged to 7.45%, the highest level since April 2024 as bonds sold off and yields rose.]]></description>
+      <pubDate>Thu, 24 Sep 2026 23:08:16 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

@@ -6,6 +6,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./fx": "./src/fx/index.ts",
+    "./news": "./src/news/index.ts",
     "./qdii": "./src/qdii/index.ts",
     "./usd": "./src/usd/index.ts",
     "./etf": "./src/etf/index.ts"

@@ -1,0 +1,7 @@
+<!-- fixture: rate-limited
+     采集日期: 2026-09-26
+     原始 URL: https://feeds.finance.yahoo.com/rss/2.0/headline?s=%5EGSPC&region=US&lang=en-US
+     说明: Yahoo 首次请求返回的真实 429 响应体（19 字节，Content-Type 为文本）。
+           这种响应必须抛 ParseError 并触发退避，绝不能当成空 feed 静默吞掉。
+-->
+Too Many Requests

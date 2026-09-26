@@ -1,0 +1,298 @@
+<!-- fixture: project-syndicate
+     采集日期: 2026-09-26
+     原始 URL: https://www.project-syndicate.org/rss
+     格式: RSS 2.0
+     用途: packages/sources/src/feeds/rss.test.ts（上游改版时用同一 URL 重采、diff、更新解析逻辑）
+-->
+﻿<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:dcterms="http://purl.org/dc/terms/" version="2.0">
+  <channel>
+    <description><![CDATA[Project Syndicate - The World’s Opinion Page]]></description>
+    <link>https://www.project-syndicate.org/rss</link>
+    <lastBuildDate>Sat, 26 Sep 2026 02:20:15 GMT</lastBuildDate>
+    <title>Project Syndicate</title>
+    <copyright>Copyright: Project Syndicate, 2026.
+www.project-syndicate.org</copyright>
+    <language>en</language>
+    <atom:link rel="self" href="https://www.project-syndicate.org/rss" type="application/rss+xml" />
+    <atom:link rel="first" href="https://www.project-syndicate.org/rss" />
+    <atom:link rel="next" href="https://www.project-syndicate.org/rss?page=2" />
+    <atom:link rel="last" href="https://www.project-syndicate.org/rss?page=1267" />
+    <item>
+      <description><![CDATA[<p>The deepening political dysfunction plaguing the US can be traced not to wealth inequality, as some argue, but to the fact that different groups of voters believe different facts. A political strategy that takes this into account might eventually lead to wealth redistribution, but it must begin with improved critical-thinking skills.</p>]]></description>
+      <link>https://www.project-syndicate.org/commentary/inequality-is-not-the-root-cause-of-us-political-dysfunction-by-jeffrey-frankel-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>Oligarchy Is a Symptom, Not a Cause</title>
+      <comments>https://www.project-syndicate.org/commentary/inequality-is-not-the-root-cause-of-us-political-dysfunction-by-jeffrey-frankel-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>0</slash:comments>
+      <dc:creator>Jeffrey Frankel</dc:creator>
+      <pubDate>Fri, 25 Sep 2026 15:36:08 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/inequality-is-not-the-root-cause-of-us-political-dysfunction-by-jeffrey-frankel-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/aa5849a0d2ae4e2fe19d68784ee0b902.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[Yasuyoshi Chiba/AFP via Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/aa5849a0d2ae4e2fe19d68784ee0b902.16-9-xlarge.1.jpg" length="608863" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[<p>Right-wing populists have turned hypocrisy into a successful electoral strategy. But those voting for nativism in Europe and the United States should be careful what they wish for: They may end up expelling their own family members, if not their own political leaders.</p>]]></description>
+      <link>https://www.project-syndicate.org/commentary/immigrants-leading-anti-immigrant-right-by-slawomir-sierakowski-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>The Immigrants Leading the Anti-Immigrant Far Right</title>
+      <comments>https://www.project-syndicate.org/commentary/immigrants-leading-anti-immigrant-right-by-slawomir-sierakowski-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>0</slash:comments>
+      <dc:creator>Sławomir Sierakowski</dc:creator>
+      <pubDate>Fri, 25 Sep 2026 14:21:53 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/immigrants-leading-anti-immigrant-right-by-slawomir-sierakowski-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/d55adb03744099ff01a88372161b210c.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[Thomas Lohnes/Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/d55adb03744099ff01a88372161b210c.16-9-xlarge.1.jpg" length="582557" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[<p>As the two world leaders in AI development and adoption, the United States and China are each operating under assumptions that justify ever-faster progress, regardless of the risks. The current thinking is not unlike the rationale once given for Stalinist brutality in the name of rapid modernization.</p>]]></description>
+      <link>https://www.project-syndicate.org/commentary/us-china-both-betting-everything-on-ai-regardless-of-risks-by-harold-james-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>The Great AI Gamble</title>
+      <comments>https://www.project-syndicate.org/commentary/us-china-both-betting-everything-on-ai-regardless-of-risks-by-harold-james-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>0</slash:comments>
+      <dc:creator>Harold James</dc:creator>
+      <pubDate>Fri, 25 Sep 2026 12:47:10 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/us-china-both-betting-everything-on-ai-regardless-of-risks-by-harold-james-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/3cdf2c2b70b860d0cf08cfbf70fa428c.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[Brendan Smialowski/AFP via Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/3cdf2c2b70b860d0cf08cfbf70fa428c.16-9-xlarge.1.jpg" length="527654" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[<p>As European leaders hobnob with their counterparts at the 81st session of the United Nations General Assembly, they must think carefully about how to navigate a fast-changing multilateral landscape. The old world belonged to rule-makers and institution-builders, but the current one favors those who can improvise.</p>]]></description>
+      <link>https://www.project-syndicate.org/commentary/unorder-means-new-forms-of-multilateralism-for-eu-and-others-by-mark-leonard-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>The Un-Ordered UN Order</title>
+      <comments>https://www.project-syndicate.org/commentary/unorder-means-new-forms-of-multilateralism-for-eu-and-others-by-mark-leonard-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>1</slash:comments>
+      <dc:creator>Mark Leonard</dc:creator>
+      <pubDate>Fri, 25 Sep 2026 11:29:35 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/unorder-means-new-forms-of-multilateralism-for-eu-and-others-by-mark-leonard-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/02c96af5627d51494a81928866b9e057.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[KB Mpofu/Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/02c96af5627d51494a81928866b9e057.16-9-xlarge.1.jpg" length="662012" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[<p>As people increasingly rely on AI chatbots for news, the already tenuous bargain between publishers and tech firms—the former invested in journalism that the latter helped audiences discover—is no longer workable. UNESCO’s proposed Guidance on Fair Compensation for News could help create a new value-exchange model.</p>]]></description>
+      <link>https://www.project-syndicate.org/commentary/ai-needs-trusted-journalism-to-thrive-by-stig-orskov-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>AI Needs Trusted Journalism</title>
+      <comments>https://www.project-syndicate.org/commentary/ai-needs-trusted-journalism-to-thrive-by-stig-orskov-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>0</slash:comments>
+      <dc:creator>Stig Ørskov</dc:creator>
+      <pubDate>Fri, 25 Sep 2026 10:25:19 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/ai-needs-trusted-journalism-to-thrive-by-stig-orskov-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/cc51582af13230516016f682566398df.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[Sean Gallup/Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/cc51582af13230516016f682566398df.16-9-xlarge.1.jpg" length="495422" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[AI could very well end democracy, if not humanity, yet efforts to slow its development may fail as companies and countries race to stay ahead. Preventing such a future will require international coordination and taxing the extreme wealth that could put unprecedented power in the hands of a tiny elite.]]></description>
+      <link>https://www.project-syndicate.org/commentary/real-ai-apocalypse-might-not-be-human-extinction-but-orwellian-authoritarianism-by-kaushik-basu-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>How to Stop the AI-pocalypse</title>
+      <comments>https://www.project-syndicate.org/commentary/real-ai-apocalypse-might-not-be-human-extinction-but-orwellian-authoritarianism-by-kaushik-basu-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>0</slash:comments>
+      <dc:creator>Kaushik Basu</dc:creator>
+      <pubDate>Fri, 25 Sep 2026 09:24:00 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/real-ai-apocalypse-might-not-be-human-extinction-but-orwellian-authoritarianism-by-kaushik-basu-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/2d21aa7af945d154058f628dc297be5c.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[Bryan Dozier/Middle East ImagesAFP via Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/2d21aa7af945d154058f628dc297be5c.16-9-xlarge.1.jpg" length="780128" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[There is no shortage of people and ideas to blame for liberalism’s decline, but searching for a single culprit is probably futile. Two new books by Gordon Brown and Daron Acemoglu take up the harder question of how to rebuild the institutions that once gave people a sense of community and power over their lives.]]></description>
+      <link>https://www.project-syndicate.org/onpoint/acemoglu-and-brown-offer-different-prescriptions-for-reversing-liberal-decline-by-gene-frieda-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>What Killed Liberalism?</title>
+      <comments>https://www.project-syndicate.org/onpoint/acemoglu-and-brown-offer-different-prescriptions-for-reversing-liberal-decline-by-gene-frieda-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>4</slash:comments>
+      <dc:creator>Gene Frieda</dc:creator>
+      <pubDate>Fri, 25 Sep 2026 08:42:19 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/onpoint/acemoglu-and-brown-offer-different-prescriptions-for-reversing-liberal-decline-by-gene-frieda-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/26e9d7743c7e7f2387ae2724d89550d4.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[Geography Photos/Universal Images Group via Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/26e9d7743c7e7f2387ae2724d89550d4.16-9-xlarge.1.jpg" length="1184893" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[<p>Until this month, a far-right, openly ethnonationalist party had never come so close to winning an absolute majority in an election in the Federal Republic of Germany. Now that it has, and with similarly pro-Russian forces on the rise in France, all Europeans must prepare for the worst.</p>]]></description>
+      <link>https://www.project-syndicate.org/commentary/german-question-afd-far-right-nightmare-scenario-for-europe-by-joschka-fischer-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>The Return of the German Question</title>
+      <comments>https://www.project-syndicate.org/commentary/german-question-afd-far-right-nightmare-scenario-for-europe-by-joschka-fischer-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>0</slash:comments>
+      <dc:creator>Joschka Fischer</dc:creator>
+      <pubDate>Thu, 24 Sep 2026 16:23:51 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/german-question-afd-far-right-nightmare-scenario-for-europe-by-joschka-fischer-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/914b4ed20c5cda6370492f2f16e51a1a.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[Jens Schlueter/AFP via Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/914b4ed20c5cda6370492f2f16e51a1a.16-9-xlarge.1.jpg" length="517684" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[<p>With the world facing the largest number of armed conflicts since 1946, the Trump administration’s continuing assault on the United Nations has prevented the organization from fulfilling its peacekeeping duties. A recent report by UN Secretary-General António Guterres shows how the organization has few, if any, levers to fight back.</p>]]></description>
+      <link>https://www.project-syndicate.org/commentary/un-peacekeeping-crisis-africa-cannot-counter-trump-administration-by-adekeye-adebajo-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>UN Peacekeeping in Crisis</title>
+      <comments>https://www.project-syndicate.org/commentary/un-peacekeeping-crisis-africa-cannot-counter-trump-administration-by-adekeye-adebajo-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>0</slash:comments>
+      <dc:creator>Adekeye Adebajo</dc:creator>
+      <pubDate>Thu, 24 Sep 2026 15:01:21 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/un-peacekeeping-crisis-africa-cannot-counter-trump-administration-by-adekeye-adebajo-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/c527305fda1a46809e5bcee7d5e5106e.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[Silvia Casadei/Middle East Images/AFP via Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/c527305fda1a46809e5bcee7d5e5106e.16-9-xlarge.1.jpg" length="1065682" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[<p>An obviously amateurish brief published by the US Census Bureau should raise alarms for all businesses, investors, and others who rely on official government statistics. By recklessly undermining trust in what should be an apolitical public service, Donald Trump is jeopardizing a critical pillar of American prosperity.</p>]]></description>
+      <link>https://www.project-syndicate.org/commentary/trump-corrupting-official-data-reporting-to-push-election-lie-by-michael-r-strain-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>Lies, Election Lies, and Trump’s Statisticians</title>
+      <comments>https://www.project-syndicate.org/commentary/trump-corrupting-official-data-reporting-to-push-election-lie-by-michael-r-strain-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>0</slash:comments>
+      <dc:creator>Michael R. Strain</dc:creator>
+      <pubDate>Thu, 24 Sep 2026 13:08:25 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/trump-corrupting-official-data-reporting-to-push-election-lie-by-michael-r-strain-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/c9e0b509c53fbb30b4923fa2015db2a1.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[Andrew Harnik/Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/c9e0b509c53fbb30b4923fa2015db2a1.16-9-xlarge.1.jpg" length="539894" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[<p>Over the past decade, many Latin American and Caribbean countries internalized IMF-style policy discipline without having active IMF programs, producing fragile stagnation—and an opening for the Fund to swoop back in. This could end up helping the United States reassert its dominance over the region.</p>]]></description>
+      <link>https://www.project-syndicate.org/commentary/imf-new-era-in-latin-america-financial-dependence-geopolitical-alignment-by-martin-abeles-1-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>The Return of the IMF to Latin America</title>
+      <comments>https://www.project-syndicate.org/commentary/imf-new-era-in-latin-america-financial-dependence-geopolitical-alignment-by-martin-abeles-1-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>0</slash:comments>
+      <dc:creator>Martín Abeles</dc:creator>
+      <pubDate>Thu, 24 Sep 2026 12:05:02 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/imf-new-era-in-latin-america-financial-dependence-geopolitical-alignment-by-martin-abeles-1-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/e602852c0eacd4a8ac9ff074d2c2342d.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[Luis Robayo/AFP via Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/e602852c0eacd4a8ac9ff074d2c2342d.16-9-xlarge.1.jpg" length="884642" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[<p>When it comes to AI, it is difficult to know what to believe. Are the CEOs, researchers, and investors who tout the technology’s seemingly unlimited capabilities more credible, because they work directly with it, or less credible, because they stand to profit handsomely from further investment? While misplaced optimism could fuel a financial bubble, we have seen in recent months that underestimating the risks posed by AI could also carry other, even existential, costs.</p>]]></description>
+      <link>https://www.project-syndicate.org/onpoint/the-ai-plot-thickens?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>The AI Plot Thickens</title>
+      <comments>https://www.project-syndicate.org/onpoint/the-ai-plot-thickens?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>0</slash:comments>
+      <dc:creator>PS Commentators</dc:creator>
+      <pubDate>Thu, 24 Sep 2026 09:45:46 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/onpoint/the-ai-plot-thickens</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/f87d59659b48a73c435b9f88d54e7d38.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[Photo by Dan Kitwood/Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/f87d59659b48a73c435b9f88d54e7d38.16-9-xlarge.1.jpg" length="4053189" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[]]></description>
+      <link>https://www.project-syndicate.org/commentary/the-ai-plot-thickens-doc-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>The Big Picture</title>
+      <comments>https://www.project-syndicate.org/commentary/the-ai-plot-thickens-doc-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>0</slash:comments>
+      <dc:creator>PS editors</dc:creator>
+      <pubDate>Thu, 24 Sep 2026 09:45:23 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/the-ai-plot-thickens-doc-2026-09</guid>
+    </item>
+    <item>
+      <description><![CDATA[<p>While AI is beginning to affect some entry-level jobs, its effects remain limited and uneven, and there is little evidence of economy-wide displacement. Nonetheless, from updating education and training to strengthening labor-market institutions, policies are needed to support workers amid AI-induced disruption.</p>]]></description>
+      <link>https://www.project-syndicate.org/commentary/will-ai-cause-youth-unemployment-to-surge-in-asia-by-lee-jong-wha-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>Will AI Take Asian Young People’s Jobs?</title>
+      <comments>https://www.project-syndicate.org/commentary/will-ai-cause-youth-unemployment-to-surge-in-asia-by-lee-jong-wha-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>0</slash:comments>
+      <dc:creator>Lee Jong-Wha</dc:creator>
+      <pubDate>Thu, 24 Sep 2026 08:41:39 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/will-ai-cause-youth-unemployment-to-surge-in-asia-by-lee-jong-wha-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/dccc5e31deb527fe6a6395cb786475aa.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[R. Satish Babu/AFP via Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/dccc5e31deb527fe6a6395cb786475aa.16-9-xlarge.1.jpg" length="658389" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[<p>Environmental conservation is among the most important, universally shared imperatives the world faces, and market access is one of the few carrots available in international politics. By linking tariffs to deforestation, the EU and others can create trade agreements that deliver more conservation and more gains from trade.</p>]]></description>
+      <link>https://www.project-syndicate.org/commentary/trade-agreements-should-include-tariffs-triggered-by-deforestation-by-bard-harstad-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>How Trade Deals Can Save Nature</title>
+      <comments>https://www.project-syndicate.org/commentary/trade-agreements-should-include-tariffs-triggered-by-deforestation-by-bard-harstad-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>0</slash:comments>
+      <dc:creator>Bård Harstad</dc:creator>
+      <pubDate>Wed, 23 Sep 2026 15:45:00 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/trade-agreements-should-include-tariffs-triggered-by-deforestation-by-bard-harstad-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/2c6bb50f627710a5c4e1cf22ef5403a0.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[Rafael Vilela/The Washington Post via Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/2c6bb50f627710a5c4e1cf22ef5403a0.16-9-xlarge.1.jpg" length="1235050" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[<p>Instead of choosing between a confrontation with China and business as usual, European policymakers should examine the benefits and costs of trade sector by sector to identify where mutually beneficial arrangements remain possible. Economic modeling shows that pragmatism beats more extreme options in most cases.</p>]]></description>
+      <link>https://www.project-syndicate.org/commentary/europe-china-trade-third-way-by-pinelopi-koujianou-goldberg-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>Europe’s Third Way on China</title>
+      <comments>https://www.project-syndicate.org/commentary/europe-china-trade-third-way-by-pinelopi-koujianou-goldberg-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>0</slash:comments>
+      <dc:creator>Pinelopi Koujianou Goldberg</dc:creator>
+      <pubDate>Wed, 23 Sep 2026 14:51:06 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/europe-china-trade-third-way-by-pinelopi-koujianou-goldberg-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/2de6f9860fa82a6a1591e3e68d447745.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[Jens Schlueter/AFP via Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/2de6f9860fa82a6a1591e3e68d447745.16-9-xlarge.1.jpg" length="1128393" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[<p>Recent developments in the Balkans ought to be a wake-up call for Europe, given the potential for nationalist provocations in one country to spill over within the region. Multiple elections coming next month raise the risk of a dangerous descent into political instability.</p>]]></description>
+      <link>https://www.project-syndicate.org/commentary/balkans-2026-elections-amid-rising-nationalist-tensions-are-worrisome-by-carl-bildt-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>Alarm Bells in the Balkans</title>
+      <comments>https://www.project-syndicate.org/commentary/balkans-2026-elections-amid-rising-nationalist-tensions-are-worrisome-by-carl-bildt-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>0</slash:comments>
+      <dc:creator>Carl Bildt</dc:creator>
+      <pubDate>Wed, 23 Sep 2026 13:19:12 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/balkans-2026-elections-amid-rising-nationalist-tensions-are-worrisome-by-carl-bildt-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/d5f3963ee54ce81dd35be119c2f2af7d.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[Armend Nimani/AFP via Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/d5f3963ee54ce81dd35be119c2f2af7d.16-9-xlarge.1.jpg" length="976609" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[<p>Since his return to the White House, Donald Trump has turned his back on the free-market principles that the United States spent decades championing. In doing so, he threatens to dismantle the economic order that helped produce unprecedented growth in global output and trade.</p>]]></description>
+      <link>https://www.project-syndicate.org/commentary/us-government-propping-up-weak-companies-is-bad-economics-by-anne-o-krueger-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>Trump’s 21st-Century Mercantilism</title>
+      <comments>https://www.project-syndicate.org/commentary/us-government-propping-up-weak-companies-is-bad-economics-by-anne-o-krueger-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>0</slash:comments>
+      <dc:creator>Anne O. Krueger</dc:creator>
+      <pubDate>Wed, 23 Sep 2026 11:03:48 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/us-government-propping-up-weak-companies-is-bad-economics-by-anne-o-krueger-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/fff6eb3043ab1116eef7949fd94d9d76.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[Saul Loeb/AFP via Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/fff6eb3043ab1116eef7949fd94d9d76.16-9-xlarge.1.jpg" length="811882" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[<p>As with previous technological revolutions, it is natural to focus on AI's net effects: Will it create more than it destroys? But unlike previous eras of creative destruction, the real question this time is, “Create more of what?”</p>]]></description>
+      <link>https://www.project-syndicate.org/commentary/ai-productivity-debate-asks-the-wrong-question-by-yanis-varoufakis-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>The AI Productivity Delusion</title>
+      <comments>https://www.project-syndicate.org/commentary/ai-productivity-debate-asks-the-wrong-question-by-yanis-varoufakis-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>6</slash:comments>
+      <dc:creator>Yanis Varoufakis</dc:creator>
+      <pubDate>Wed, 23 Sep 2026 10:12:06 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/ai-productivity-debate-asks-the-wrong-question-by-yanis-varoufakis-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/fcfff09794d6c8c0c6e7e329593592be.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[Alex Wong/Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/fcfff09794d6c8c0c6e7e329593592be.16-9-xlarge.1.jpg" length="627662" type="image/jpeg" />
+    </item>
+    <item>
+      <description><![CDATA[<p>Across Africa, past success stories have led policymakers to believe that developing economies can usually bypass the arduous, expensive stages of infrastructure development by adopting technologies built elsewhere. But this approach deserves more scrutiny, especially when applied to imported AI systems.</p>]]></description>
+      <link>https://www.project-syndicate.org/commentary/limits-of-leapfrogging-in-ai-age-by-mark-alexandre-doumba-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en</link>
+      <title>Technological Leapfrogging in the AI Age</title>
+      <comments>https://www.project-syndicate.org/commentary/limits-of-leapfrogging-in-ai-age-by-mark-alexandre-doumba-2026-09?utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=main&amp;utm_content=en#comments</comments>
+      <slash:comments>0</slash:comments>
+      <dc:creator>Mark-Alexandre Doumba</dc:creator>
+      <pubDate>Wed, 23 Sep 2026 08:42:40 GMT</pubDate>
+      <guid isPermaLink="true">https://www.project-syndicate.org/commentary/limits-of-leapfrogging-in-ai-age-by-mark-alexandre-doumba-2026-09</guid>
+      <media:content url="https://webapi.project-syndicate.org/library/5c88f7bcd26e0f3bdba6fb06b871e1e8.16-9-xlarge.1.jpg" height="540" width="960" medium="image" type="image/jpeg">
+        <media:copyright><![CDATA[Li Yahui/Xinhua via Getty Images]]></media:copyright>
+      </media:content>
+      <enclosure url="https://webapi.project-syndicate.org/library/5c88f7bcd26e0f3bdba6fb06b871e1e8.16-9-xlarge.1.jpg" length="740018" type="image/jpeg" />
+    </item>
+  </channel>
+</rss>

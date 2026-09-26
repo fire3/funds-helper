@@ -1,0 +1,178 @@
+<!-- fixture: foreign-affairs
+     采集日期: 2026-09-26
+     原始 URL: https://www.foreignaffairs.com/rss.xml
+     格式: RSS 2.0
+     用途: packages/sources/src/feeds/rss.test.ts（上游改版时用同一 URL 重采、diff、更新解析逻辑）
+-->
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xml:base="https://www.foreignaffairs.com/">
+  <channel>
+    <title>FA RSS</title>
+    <link>https://www.foreignaffairs.com/</link>
+    <description/>
+    <language>en</language>
+    <atom:link href="https://www.foreignaffairs.com/rss.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+  <title>How Iran Changed War</title>
+  <link>https://www.foreignaffairs.com/iran/how-iran-changed-war-united-states-michael-horowitz</link>
+  <description>The lessons of Tehran’s use of precise mass.</description>
+  <pubDate>Fri, 25 Sep 2026 00:00:00 -0400</pubDate>
+    <dc:creator>Michael C. Horowitz</dc:creator>
+    <guid isPermaLink="false">1135534</guid>
+    </item>
+<item>
+  <title>The Coming Taiwan Crisis</title>
+  <link>https://www.foreignaffairs.com/taiwan/coming-taiwan-crisis-china-jonathan-czin</link>
+  <description>Use today’s calm to prepare for the next perfect storm.</description>
+  <pubDate>Fri, 25 Sep 2026 00:00:00 -0400</pubDate>
+    <dc:creator>Jonathan A. Czin</dc:creator>
+    <guid isPermaLink="false">1135533</guid>
+    </item>
+<item>
+  <title>The Price of Arctic Ambition</title>
+  <link>https://www.foreignaffairs.com/arctic-antarctic/price-arctic-ambition-greenland-iris-ferguson</link>
+  <description>The Greenland deal proves self-reliance is not an option.</description>
+  <pubDate>Thu, 24 Sep 2026 00:00:01 -0400</pubDate>
+    <dc:creator>Iris Ferguson</dc:creator>
+    <guid isPermaLink="false">1135527</guid>
+    </item>
+<item>
+  <title>How Putin Escalates</title>
+  <link>https://www.foreignaffairs.com/russia/how-putin-escalates-ukraine-war-andrei-kolesnikov</link>
+  <description>A new stage in Russia's confrontation with Ukraine—and the West.</description>
+  <pubDate>Thu, 24 Sep 2026 00:00:00 -0400</pubDate>
+    <dc:creator>Andrei Kolesnikov</dc:creator>
+    <guid isPermaLink="false">1135531</guid>
+    </item>
+<item>
+  <title>The Stalemate With Iran Is Not Sustainable</title>
+  <link>https://www.foreignaffairs.com/iran/stalemate-iran-not-sustainable</link>
+  <description>A diplomatic strategy to end the war.</description>
+  <pubDate>Wed, 23 Sep 2026 00:00:00 -0400</pubDate>
+    <dc:creator>Richard Haass, Carolyn Kissane</dc:creator>
+    <guid isPermaLink="false">1135530</guid>
+    </item>
+<item>
+  <title>Europe Can’t Get Out of Its Own Way</title>
+  <link>https://www.foreignaffairs.com/europe/europe-cant-get-out-its-own-way-andrew-mcAfee</link>
+  <description>The real barriers to competitiveness and innovation are still in place.</description>
+  <pubDate>Wed, 23 Sep 2026 00:00:00 -0400</pubDate>
+    <dc:creator>Andrew McAfee</dc:creator>
+    <guid isPermaLink="false">1135526</guid>
+    </item>
+<item>
+  <title>Syria’s Imperiled Transition</title>
+  <link>https://www.foreignaffairs.com/syria/syrias-imperiled-transition</link>
+  <description>How shock therapy threatens the post-Assad peace.</description>
+  <pubDate>Tue, 22 Sep 2026 00:00:00 -0400</pubDate>
+    <dc:creator>Sam Heller</dc:creator>
+    <guid isPermaLink="false">1135524</guid>
+    </item>
+<item>
+  <title>The Trouble With the Nuclear-AI Analogy</title>
+  <link>https://www.foreignaffairs.com/united-states/trouble-nuclear-ai-analogy</link>
+  <description>In humanity’s quest to constrain the dangers from fast-advancing artificial intelligence, many have looked to the most revolutionary technology that preceded it: nuclear weapons. SpaceX CEO Elon Musk has called artificial intelligence “far more dangerous than nukes.” Anthropic CEO Dario Amodei, who assigns The Making of the Atomic Bomb to employees and has likened himself to the Manhattan Project scientist Leo Szilard, describes the most powerful AI models as “weaponizable nuclear materials.” When asked how a technology such as AI can be regulated, OpenAI CEO Sam Altman often references the world’s nuclear materials watchdog, the International Atomic Energy Agency. Even the director of the CIA, John Ratcliffe, has made the same comparison.</description>
+  <pubDate>Tue, 22 Sep 2026 00:00:00 -0400</pubDate>
+    <dc:creator>Christopher David LaRoche, Ankit Panda</dc:creator>
+    <guid isPermaLink="false">1135525</guid>
+    </item>
+<item>
+  <title>China Still Has What America Needs</title>
+  <link>https://www.foreignaffairs.com/china/china-still-has-what-america-needs-adam-posen</link>
+  <description>The Trump-Xi summit gives Washington a chance to buy time.</description>
+  <pubDate>Mon, 21 Sep 2026 00:00:00 -0400</pubDate>
+    <dc:creator>Adam S. Posen</dc:creator>
+    <guid isPermaLink="false">1135522</guid>
+    </item>
+<item>
+  <title>Shrink the UN</title>
+  <link>https://www.foreignaffairs.com/united-states/united-nations-general-assembly-secretary-general</link>
+  <description>The next secretary-general must get back to basics</description>
+  <pubDate>Mon, 21 Sep 2026 00:00:00 -0400</pubDate>
+    <dc:creator>Richard Gowan</dc:creator>
+    <guid isPermaLink="false">1135523</guid>
+    </item>
+<item>
+  <title>America’s Attrition Trap</title>
+  <link>https://www.foreignaffairs.com/united-states/americas-attrition-trap</link>
+  <description>The U.S. military needs to build up its endurance.</description>
+  <pubDate>Fri, 18 Sep 2026 00:00:00 -0400</pubDate>
+    <dc:creator>Nadia Schadlow</dc:creator>
+    <guid isPermaLink="false">1135519</guid>
+    </item>
+<item>
+  <title>Ebola Is Only the Beginning</title>
+  <link>https://www.foreignaffairs.com/democratic-republic-congo/ebola-only-beginning</link>
+  <description>Congo’s warning for the global health system.</description>
+  <pubDate>Fri, 18 Sep 2026 00:00:00 -0400</pubDate>
+    <dc:creator>Stephanie Psaki </dc:creator>
+    <guid isPermaLink="false">1135520</guid>
+    </item>
+<item>
+  <title>Cuba’s Point of No Return</title>
+  <link>https://www.foreignaffairs.com/cuba/cubas-point-no-return</link>
+  <description>The country is collapsing even as its regime survives.</description>
+  <pubDate>Thu, 17 Sep 2026 00:00:00 -0400</pubDate>
+    <dc:creator>Will Freeman</dc:creator>
+    <guid isPermaLink="false">1135515</guid>
+    </item>
+<item>
+  <title>China’s Purges Are Working as Designed</title>
+  <link>https://www.foreignaffairs.com/china/chinas-purges-are-working-designed</link>
+  <description>A unique discipline system has helped the party endure.</description>
+  <pubDate>Thu, 17 Sep 2026 00:00:00 -0400</pubDate>
+    <dc:creator>Andrew Mertha</dc:creator>
+    <guid isPermaLink="false">1135516</guid>
+    </item>
+<item>
+  <title>Trump and Xi Can’t Stop the U.S.-China Spiral</title>
+  <link>https://www.foreignaffairs.com/united-states/trump-and-xi-cant-stop-us-china-spiral-orville-schell</link>
+  <description>The delusions of summitry and the limits of personalist diplomacy.</description>
+  <pubDate>Wed, 16 Sep 2026 00:00:00 -0400</pubDate>
+    <dc:creator>Orville Schell</dc:creator>
+    <guid isPermaLink="false">1135514</guid>
+    </item>
+<item>
+  <title>The New Chinese Way of Cyberwar</title>
+  <link>https://www.foreignaffairs.com/china/new-chinese-way-cyberwar-ai</link>
+  <description>How Beijing will weaponize digital chokepoints.</description>
+  <pubDate>Tue, 15 Sep 2026 00:00:00 -0400</pubDate>
+    <dc:creator>Anne Neuberger</dc:creator>
+    <guid isPermaLink="false">1135510</guid>
+    </item>
+<item>
+  <title>The Crumbling Defense of Europe</title>
+  <link>https://www.foreignaffairs.com/united-states/crumbling-defense-europe</link>
+  <description>Trump has already undermined NATO and allied deterrence.</description>
+  <pubDate>Tue, 15 Sep 2026 00:00:00 -0400</pubDate>
+    <dc:creator>Franklin C. Miller, Eric Edelman, Walter B. Slocombe</dc:creator>
+    <guid isPermaLink="false">1135512</guid>
+    </item>
+<item>
+  <title>Putin Will Not Yield</title>
+  <link>https://www.foreignaffairs.com/united-states/putin-will-not-yield</link>
+  <description>Pressure and pain won’t sap Russia’s resolve in Ukraine.</description>
+  <pubDate>Mon, 14 Sep 2026 08:40:00 -0400</pubDate>
+    <dc:creator>Michael Kimmage, Maria Lipman</dc:creator>
+    <guid isPermaLink="false">1135508</guid>
+    </item>
+<item>
+  <title>Europe’s Hidden Trade Advantage</title>
+  <link>https://www.foreignaffairs.com/europe/europes-hidden-trade-advantage</link>
+  <description>Slow and steady wins the negotiation.</description>
+  <pubDate>Mon, 14 Sep 2026 00:00:00 -0400</pubDate>
+    <dc:creator>Jonas Nahm</dc:creator>
+    <guid isPermaLink="false">1135509</guid>
+    </item>
+<item>
+  <title>Iran’s Second Front</title>
+  <link>https://www.foreignaffairs.com/yemen/irans-second-front</link>
+  <description>The Houthis’ bold advance has transformed the Middle East’s wars.</description>
+  <pubDate>Fri, 11 Sep 2026 09:57:00 -0400</pubDate>
+    <dc:creator>April Longley Alley, Allison Minor</dc:creator>
+    <guid isPermaLink="false">1135506</guid>
+    </item>
+
+  </channel>
+</rss>
