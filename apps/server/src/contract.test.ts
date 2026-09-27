@@ -10,6 +10,8 @@ import {
   ETF_SORT_KEYS,
   FX_INTERVAL_KEYS,
   FX_RANGE_KEYS,
+  INDEX_INTERVAL_KEYS,
+  INDEX_RANGE_KEYS,
   PurchaseStatus,
   REDEEM_STATUS_VALUES,
 } from '@funds-helper/core';
@@ -24,6 +26,8 @@ import {
   EtfConfigUpdateSchema,
   FX_INTERVALS,
   FX_RANGES,
+  INDEX_INTERVALS,
+  INDEX_RANGES,
   NEWS_SOURCE_IDS,
   NEWS_SUMMARY_JSON_SCHEMA,
   NewsSummaryPayloadSchema,
@@ -76,6 +80,14 @@ describe('core 领域模型 ↔ shared 传输契约', () => {
 
   it('汇率统计区间取值完全一致（含顺序）', () => {
     expect([...FX_INTERVAL_KEYS]).toEqual([...FX_INTERVALS]);
+  });
+
+  it('国际行情的展示区间取值完全一致（含顺序）', () => {
+    expect([...INDEX_RANGE_KEYS]).toEqual([...INDEX_RANGES]);
+  });
+
+  it('国际行情的统计区间取值完全一致（含顺序）', () => {
+    expect([...INDEX_INTERVAL_KEYS]).toEqual([...INDEX_INTERVALS]);
   });
 
   it('ETF 分类取值完全一致（含顺序 —— 顺序决定统计面板与筛选器的展示顺序）', () => {
@@ -133,12 +145,13 @@ describe('工具注册表与 shared 目录', () => {
 
   it('注册表里的描述符与 shared 目录指向同一个对象（服务端启动时的一致性断言）', () => {
     const tools = createServerTools();
-    expect(tools).toHaveLength(5);
+    expect(tools).toHaveLength(6);
     expect(tools[0]?.descriptor).toBe(TOOL_CATALOG.qdii);
     expect(tools[1]?.descriptor).toBe(TOOL_CATALOG.usd);
     expect(tools[2]?.descriptor).toBe(TOOL_CATALOG.fx);
     expect(tools[3]?.descriptor).toBe(TOOL_CATALOG.etf);
-    expect(tools[4]?.descriptor).toBe(TOOL_CATALOG.news);
+    expect(tools[4]?.descriptor).toBe(TOOL_CATALOG.indices);
+    expect(tools[5]?.descriptor).toBe(TOOL_CATALOG.news);
   });
 
   it('每个工具都声明了 5 段式 cron 的定时任务', () => {
@@ -147,21 +160,36 @@ describe('工具注册表与 shared 目录', () => {
     const usdJobs = tools[1]?.jobs?.({} as never) ?? [];
     const fxJobs = tools[2]?.jobs?.({} as never) ?? [];
     const etfJobs = tools[3]?.jobs?.({} as never) ?? [];
-    const newsJobs = tools[4]?.jobs?.({} as never) ?? [];
+    const newsJobs = tools[5]?.jobs?.({} as never) ?? [];
+    const indicesJobs = tools[4]?.jobs?.({} as never) ?? [];
 
     expect(qdiiJobs.map((job) => job.name)).toEqual(['qdii.snapshot', 'qdii.premium']);
     expect(usdJobs.map((job) => job.name)).toEqual(['usd.snapshot']);
     expect(fxJobs.map((job) => job.name)).toEqual(['fx.daily']);
     expect(etfJobs.map((job) => job.name)).toEqual(['etf.snapshot', 'etf.feeders', 'etf.periods']);
+    expect(indicesJobs.map((job) => job.name)).toEqual(['indices.daily']);
     expect(newsJobs.map((job) => job.name)).toEqual(['news.fetch', 'news.summary']);
 
-    for (const job of [...qdiiJobs, ...usdJobs, ...fxJobs, ...etfJobs, ...newsJobs]) {
+    for (const job of [
+      ...qdiiJobs,
+      ...usdJobs,
+      ...fxJobs,
+      ...etfJobs,
+      ...indicesJobs,
+      ...newsJobs,
+    ]) {
       expect(job.cron.split(' ')).toHaveLength(5);
     }
   });
 
+  it('国际行情每 3 小时增量抓一次且启动补跑（日频收盘价，各市场收盘时刻不同）', () => {
+    const indicesJobs = createServerTools()[4]?.jobs?.({} as never) ?? [];
+    expect(indicesJobs[0]?.cron).toBe('20 */3 * * *');
+    expect(indicesJobs[0]?.runOnBoot).toBe(true);
+  });
+
   it('news.fetch 每 10 分钟一跳且启动补跑；news.summary 每天 08:30 且**不**启动补跑', () => {
-    const newsJobs = createServerTools()[4]?.jobs?.({} as never) ?? [];
+    const newsJobs = createServerTools()[5]?.jobs?.({} as never) ?? [];
     const fetchJob = newsJobs.find((job) => job.name === 'news.fetch');
     const summaryJob = newsJobs.find((job) => job.name === 'news.summary');
 

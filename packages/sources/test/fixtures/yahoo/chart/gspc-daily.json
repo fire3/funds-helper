@@ -1,0 +1,155 @@
+{
+ "_meta": {
+  "interface": "Yahoo Finance chart v8",
+  "capturedAt": "2026-09-26",
+  "url": "https://query1.finance.yahoo.com/v8/finance/chart/^GSPC?period1=0&period2=<now>&interval=1d",
+  "note": "真实响应 14305 行 / 1.5 MB，这里保留首 3 行（1970 起）与末 7 行（2026-09）。日线时间戳为交易所开盘时刻（13:30/14:30 UTC = 纽约 9:30），日期按 meta.exchangeTimezoneName 换算。"
+ },
+ "chart": {
+  "result": [
+   {
+    "meta": {
+     "currency": "USD",
+     "symbol": "^GSPC",
+     "exchangeName": "SNP",
+     "fullExchangeName": "SNP",
+     "instrumentType": "INDEX",
+     "firstTradeDate": -1325583000,
+     "regularMarketTime": 1790368797,
+     "hasPrePostMarketData": false,
+     "gmtoffset": -14400,
+     "timezone": "EDT",
+     "exchangeTimezoneName": "America/New_York",
+     "regularMarketPrice": 7743.41,
+     "regularMarketChangePercent": 0.51,
+     "fulldayPrice": 7743.41,
+     "fulldayChange": 39.28,
+     "fulldayChangePercent": 0.51,
+     "fiftyTwoWeekHigh": 7816.7,
+     "fiftyTwoWeekLow": 6316.91,
+     "regularMarketDayHigh": 7752.07,
+     "regularMarketDayLow": 7693.08,
+     "regularMarketVolume": 2644756000,
+     "longName": "S&P 500",
+     "shortName": "S&P 500",
+     "chartPreviousClose": 92.06,
+     "priceHint": 2,
+     "currentTradingPeriod": {
+      "pre": {
+       "timezone": "EDT",
+       "start": 1790323200,
+       "end": 1790343000,
+       "gmtoffset": -14400
+      },
+      "regular": {
+       "timezone": "EDT",
+       "start": 1790343000,
+       "end": 1790366400,
+       "gmtoffset": -14400
+      },
+      "post": {
+       "timezone": "EDT",
+       "start": 1790366400,
+       "end": 1790380800,
+       "gmtoffset": -14400
+      }
+     },
+     "dataGranularity": "1d",
+     "range": "",
+     "validRanges": [
+      "1d",
+      "5d",
+      "1mo",
+      "3mo",
+      "6mo",
+      "1y",
+      "2y",
+      "5y",
+      "10y",
+      "ytd",
+      "max"
+     ]
+    },
+    "timestamp": [
+     138600,
+     397800,
+     484200,
+     1789651800,
+     1789738200,
+     1789997400,
+     1790083800,
+     1790170200,
+     1790256600,
+     1790343000
+    ],
+    "indicators": {
+     "quote": [
+      {
+       "low": [
+        91.79000091552734,
+        92.52999877929688,
+        92.12999725341797,
+        7611.81005859375,
+        7610.52001953125,
+        7691.18994140625,
+        7756.259765625,
+        7694.89013671875,
+        7662.56982421875,
+        7693.080078125
+       ],
+       "volume": [
+        8050000,
+        11490000,
+        11460000,
+        5058210000,
+        8858350000,
+        4828050000,
+        5286270000,
+        5110910000,
+        5316390000,
+        4499180000
+       ],
+       "high": [
+        93.54000091552734,
+        94.25,
+        93.80999755859375,
+        7646.85986328125,
+        7657.169921875,
+        7779.22021484375,
+        7782.18994140625,
+        7761.93994140625,
+        7719.009765625,
+        7752.06982421875
+       ],
+       "close": [
+        93.0,
+        93.45999908447266,
+        92.81999969482422,
+        7637.759765625,
+        7650.5,
+        7764.7001953125,
+        7764.64013671875,
+        7706.02978515625,
+        7704.1298828125,
+        7743.41015625
+       ],
+       "open": [
+        92.05999755859375,
+        93.0,
+        93.45999908447266,
+        7631.43994140625,
+        7657.169921875,
+        7692.830078125,
+        7770.81005859375,
+        7761.93994140625,
+        7666.990234375,
+        7709.85986328125
+       ]
+      }
+     ]
+    }
+   }
+  ],
+  "error": null
+ }
+}

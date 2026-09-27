@@ -1,0 +1,155 @@
+{
+ "_meta": {
+  "interface": "Yahoo Finance chart v8",
+  "capturedAt": "2026-09-26",
+  "url": "https://query1.finance.yahoo.com/v8/finance/chart/^N225?period1=0&period2=<now>&interval=1d",
+  "note": "用于验证非美时区（Asia/Tokyo）的日期换算。真实响应全量，这里保留首 3 + 末 7 行。"
+ },
+ "chart": {
+  "result": [
+   {
+    "meta": {
+     "currency": "JPY",
+     "symbol": "^N225",
+     "exchangeName": "OSA",
+     "fullExchangeName": "Osaka",
+     "instrumentType": "INDEX",
+     "firstTradeDate": -157420800,
+     "regularMarketTime": 1790318703,
+     "hasPrePostMarketData": false,
+     "gmtoffset": 32400,
+     "timezone": "JST",
+     "exchangeTimezoneName": "Asia/Tokyo",
+     "regularMarketPrice": 66364.2,
+     "regularMarketChangePercent": 1.298,
+     "fulldayPrice": 66364.2,
+     "fulldayChange": 850.215,
+     "fulldayChangePercent": 1.298,
+     "fiftyTwoWeekHigh": 72831.73,
+     "fiftyTwoWeekLow": 44357.65,
+     "regularMarketDayHigh": 66410.27,
+     "regularMarketDayLow": 65639.62,
+     "regularMarketVolume": 0,
+     "longName": "Nikkei 225",
+     "shortName": "Nikkei 225",
+     "chartPreviousClose": 2402.85,
+     "priceHint": 2,
+     "currentTradingPeriod": {
+      "pre": {
+       "timezone": "JST",
+       "start": 1790294400,
+       "end": 1790294400,
+       "gmtoffset": 32400
+      },
+      "regular": {
+       "timezone": "JST",
+       "start": 1790294400,
+       "end": 1790317800,
+       "gmtoffset": 32400
+      },
+      "post": {
+       "timezone": "JST",
+       "start": 1790317800,
+       "end": 1790317800,
+       "gmtoffset": 32400
+      }
+     },
+     "dataGranularity": "1d",
+     "range": "",
+     "validRanges": [
+      "1d",
+      "5d",
+      "1mo",
+      "3mo",
+      "6mo",
+      "1y",
+      "2y",
+      "5y",
+      "10y",
+      "ytd",
+      "max"
+     ]
+    },
+    "timestamp": [
+     345600,
+     432000,
+     518400,
+     1789344000,
+     1789430400,
+     1789516800,
+     1789603200,
+     1789689600,
+     1790208000,
+     1790294400
+    ],
+    "indicators": {
+     "quote": [
+      {
+       "low": [
+        2402.85009765625,
+        2406.219970703125,
+        2394.9599609375,
+        62726.1796875,
+        63067.1796875,
+        63209.921875,
+        63824.55859375,
+        64403.8515625,
+        65407.37109375,
+        65639.6171875
+       ],
+       "high": [
+        2402.85009765625,
+        2406.219970703125,
+        2394.9599609375,
+        63691.53125,
+        64101.0,
+        63923.0,
+        64643.578125,
+        65436.5703125,
+        66249.109375,
+        66410.2734375
+       ],
+       "volume": [
+        0,
+        0,
+        0,
+        135800000,
+        135000000,
+        124200000,
+        133400000,
+        197700000,
+        175000000,
+        148900000
+       ],
+       "close": [
+        2402.85009765625,
+        2406.219970703125,
+        2394.9599609375,
+        63492.98828125,
+        63484.1015625,
+        63923.0,
+        64136.25,
+        65018.94921875,
+        65513.98828125,
+        66364.203125
+       ],
+       "open": [
+        2402.85009765625,
+        2406.219970703125,
+        2394.9599609375,
+        63659.53125,
+        63190.37109375,
+        63672.12890625,
+        64643.578125,
+        64681.55078125,
+        65476.44140625,
+        65639.6171875
+       ]
+      }
+     ]
+    }
+   }
+  ],
+  "error": null
+ }
+}

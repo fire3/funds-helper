@@ -6,7 +6,7 @@
  * strip-only 模式 —— 两者的语法支持不同（例如构造函数参数属性 esbuild 支持、
  * Node 不支持）。只有在真实运行时跑一次，才能发现这类「测试全绿但起不来」的问题。
  *
- * 用法：pnpm smoke            （会访问真实上游，约 1 次 4MB 请求）
+ * 用法：pnpm smoke            （会访问真实上游：QDII 全量约 4MB + 汇率/指数日线）
  *      SMOKE_PORT=9001 pnpm smoke
  */
 import { spawn } from 'node:child_process';
@@ -234,6 +234,36 @@ async function main() {
     'CNY/USD 方向是倒数（涨跌幅在服务端重算，前端不取倒数）',
     fxLatest > 0 && Math.abs(fxInverse - 1 / fxLatest) < 1e-9,
     `USD/CNY=${fxLatest} CNY/USD=${fxInverse}`,
+  );
+
+  // ---- 国际行情（双源：Yahoo 主 + 东财备，见 docs/design/indices-tool.md）----
+  // 只验单指数全链路（dataset）：概览的首访会对全部 22 个指数做全量回填
+  // （约 33 MB，Yahoo 还可能中途 429），冒烟不该花这个代价 —— 概览由集成测试兑底。
+  check('工具清单包含 indices', health.body?.tools?.some((tool) => tool.id === 'indices') === true);
+
+  const indicesDataset = await getJson('/api/tools/indices/dataset?code=SPX&range=5y');
+  check(
+    'GET /api/tools/indices/dataset 正常',
+    indicesDataset.status === 200,
+    `HTTP ${indicesDataset.status}`,
+  );
+  const idx = indicesDataset.body;
+  check(
+    '标普500日线达到预期下限（Yahoo 全量≥1万，东财备源回填≥5000）',
+    (idx?.summary?.totalBars ?? 0) >= 5000,
+    `totalBars=${idx?.summary?.totalBars} ${idx?.summary?.firstDate}~${idx?.summary?.lastDate} source=${idx?.freshness?.source}`,
+  );
+  check(
+    '指数点位与币种合理（标普500 > 1000、USD、非 stale）',
+    (idx?.summary?.latest?.value ?? 0) > 1000 &&
+      idx?.currency === 'USD' &&
+      idx?.freshness?.stale === false,
+    `value=${idx?.summary?.latest?.value} ${idx?.currency} stale=${idx?.freshness?.stale}`,
+  );
+  check(
+    '区间涨跌表包含全部统计区间',
+    (idx?.intervals?.length ?? 0) === 8,
+    `${idx?.intervals?.length} 个区间`,
   );
 
   // ---- ETF 汇总 ----

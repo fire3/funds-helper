@@ -1,0 +1,21 @@
+{
+ "_meta": {
+  "interface": "push2his kline（东财全球指数日线）",
+  "capturedAt": "2026-09-26",
+  "note": "改编自 spx-kline.json：上游若新增成交量列（fields2 多要一列或上游改版），行会变成 6 列。期望：抛 ParseError 并指出列数不符（结构级严格）。"
+ },
+ "rc": 0,
+ "rt": 17,
+ "svr": 181669475,
+ "lt": 1,
+ "full": 0,
+ "dlmkts": "",
+ "dsc": "0",
+ "data": {
+  "code": "SPX",
+  "market": 100,
+  "name": "标普500",
+  "decimal": 2,
+  "klines": ["2026-09-01,7635.47,7631.47,7663.63,7611.20,2737707632"]
+ }
+}

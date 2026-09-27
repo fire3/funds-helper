@@ -40,6 +40,10 @@ export const WEB_TOOLS: WebTool[] = [
     page: lazy(() => import('./etf/page.tsx')),
   },
   {
+    descriptor: TOOL_CATALOG.indices,
+    page: lazy(() => import('./indices/page.tsx')),
+  },
+  {
     descriptor: TOOL_CATALOG.news,
     page: lazy(() => import('./news/page.tsx')),
   },

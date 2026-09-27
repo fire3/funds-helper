@@ -1,5 +1,6 @@
 import { type CreateEtfToolOptions, createEtfTool } from './etf/index.ts';
 import { type CreateFxToolOptions, createFxTool } from './fx/index.ts';
+import { type CreateIndicesToolOptions, createIndicesTool } from './indices/index.ts';
 import { type CreateNewsToolOptions, createNewsTool } from './news/index.ts';
 import { type CreateQdiiToolOptions, createQdiiTool } from './qdii/index.ts';
 import type { ServerTool } from './types.ts';
@@ -18,6 +19,7 @@ export function createServerTools(
     fx?: CreateFxToolOptions;
     etf?: CreateEtfToolOptions;
     news?: CreateNewsToolOptions;
+    indices?: CreateIndicesToolOptions;
   } = {},
 ): ServerTool[] {
   return [
@@ -25,6 +27,7 @@ export function createServerTools(
     createUsdTool(options.usd ?? {}),
     createFxTool(options.fx ?? {}),
     createEtfTool(options.etf ?? {}),
+    createIndicesTool(options.indices ?? {}),
     createNewsTool(options.news ?? {}),
   ];
 }

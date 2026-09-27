@@ -21,6 +21,13 @@ import {
   type FxRange,
   type FxRefreshResponse,
   FxRefreshResponseSchema,
+  type IndexDatasetResponse,
+  IndexDatasetResponseSchema,
+  type IndexOverviewResponse,
+  IndexOverviewResponseSchema,
+  type IndexRange,
+  type IndexRefreshResponse,
+  IndexRefreshResponseSchema,
   type NewsAiConfigUpdate,
   type NewsConfigResponse,
   NewsConfigResponseSchema,
@@ -182,6 +189,29 @@ export const api = {
 
   refreshFx: (): Promise<FxRefreshResponse> =>
     request('/api/tools/fx/refresh', FxRefreshResponseSchema, { method: 'POST' }),
+
+  // ---- indices：国际行情 ----
+
+  /** 全部主要指数的最新收盘与日涨跌（按地区分组） */
+  getIndicesOverview: (refresh = false): Promise<IndexOverviewResponse> =>
+    request(
+      `/api/tools/indices/overview${refresh ? '?refresh=1' : ''}`,
+      IndexOverviewResponseSchema,
+    ),
+
+  /** 单指数走势 + 区间涨跌 + 年度表现（区间与选中指数写在 URL） */
+  getIndicesDataset: (params: {
+    code: string;
+    range: IndexRange;
+    refresh?: boolean;
+  }): Promise<IndexDatasetResponse> => {
+    const search = new URLSearchParams({ code: params.code, range: params.range });
+    if (params.refresh === true) search.set('refresh', '1');
+    return request(`/api/tools/indices/dataset?${search.toString()}`, IndexDatasetResponseSchema);
+  },
+
+  refreshIndices: (): Promise<IndexRefreshResponse> =>
+    request('/api/tools/indices/refresh', IndexRefreshResponseSchema, { method: 'POST' }),
 
   getEtfDataset: (refresh = false): Promise<EtfDatasetResponse> =>
     request(`/api/tools/etf/dataset${refresh ? '?refresh=1' : ''}`, EtfDatasetResponseSchema),

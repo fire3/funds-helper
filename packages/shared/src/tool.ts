@@ -71,6 +71,18 @@ const ETF: ToolDescriptor = {
   tags: ['ETF', '折溢价', '规模', '跟踪指数', '场内'],
 };
 
+const INDICES: ToolDescriptor = {
+  id: 'indices',
+  name: '国际行情',
+  summary: '全球主要指数 · 最新收盘 · 区间走势',
+  question: '美股、港股、海外主要指数现在多少？这段时间是怎么走的？',
+  status: 'ready',
+  version: '0.1.0',
+  // 日频收盘价落库，各市场休市节奏不同（见 global-index-data-sources.md）
+  dataFreshness: 'daily',
+  tags: ['指数', '标普500', '纳斯达克', '恒生', '日经', '全球行情'],
+};
+
 const NEWS: ToolDescriptor = {
   id: 'news',
   name: '财经信息流',
@@ -88,6 +100,7 @@ export const TOOL_CATALOG = {
   usd: USD,
   fx: FX,
   etf: ETF,
+  indices: INDICES,
   news: NEWS,
 } as const;
 

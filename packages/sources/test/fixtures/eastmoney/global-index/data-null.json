@@ -1,0 +1,16 @@
+{
+ "_meta": {
+  "interface": "push2his kline（东财全球指数日线）",
+  "capturedAt": "2026-09-26",
+  "url": "http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=100.HSTECH&klt=101&fqt=0&beg=20260901&end=20260926&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55",
+  "note": "实测响应体原样（rc=100, data=null）：东财没有恒生科技指数。期望：抛 UpstreamError（让 Yahoo 主源/整体降级逻辑接管），而不是 ParseError 或静默空数据。"
+ },
+ "rc": 100,
+ "rt": 1,
+ "svr": 181669475,
+ "lt": 1,
+ "full": 1,
+ "dlmkts": "",
+ "dsc": "0",
+ "data": null
+}
