@@ -34,15 +34,14 @@ function plainPercent(value: number | null | undefined, digits = 2): string {
   return `${value.toFixed(digits)}%`;
 }
 
-/** 上游来源的中文标签（卡片角标）；Yahoo 是主源不标，其余展示中文 */
+/** 上游来源的中文标签（卡片角标）；稳定主源（新浪/腾讯）不标，只标备源/兜底 */
 const SOURCE_LABELS: Record<string, string> = {
   eastmoney: '东财',
-  tencent: '腾讯',
-  sina: '新浪',
+  yahoo: 'Yahoo',
 };
 
 function sourceLabel(source: string): string {
-  if (source === 'yahoo') return '';
+  if (source === 'sina' || source === 'tencent') return '';
   return SOURCE_LABELS[source] ?? source;
 }
 
@@ -126,10 +125,10 @@ export default function IndicesPage() {
       </header>
 
       <p className="rounded-md border border-sky-200 bg-sky-50 px-3 py-2 text-xs text-sky-800 dark:border-sky-900 dark:bg-sky-950/40 dark:text-sky-300">
-        数据来自 <strong>Yahoo Finance</strong>（主源）与<strong>东方财富、腾讯、新浪财经</strong>
-        （备源）的公开接口，全部缺失时还有<strong>东方财富批量实时</strong>兑底； 为
-        <strong>免费延迟行情</strong>，按各交易所当地日期记录；价格是
-        <strong>原生币种点位</strong>
+        数据来自 <strong>新浪财经、腾讯</strong>（稳定主源）与 <strong>东方财富</strong>、
+        <strong>Yahoo Finance</strong>（备源/兜底）的公开接口，全部缺失时还有
+        <strong>东方财富批量实时</strong>兑底。全部为<strong>免费延迟行情</strong>，
+        按各交易所当地日期记录；价格是<strong>原生币种点位</strong>
         （美元/港币/日元…），不做汇率换算 —— 换算请用「人民币汇率」工具。各市场休市节奏不同，
         每条行情下方标注的是它自己的数据日期。
       </p>

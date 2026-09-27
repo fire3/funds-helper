@@ -24,7 +24,7 @@ export const IndexIntervalSchema = z.enum(INDEX_INTERVALS);
 export type IndexInterval = z.infer<typeof IndexIntervalSchema>;
 
 export const INDEX_DISCLAIMER =
-  '指数数据来自 Yahoo Finance（主源）与东方财富、腾讯、新浪财经（备源）的公开接口（免费延迟行情），按各交易所当地日期记录，仅供参考，不构成投资建议';
+  '指数数据来自新浪财经、腾讯（稳定主源）与东方财富、Yahoo Finance（备源/兜底）的公开接口（免费延迟行情），按各交易所当地日期记录，仅供参考，不构成投资建议';
 
 /** 一根日线。open/high/low 可空（上游偶发缺列），close 必有 */
 export const IndexBarSchema = z.object({

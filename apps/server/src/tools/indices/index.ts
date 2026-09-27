@@ -18,7 +18,8 @@ export interface CreateIndicesToolOptions {
  * 国际行情工具 —— 工具箱的第六个工具。
  *
  * 与其它工具共享框架能力（三级降级、`freshness` 契约、调度器与 `job_run` 留痕），
- * 上游是**双源**（Yahoo 主 + 东财备，见 `docs/design/global-index-data-sources.md`）。
+ * 上游是**四源编排**：新浪 gi / 腾讯（稳定国内源，主）→ 东财 K 线 → Yahoo（兜底），
+ * 见 `docs/design/indices-tool.md` §3。
  */
 export function createIndicesTool(options: CreateIndicesToolOptions = {}): ServerTool {
   let memo: { ctx: ToolContext; service: IndicesService } | null = null;

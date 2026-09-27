@@ -93,6 +93,20 @@ interface DatasetBase {
 const OVERVIEW_CACHE_KEY = 'indices.overview';
 const datasetCacheKey = (code: string): string => `indices.dataset.${code}`;
 
+/**
+ * 概览触发补抓时，库里已入库指数少于此**比例**就先同步抓一轮再返回 ——
+ * 首访/只抓过个别指数时概览会明显缺块，等一次比返回半截数据好。
+ */
+const OVERVIEW_SYNC_CAPTURE_MIN_RATIO = 0.5;
+
+/**
+ * 后台自动补抓的最小间隔（节流）。
+ * `hasMissing` 长期为真是常态（罗素/VIX/恒生科技在稳定源里没有代码），
+ * 不加节流会变成每次重建概览都去抓一轮上游。定时任务在服务器常驻时独立刷新，
+ * 这里只是交互式访问的兜底。
+ */
+const AUTO_REFRESH_MIN_INTERVAL_MS = 5 * 60_000;
+
 /** 注册表里必然存在；找不到只可能是编程错误，显式抛 500 而不是 undefined 静默传播 */
 function requireDefinition(key: string): IndexDefinition {
   const def = getIndexDefinition(key);
@@ -105,6 +119,10 @@ function requireDefinition(key: string): IndexDefinition {
 export class IndicesService {
   private readonly deps: IndicesServiceDeps;
   private readonly now: () => number;
+  /** 后台补抓任务：同一时刻只跑一个（dedupe），避免并发请求把上游压力放大 */
+  private backgroundRefresh: Promise<unknown> | null = null;
+  /** 上一次自动补抓的触发时刻（节流，见 AUTO_REFRESH_MIN_INTERVAL_MS） */
+  private lastAutoRefreshAt = 0;
 
   constructor(deps: IndicesServiceDeps) {
     this.deps = deps;
@@ -212,6 +230,40 @@ export class IndicesService {
     return stats;
   }
 
+  /**
+   * 后台补抓：**不阻塞响应**，抓完由 `captureCode` 顺带失效概览/单指数缓存。
+   *
+   * 为什么需要它：`hasMissing` 一旦有「稳定源里没有代码」的指数（罗素 2000 / VIX /
+   * 恒生科技…）就会**长期为真**，于是每次重建概览都会触发一次全量抓取。
+   * 2026-09-27 实测这条同步路径把 `/overview` 卡住约 40 秒（东财 503 重试 × 28 指数 +
+   * Yahoo 429 冷却），前端就一直停在「加载指数概览…」。库里已经有可展示的数据时，
+   * 正确做法是**先返回 SQLite 快照**，把抓取丢到后台。
+   */
+  private scheduleBackgroundRefresh(reason: string): void {
+    if (this.backgroundRefresh !== null) return;
+    if (this.now() - this.lastAutoRefreshAt < AUTO_REFRESH_MIN_INTERVAL_MS) return;
+    this.lastAutoRefreshAt = this.now();
+
+    const task = this.captureAll()
+      .then((stats) => {
+        this.deps.logger.info(
+          { ...stats, failed: stats.failed.length, reason },
+          '国际指数后台补抓完成',
+        );
+      })
+      .catch((error: unknown) => {
+        // 上游故障不是异常：库里仍有数据可展示，只记日志（与概览的降级语义一致）
+        this.deps.logger.warn(
+          { err: error instanceof Error ? error.message : String(error), reason },
+          '国际指数后台补抓失败（继续用本地数据）',
+        );
+      });
+
+    this.backgroundRefresh = task.finally(() => {
+      this.backgroundRefresh = null;
+    });
+  }
+
   // -------------------------------------------------------------------------
   // 概览（全部指数的最新收盘与日涨跌）
   // -------------------------------------------------------------------------
@@ -234,7 +286,7 @@ export class IndicesService {
     let stale = false;
     let staleReason: string | undefined;
 
-    // 触发补抓的两个条件（缺一不可）：
+    // 触发补抓的两个条件（满足其一）：
     // 1. 全局抓取超过 staleWindow；
     // 2. **注册表里有指数从未入库** —— 只看全局 capturedAt 会踩一个真实坑：
     //    用户先打开某一个指数的走势（只抓了那一个），随后进概览时全局年龄还很新，
@@ -242,19 +294,32 @@ export class IndicesService {
     const recentsBefore = this.deps.repo.loadRecentCloses();
     const captured = new Set(recentsBefore.map((row) => row.code));
     const hasMissing = INDEX_REGISTRY.some((def) => !captured.has(def.key));
+    const ageStale = age > staleWindowMs;
 
-    if (age > staleWindowMs || hasMissing) {
-      try {
-        await this.captureAll();
-      } catch (error) {
-        if (!(error instanceof UpstreamError)) throw error;
-        const message = error instanceof Error ? error.message : String(error);
-        // 关键降级：宁可返回「陈旧但真实」的收盘数据，也不返回错误页。
-        // 「一行都没有」时不立刻 503 —— 先尝试下面的批量实时补齐，全空才 503
-        // （实战动机：2026-09-27 东财 K 线 + Yahoo 双故障，clist 仍活）。
-        stale = true;
-        staleReason = message;
-        this.deps.logger.warn({ err: message }, '指数抓取失败，回退到本地日线');
+    if (ageStale || hasMissing) {
+      // 需要**同步**等抓取的三种情况：
+      // - 库里一行都没有（没有可展示的旧数据，抓不到就 503）；
+      // - 数据已过陈旧窗口（返回前必须知道抓取成败，才能如实标 stale）；
+      // - 库里明显不全（首访只抓过个别指数，等一次好过返回半截概览）。
+      // 其余情况 = 库里已有大部分新鲜数据、只是某些指数永远补不上（稳定源没代码）：
+      // 先返回 SQLite 快照，抓取放后台 —— 否则每次重建概览都要卡约 40 秒。
+      const materiallyIncomplete =
+        captured.size < INDEX_REGISTRY.length * OVERVIEW_SYNC_CAPTURE_MIN_RATIO;
+      if (recentsBefore.length === 0 || ageStale || materiallyIncomplete) {
+        try {
+          await this.captureAll();
+        } catch (error) {
+          if (!(error instanceof UpstreamError)) throw error;
+          const message = error instanceof Error ? error.message : String(error);
+          // 关键降级：宁可返回「陈旧但真实」的收盘数据，也不返回错误页。
+          // 「一行都没有」时不立刻 503 —— 先尝试下面的批量实时补齐，全空才 503
+          // （实战动机：2026-09-27 东财 K 线 + Yahoo 双故障，clist 仍活）。
+          stale = true;
+          staleReason = message;
+          this.deps.logger.warn({ err: message }, '指数抓取失败，回退到本地日线');
+        }
+      } else {
+        this.scheduleBackgroundRefresh('部分指数从未入库，本地已有新鲜数据');
       }
     }
 

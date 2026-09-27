@@ -222,6 +222,46 @@ describe('GET /api/tools/indices/overview', () => {
       await app.close();
     }
   });
+
+  it('库里已有大部分新鲜数据、只有少数指数永远补不上 → 立即返回，抓取转后台', async () => {
+    const { app, source } = await indicesHarness();
+    try {
+      // 模拟「稳定源里没有代码」的指数（罗素/VIX/恒生科技）：它们从未入库，
+      // hasMissing 因此长期为真 —— 这正是线上每次重建概览都同步卡 40 秒的触发条件。
+      for (const code of ['RUT', 'VIX', 'HSTECH']) source.failCodes.add(code);
+      await app.inject({ method: 'GET', url: '/api/tools/indices/overview' });
+      const afterFirst = source.calls.fetch ?? 0;
+      expect(afterFirst).toBe(INDEX_REGISTRY.length);
+
+      // 闸门卡住上游：若概览仍**同步**等抓取，这个 inject 会一直挂到测试超时
+      let release!: () => void;
+      source.gate = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+
+      const response = await app.inject({
+        method: 'GET',
+        url: '/api/tools/indices/overview?refresh=1',
+      });
+      expect(response.statusCode).toBe(200);
+      const items = (response.json() as IndexOverviewResponse).regions.flatMap(
+        (region) => region.items,
+      );
+      // 用的是库里的快照（4 个从未入库的指数里只有东财有代码的恒生国企能被实时补齐）
+      expect(items.length).toBeGreaterThan(0);
+      // 后台确实已经开始抓：第一个指数进来就被闸门挡住
+      expect(source.calls.fetch).toBeGreaterThan(afterFirst);
+
+      // 放行并等后台任务收尾，避免它在 app.close() 之后还写库
+      release();
+      source.gate = null;
+      await new Promise<void>((resolve) => {
+        setTimeout(() => resolve(), 0);
+      });
+    } finally {
+      await app.close();
+    }
+  });
 });
 
 describe('POST /api/tools/indices/refresh', () => {

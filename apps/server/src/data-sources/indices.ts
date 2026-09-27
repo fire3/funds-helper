@@ -13,15 +13,27 @@ import {
 /**
  * 国际指数数据能力（**四源编排 + 批量实时补齐**）。
  *
- * 优先级来自调研结论（`global-index-data-sources.md` §11/§13/§14）：
- * - **Yahoo 主源**：唯一能覆盖全部 28 个指数的源，历史最深（标普自 1970）；
- * - **东财 K 线备源**：国内直连（http 端点），缺 4 个指数（注册表 `em: null`）；
- * - **腾讯应急源**：实测只覆盖美/港 5 个（`tencent` 非 null），K 线上限 1600 行；
- *   但国内直连时最稳 —— 2026-09-26 实测「Yahoo 429 + 东财 503」双故障窗口里
- *   腾讯仍然 200，5 个头部指数靠它没断，这正是「应急」两字的含义；
- * - **新浪 gi 日线第四源**（2026-09-27 实装，akshare 线索）：只覆盖欧亚/美洲/大洋洲
- *   （`sina` 非 null，与腾讯恰好互补），深度上限 1000 行（约 4 年）；
- *   实战首日即命中：当日东财 push2his 整体故障、Yahoo 直连不通，日欧指数靠它未断。
+ * 优先级：**稳定国内源在前，Yahoo/东财退居兜底**（2026-09-27 调整，用户反馈
+ * 「东财与 Yahoo 都不太稳定，主源不要这两个」）。实测当日：新浪 gi 200、
+ * 腾讯 200，而东财 push2his 503、Yahoo 直连 429 —— 与前两天的双故障窗口一致。
+ *
+ * - **主源①：新浪 gi 日线**（国内直连最稳）：覆盖欧亚/美洲/大洋洲 19 个指数
+ *   （`sina` 非 null），OHLC 齐全，深度上限 1000 行（约 4 年，增量足够）；
+ * - **主源②：腾讯**（国内直连）：恰好覆盖美/港 5 个指数（`tencent` 非 null，
+ *   与新浪**互补而非重叠**），K 线上限 1600 行；已知怪癖：`usNDX` 只回 1 根；
+ * - **备源：东财 K 线**：覆盖 24/28（缺纳指100/罗素/VIX/恒生科技），国内直连
+ *   但端点常 503（http 在前、https 兜底）；
+ * - **最后兜底：Yahoo**：唯一覆盖全部 28 个、历史最深（标普自 1970），
+ *   但直连常 429，仅在上述三源都拿不到时使用。
+ *
+ * 降级链**逐指数按注册表取实际拥有该指数代码的源**，不是固定四跳：美股/恒指系
+ * 只走腾讯→东财→Yahoo，欧亚/美洲只走新浪→东财→Yahoo。因此罗素 2000 / VIX /
+ * 恒生科技（注册表 `sina`/`tencent` 均为 null、`em` 也缺）**仍只能**落到
+ * Yahoo；恒生国企则只有东财（`em`）与 Yahoo。**其余 24 个指数都能由稳定源长期供数。**
+ *
+ * ⚠️ 历史深度：新浪/腾讯有行数上限（约 4 / 6.5 年）。**库中已有历史不受影响**
+ * （增量 upsert 只追加新行）；但首次回填（库里没有该指数）时，稳定源给不了
+ * Yahoo/东财那样的数十年深度 —— 需要完整历史时把这两个源临时恢复为优先即可。
  *
  * 另有 `fetchLiveQuotes`（东财 clist 批量实时）：**不写日线**，只供概览给
  * “日线全链路失败/从未入库”的指数补一条报价（见 service.buildOverview）。
@@ -33,7 +45,7 @@ import {
  * 「一个上游 → 结构化对象」，谁主谁备是用例层的决策。
  */
 export interface IndexBarFetch {
-  /** 本次实际使用的上游（'yahoo' | 'eastmoney' | 'tencent'），随行落库 */
+  /** 本次实际使用的上游（'sina' | 'tencent' | 'eastmoney' | 'yahoo'），随行落库 */
   source: string;
   bars: RawIndexBar[];
   skippedRows: number;
@@ -76,25 +88,49 @@ export interface IndicesDataSource {
 
 export function createIndicesDataSource(http: HttpClient): IndicesDataSource {
   return {
-    name: 'yahoo+eastmoney+tencent+sina',
+    name: 'sina+tencent+eastmoney+yahoo',
 
     async fetchBars(def, options = {}): Promise<IndexBarFetch> {
       const failures: string[] = [];
 
-      // 主源：Yahoo
-      try {
-        const series = await fetchYahooDailyBars(http, def.yahoo, {
-          since: options.since ?? null,
-          ...(options.now === undefined ? {} : { now: options.now }),
-        });
-        return {
-          source: 'yahoo',
-          bars: series.bars,
-          skippedRows: series.skippedRows,
-          currency: series.currency,
-        };
-      } catch (error) {
-        failures.push(`yahoo: ${error instanceof Error ? error.message : String(error)}`);
+      // 主源①：新浪 gi 日线（国内直连最稳；只覆盖欧亚/美洲/大洋洲）
+      if (def.sina !== null) {
+        try {
+          const series = await fetchSinaGlobalDaily(http, def.sina, {
+            since: options.since ?? null,
+          });
+          return {
+            source: 'sina',
+            bars: series.bars,
+            skippedRows: series.skippedRows,
+            // 新浪响应没有币种字段，用注册表的原生币种
+            currency: def.currency,
+          };
+        } catch (error) {
+          failures.push(`sina: ${error instanceof Error ? error.message : String(error)}`);
+        }
+      } else {
+        failures.push(`sina: 新浪没有 ${def.key} 的指数（注册表 sina=null）`);
+      }
+
+      // 主源②：腾讯（国内直连；与新浪恰好互补 —— 只覆盖美/港 5 个）
+      if (def.tencent !== null) {
+        try {
+          const series = await fetchTencentDailyBars(http, def.tencent, {
+            // exactOptionalPropertyTypes：不能把 undefined 传给可选字段，缺省时不写这个 key
+            ...(options.since == null ? {} : { count: 40 }),
+          });
+          return {
+            source: 'tencent',
+            bars: series.bars,
+            skippedRows: series.skippedRows,
+            currency: def.currency,
+          };
+        } catch (error) {
+          failures.push(`tencent: ${error instanceof Error ? error.message : String(error)}`);
+        }
+      } else {
+        failures.push(`tencent: 腾讯没有 ${def.key} 的指数（注册表 tencent=null）`);
       }
 
       // 备源：东财（注册表标记无此指数时直接跳过）
@@ -117,44 +153,20 @@ export function createIndicesDataSource(http: HttpClient): IndicesDataSource {
         failures.push(`eastmoney: 东财没有 ${def.key} 的指数（注册表 em=null）`);
       }
 
-      // 应急源：腾讯（只覆盖美/港 5 个；有 since 时只要最近 40 行，增量语义相同）
-      if (def.tencent !== null) {
-        try {
-          const series = await fetchTencentDailyBars(http, def.tencent, {
-            // exactOptionalPropertyTypes：不能把 undefined 传给可选字段，缺省时不写这个 key
-            ...(options.since == null ? {} : { count: 40 }),
-          });
-          return {
-            source: 'tencent',
-            bars: series.bars,
-            skippedRows: series.skippedRows,
-            currency: def.currency,
-          };
-        } catch (error) {
-          failures.push(`tencent: ${error instanceof Error ? error.message : String(error)}`);
-        }
-      } else {
-        failures.push(`tencent: 腾讯没有 ${def.key} 的指数（注册表 tencent=null）`);
-      }
-
-      // 第四源：新浪 gi 日线（只覆盖欧亚/美洲/大洋洲；与腾讯恰好互补）
-      if (def.sina !== null) {
-        try {
-          const series = await fetchSinaGlobalDaily(http, def.sina, {
-            since: options.since ?? null,
-          });
-          return {
-            source: 'sina',
-            bars: series.bars,
-            skippedRows: series.skippedRows,
-            // 新浪响应没有币种字段，用注册表的原生币种
-            currency: def.currency,
-          };
-        } catch (error) {
-          failures.push(`sina: ${error instanceof Error ? error.message : String(error)}`);
-        }
-      } else {
-        failures.push(`sina: 新浪没有 ${def.key} 的指数（注册表 sina=null）`);
+      // 最后兜底：Yahoo（唯一覆盖全部 28 个、历史最深，但直连常 429）
+      try {
+        const series = await fetchYahooDailyBars(http, def.yahoo, {
+          since: options.since ?? null,
+          ...(options.now === undefined ? {} : { now: options.now }),
+        });
+        return {
+          source: 'yahoo',
+          bars: series.bars,
+          skippedRows: series.skippedRows,
+          currency: series.currency,
+        };
+      } catch (error) {
+        failures.push(`yahoo: ${error instanceof Error ? error.message : String(error)}`);
       }
 
       throw new UpstreamError(`${def.key}（${def.name}）四个上游都失败：${failures.join('；')}`);

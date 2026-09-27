@@ -16,6 +16,8 @@ export interface FakeIndicesSource extends IndicesDataSource {
   calls: Record<string, number>;
   /** 每个指数的假日线；缺省时按 key 自动生成 */
   series: Map<string, RawIndexBar[]>;
+  /** 测试闸门：非 null 时每次 fetchBars 先等它 resolve（用于验证「后台抓取不阻塞响应」） */
+  gate: Promise<void> | null;
 }
 
 function shiftDate(date: string, days: number): string {
@@ -57,9 +59,12 @@ export function createFakeIndicesSource(
     failCodes: new Set<string>(),
     calls: {},
     series: options.series ?? new Map<string, RawIndexBar[]>(),
+    gate: null,
 
     async fetchBars(def): Promise<IndexBarFetch> {
       source.calls.fetch = (source.calls.fetch ?? 0) + 1;
+      // 闸门只用于测试「后台抓取」：卡住后台任务，验证 HTTP 响应不依赖它
+      if (source.gate !== null) await source.gate;
       if (source.failures.has('fetch')) throw new UpstreamError('模拟：指数日线接口不可用');
       // 模拟「非上游」的内部错误：用于验证它不会被伪装成 503
       if (source.failures.has('fetch:internal')) throw new Error('模拟：底层数据库错误');
