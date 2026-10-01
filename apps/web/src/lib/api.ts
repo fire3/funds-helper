@@ -33,6 +33,8 @@ import {
   NewsConfigResponseSchema,
   type NewsConfigTestResponse,
   NewsConfigTestResponseSchema,
+  type NewsDatesResponse,
+  NewsDatesResponseSchema,
   type NewsFeedResponse,
   NewsFeedResponseSchema,
   type NewsGenerateRequest,
@@ -265,6 +267,8 @@ export const api = {
   /** 分页信息流：**服务端筛选 + 游标分页**（条目几个月就是几万行，不能全量返回） */
   getNewsFeed: (params: {
     range: string;
+    /** 指定日历日（`YYYY-MM-DD`）时服务端按这一天取数，优先于 range */
+    date?: string | null;
     categories?: readonly string[];
     sources?: readonly string[];
     q?: string;
@@ -272,6 +276,7 @@ export const api = {
     limit?: number;
   }): Promise<NewsFeedResponse> => {
     const search = new URLSearchParams({ range: params.range });
+    if (params.date != null && params.date !== '') search.set('date', params.date);
     if (params.categories && params.categories.length > 0) {
       search.set('cat', params.categories.join(','));
     }
@@ -287,6 +292,14 @@ export const api = {
 
   getNewsSummary: (window: NewsWindow): Promise<NewsSummaryResponse> =>
     request(`/api/tools/news/summary?window=${window}`, NewsSummaryResponseSchema),
+
+  /** 按上海日历日取历史简报（当天生成的 today 与次日生成的 yesterday 取最新一份） */
+  getNewsSummaryByDate: (date: string): Promise<NewsSummaryResponse> =>
+    request(`/api/tools/news/summary?date=${encodeURIComponent(date)}`, NewsSummaryResponseSchema),
+
+  /** 历史简报的日期索引：哪几天有简报 */
+  getNewsSummaryDates: (): Promise<NewsDatesResponse> =>
+    request('/api/tools/news/summary/dates', NewsDatesResponseSchema),
 
   getNewsSummaryHistory: (window: NewsWindow): Promise<NewsSummaryHistoryResponse> =>
     request(`/api/tools/news/summary/history?window=${window}`, NewsSummaryHistoryResponseSchema),

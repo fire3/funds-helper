@@ -7,9 +7,10 @@
  * 名单与 cadence/weight 取自 `docs/design/global-financial-news-sources.md`（2026-09-25 实测）
  * 的 §5「最小可用配置」与 `docs/design/news-tool.md` §3.1。
  *
- * 关于「16 个信源」：设计文档的请求量估算行（media 8 + policy 4 + opinion/discovery 6）
- * 与它自己的名单表（6 + 4 + 5 = 15）对不上，这里以**名单表**为准启用 15 个 ——
- * 估算本来就是量级参考，少一个信源不影响任何结论。
+ * 关于信源数量：设计文档的请求量估算行（media 8 + policy 4 + opinion/discovery 6）
+ * 与它自己的名单表对不上，这里以**名单表**为准启用 —— 估算本来就是量级参考。
+ * 2026-09-28 复测时 `yahoo.finance` 已对 Node/undici 的请求指纹持续返回 429
+ * （curl 可达、应用自身不可达），按「去除无法获取的信源」的口径下架，剩 14 个。
  */
 
 /**
@@ -53,8 +54,9 @@ const POLICY_WEIGHT = 5;
 const LOW_WEIGHT = 1;
 
 /**
- * 首版启用的 15 个英文信源（全部为 2026-09-25 实测可直接解析的 A 类入口）。
+ * 首版启用的英文信源（2026-09-25 调研 + 2026-09-28 复测可直接解析的 A 类入口）。
  * Reuters / AP / Bloomberg 等受限源只通过 Google News 发现层进入（`discovery`）。
+ * 复测确认 `yahoo.finance` 对本应用的 fetch 持续 429，已移除（见上方说明）。
  */
 export const FEEDS: readonly FeedDefinition[] = [
   // ---- media：全球财经 ----
@@ -90,17 +92,6 @@ export const FEEDS: readonly FeedDefinition[] = [
     format: 'auto',
     weight: MEDIA_WEIGHT,
     fixture: 'cnbc-markets.xml',
-  },
-  {
-    id: 'yahoo.finance',
-    name: 'Yahoo Finance',
-    homeUrl: 'https://finance.yahoo.com/',
-    url: 'https://feeds.finance.yahoo.com/rss/2.0/headline?s=%5EGSPC&region=US&lang=en-US',
-    category: 'media',
-    cadenceSec: MEDIA_CADENCE,
-    format: 'auto',
-    weight: MEDIA_WEIGHT,
-    fixture: 'yahoo-finance.xml',
   },
   // ---- media：亚洲 ----
   {

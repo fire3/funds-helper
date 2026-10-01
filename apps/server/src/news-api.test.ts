@@ -1,6 +1,7 @@
 import { createServer, type Server } from 'node:http';
 import type {
   NewsConfigResponse,
+  NewsDatesResponse,
   NewsFeedResponse,
   NewsGenerateResponse,
   NewsRefreshResponse,
@@ -288,29 +289,29 @@ async function configure(app: App, baseUrl: string, extra: Record<string, unknow
 // ---------------------------------------------------------------------------
 
 describe('POST /api/tools/news/refresh —— 抓取与信源健康', () => {
-  it('一次抓全部到期信源：15 个信源、19 条条目落库，并留下 job_run', async () => {
+  it('一次抓全部到期信源：14 个信源、18 条条目落库，并留下 job_run', async () => {
     const app = await newsApp();
     try {
       const stats = await refresh(app);
       expect(stats.ok).toBe(true);
-      expect(stats.due).toBe(15);
-      expect(stats.fetched).toBe(15);
+      expect(stats.due).toBe(14);
+      expect(stats.fetched).toBe(14);
       expect(stats.failed).toBe(0);
-      expect(stats.inserted).toBe(19);
+      expect(stats.inserted).toBe(18);
 
       const { body } = await get<NewsSourcesResponse>(app, '/api/tools/news/sources');
-      expect(body.sources).toHaveLength(15);
+      expect(body.sources).toHaveLength(14);
       const total = body.sources.reduce((sum, source) => sum + source.itemCount, 0);
-      expect(total).toBe(19);
+      expect(total).toBe(18);
       for (const source of body.sources) {
         expect(source.lastStatus).toBe(200);
         expect(source.consecFailures).toBe(0);
         expect(source.lastError).toBeNull();
         expect(source.itemCount).toBeGreaterThan(0);
       }
-      expect(body.lastRun?.okFeeds).toBe(15);
+      expect(body.lastRun?.okFeeds).toBe(14);
       expect(body.lastRun?.failFeeds).toBe(0);
-      expect(body.lastRun?.newItems).toBe(19);
+      expect(body.lastRun?.newItems).toBe(18);
     } finally {
       await app.close();
     }
@@ -342,20 +343,20 @@ describe('POST /api/tools/news/refresh —— 抓取与信源健康', () => {
       const { body } = await get<NewsSourcesResponse>(app, '/api/tools/news/sources');
       for (const source of body.sources) expect(source.lastStatus).toBe(304);
       const { body: feed } = await get<NewsFeedResponse>(app, '/api/tools/news/feed?range=all');
-      expect(feed.total).toBe(19);
+      expect(feed.total).toBe(18);
     } finally {
       await app.close();
     }
   });
 
-  it('单个信源返回 HTML 挑战页：只影响它自己（14 成 1 败），其它信源照常', async () => {
+  it('单个信源返回 HTML 挑战页：只影响它自己（13 成 1 败），其它信源照常', async () => {
     const app = await newsApp({ http: fakeHttp({ brokenHosts: ['www.ecb.europa.eu'] }) });
     try {
       const stats = await refresh(app);
       expect(stats.ok).toBe(false);
-      expect(stats.fetched).toBe(14);
+      expect(stats.fetched).toBe(13);
       expect(stats.failed).toBe(1);
-      expect(stats.inserted).toBe(18);
+      expect(stats.inserted).toBe(17);
 
       const { body } = await get<NewsSourcesResponse>(app, '/api/tools/news/sources');
       const ecb = body.sources.find((source) => source.id === 'ecb');
@@ -368,7 +369,7 @@ describe('POST /api/tools/news/refresh —— 抓取与信源健康', () => {
       expect(body.lastRun?.failFeeds).toBe(1);
       // 信息流完全不受影响
       const { body: feed } = await get<NewsFeedResponse>(app, '/api/tools/news/feed?range=all');
-      expect(feed.total).toBe(18);
+      expect(feed.total).toBe(17);
     } finally {
       await app.close();
     }
@@ -379,7 +380,7 @@ describe('POST /api/tools/news/refresh —— 抓取与信源健康', () => {
     try {
       const { status, body } = await get<NewsSourcesResponse>(app, '/api/tools/news/sources');
       expect(status).toBe(200);
-      expect(body.sources).toHaveLength(15);
+      expect(body.sources).toHaveLength(14);
       expect(body.sources.every((source) => source.lastFetchedAt === null)).toBe(true);
       expect(body.sources.every((source) => source.itemCount === 0)).toBe(true);
       expect(body.lastRun).toBeNull();
@@ -401,8 +402,8 @@ describe('GET /api/tools/news/feed —— 服务端筛选与游标分页', () =>
     try {
       const { status, body } = await get<NewsFeedResponse>(app, '/api/tools/news/feed');
       expect(status).toBe(200);
-      expect(body.total).toBe(17); // 19 条里有 2 条是昨天的
-      expect(body.items).toHaveLength(17);
+      expect(body.total).toBe(16); // 18 条里有 2 条是昨天的
+      expect(body.items).toHaveLength(16);
       expect(body.freshness.source).toBe('rss');
 
       const keys = body.items.map((item) => item.publishedAt ?? item.fetchedAt);
@@ -417,7 +418,7 @@ describe('GET /api/tools/news/feed —— 服务端筛选与游标分页', () =>
     }
   });
 
-  it('窗口语义：今日 17 条、昨日 2 条、近 3 日/近 7 日/全部都是 19 条', async () => {
+  it('窗口语义：今日 16 条、昨日 2 条、近 3 日/近 7 日/全部都是 18 条', async () => {
     const app = await seeded();
     try {
       const totals: Record<string, number | null> = {};
@@ -425,7 +426,7 @@ describe('GET /api/tools/news/feed —— 服务端筛选与游标分页', () =>
         const { body } = await get<NewsFeedResponse>(app, `/api/tools/news/feed?range=${range}`);
         totals[range] = body.total;
       }
-      expect(totals).toEqual({ today: 17, yesterday: 2, '3d': 19, '7d': 19, all: 19 });
+      expect(totals).toEqual({ today: 16, yesterday: 2, '3d': 18, '7d': 18, all: 18 });
     } finally {
       await app.close();
     }
@@ -452,9 +453,9 @@ describe('GET /api/tools/news/feed —— 服务端筛选与游标分页', () =>
         pages += 1;
       } while (cursor !== null && pages < 20);
 
-      expect(firstTotal).toBe(19);
-      expect(ids).toHaveLength(19);
-      expect(new Set(ids).size).toBe(19);
+      expect(firstTotal).toBe(18);
+      expect(ids).toHaveLength(18);
+      expect(new Set(ids).size).toBe(18);
       expect(pages).toBe(4);
     } finally {
       await app.close();
@@ -714,7 +715,7 @@ describe('POST /api/tools/news/summaries/generate —— 正常路径', () => {
 
         // 信息流与简报是两条读路径：生成后信息流照常
         const { body: feed } = await get<NewsFeedResponse>(app, '/api/tools/news/feed');
-        expect(feed.total).toBe(17);
+        expect(feed.total).toBe(16);
       },
     );
 
@@ -869,7 +870,7 @@ describe('POST /api/tools/news/summaries/generate —— 失败要显式', () =>
 
         // 但信息流完全不受影响 —— 这是整个设计的可用性下限
         const { body: feed } = await get<NewsFeedResponse>(app, '/api/tools/news/feed');
-        expect(feed.total).toBe(17);
+        expect(feed.total).toBe(16);
       },
     );
     await app.close();
@@ -1094,5 +1095,187 @@ describe('历史与任务触发', () => {
       },
     );
     await app.close();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 按日期查看（历史简报入数据库）
+// ---------------------------------------------------------------------------
+
+describe('按日期查看信息流与中文简报', () => {
+  it('信息流可按 Asia/Shanghai 日历日取数（date 优先于 range）', async () => {
+    const app = await newsApp();
+    try {
+      await refresh(app);
+
+      const today = await get<NewsFeedResponse>(
+        app,
+        '/api/tools/news/feed?range=all&date=2026-09-26',
+      );
+      expect(today.status).toBe(200);
+      expect(today.body.total).toBe(16); // 默认今天 16 条
+
+      const yesterday = await get<NewsFeedResponse>(app, '/api/tools/news/feed?date=2026-09-25');
+      expect(yesterday.status).toBe(200);
+      expect(yesterday.body.total).toBe(2); // 昨天只有 ft.home 与 ecb 各 1 条
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('非法日期 → 400（服务端不静默回退到别的窗口）', async () => {
+    const app = await newsApp();
+    try {
+      const bad = await get(app, '/api/tools/news/feed?date=2026-13-40');
+      expect(bad.status).toBe(400);
+      const badSummary = await get(app, '/api/tools/news/summary?date=09-27-2026');
+      expect(badSummary.status).toBe(400);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('简报按 report_date 入库：可按日期取回，并列进日期索引', async () => {
+    const app = await newsApp();
+    await refresh(app);
+
+    await withModel(
+      () => ({ content: JSON.stringify(VALID_PAYLOAD) }),
+      async (baseUrl) => {
+        await configure(app, baseUrl);
+        const gen = await post<NewsGenerateResponse>(app, '/api/tools/news/summaries/generate', {
+          window: 'today',
+          force: true,
+        });
+        expect(gen.status).toBe(200);
+        expect(gen.body.summary.reportDate).toBe('2026-09-26');
+
+        // 按日期取回同一份（历史简报在库里）
+        const byDate = await get<NewsSummaryResponse>(
+          app,
+          '/api/tools/news/summary?date=2026-09-26',
+        );
+        expect(byDate.status).toBe(200);
+        expect(byDate.body.summary.id).toBe(gen.body.summary.id);
+        expect(byDate.body.summary.payload?.headline).toBe(VALID_PAYLOAD.headline);
+
+        // 日期索引里出现这一天
+        const dates = await get<NewsDatesResponse>(app, '/api/tools/news/summary/dates');
+        expect(dates.status).toBe(200);
+        expect(dates.body.dates[0]?.date).toBe('2026-09-26');
+        expect(dates.body.dates[0]?.summaryId).toBe(gen.body.summary.id);
+
+        // 没有简报的日期 → 404
+        const missing = await get(app, '/api/tools/news/summary?date=2026-09-01');
+        expect(missing.status).toBe(404);
+      },
+    );
+    await app.close();
+  });
+
+  it('yesterday 简报落在昨天，且 today 窗口不会串天返回旧简报', async () => {
+    const app = await newsApp();
+    await refresh(app);
+
+    await withModel(
+      () => ({ content: JSON.stringify(VALID_PAYLOAD) }),
+      async (baseUrl) => {
+        await configure(app, baseUrl);
+        const gen = await post<NewsGenerateResponse>(app, '/api/tools/news/summaries/generate', {
+          window: 'yesterday',
+          force: true,
+        });
+        expect(gen.status).toBe(200);
+        expect(gen.body.summary.reportDate).toBe('2026-09-25');
+
+        // 今天还没生成过 → today 窗口必须 404（不能把昨天那份 yesterday 拿回来）
+        const today = await get(app, '/api/tools/news/summary?window=today');
+        expect(today.status).toBe(404);
+        // 但按日期能取到昨天那份
+        const byDate = await get<NewsSummaryResponse>(
+          app,
+          '/api/tools/news/summary?date=2026-09-25',
+        );
+        expect(byDate.status).toBe(200);
+      },
+    );
+    await app.close();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 抓取完成后自动生成今日简报
+// ---------------------------------------------------------------------------
+
+describe('news.fetch 抓完后自动生成今日简报', () => {
+  it('未配置模型：抓取照常，自动生成显式跳过', async () => {
+    const app = await newsApp();
+    try {
+      const body = await refresh(app);
+      expect(body.fetched).toBe(14);
+      expect(body.summary?.status).toBe('skipped');
+      expect(body.summary?.reason).toContain('还没有配置模型');
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('配置了模型：抓完一轮就生成今日简报（只调用一次模型）', async () => {
+    const app = await newsApp();
+    await withModel(
+      () => ({ content: JSON.stringify(VALID_PAYLOAD) }),
+      async (baseUrl, calls) => {
+        await configure(app, baseUrl);
+        const body = await refresh(app);
+        expect(body.ok).toBe(true);
+        expect(body.summary?.status).toBe('generated');
+        expect(body.summary?.summaryId).toBeGreaterThan(0);
+        expect(calls).toHaveLength(1);
+
+        const byDate = await get<NewsSummaryResponse>(
+          app,
+          '/api/tools/news/summary?date=2026-09-26',
+        );
+        expect(byDate.status).toBe(200);
+        expect(byDate.body.summary.payload?.headline).toBe(VALID_PAYLOAD.headline);
+      },
+    );
+    await app.close();
+  });
+
+  it('陈旧窗口内不重复调模型：第二轮抓取复用缓存', async () => {
+    const app = await newsApp();
+    await withModel(
+      () => ({ content: JSON.stringify(VALID_PAYLOAD) }),
+      async (baseUrl, calls) => {
+        await configure(app, baseUrl);
+        await refresh(app);
+        expect(calls).toHaveLength(1);
+
+        app.advance(3600_000); // 到点重抓（全部 304，无新增条目）
+        const again = await refresh(app);
+        expect(again.summary?.status).toBe('reused');
+        expect(again.summary?.summaryId).toBeGreaterThan(0);
+        expect(calls).toHaveLength(1); // 仍是 1 次模型调用
+      },
+    );
+    await app.close();
+  });
+
+  it('模型不可达：抓取任务仍成功，自动生成记为 failed（信息流不受影响）', async () => {
+    const app = await newsApp();
+    try {
+      await configure(app, 'http://127.0.0.1:1');
+      const body = await refresh(app);
+      expect(body.ok).toBe(true);
+      expect(body.fetched).toBe(14);
+      expect(body.summary?.status).toBe('failed');
+
+      const feed = await get<NewsFeedResponse>(app, '/api/tools/news/feed');
+      expect(feed.status).toBe(200);
+      expect(feed.body.total).toBe(16);
+    } finally {
+      await app.close();
+    }
   });
 });

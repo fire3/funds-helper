@@ -373,7 +373,7 @@ async function main() {
     );
   }
 
-  // ---- 财经信息流（真实 RSS：15 个英文信源，见 docs/design/news-tool.md）----
+  // ---- 财经信息流（真实 RSS：14 个英文信源，见 docs/design/news-tool.md）----
   check('工具清单包含 news', health.body?.tools?.some((tool) => tool.id === 'news') === true);
 
   const newsRefreshResponse = await fetch(`${BASE}/api/tools/news/refresh`, { method: 'POST' });
@@ -388,8 +388,8 @@ async function main() {
 
   const newsSources = await getJson('/api/tools/news/sources');
   check(
-    'GET /api/tools/news/sources 返回 15 个信源',
-    newsSources.status === 200 && (newsSources.body?.sources?.length ?? 0) === 15,
+    'GET /api/tools/news/sources 返回注册表里的全部信源',
+    newsSources.status === 200 && (newsSources.body?.sources?.length ?? 0) === 14,
     `HTTP ${newsSources.status} sources=${newsSources.body?.sources?.length ?? 0}`,
   );
   // 网络层失败（DNS/超时/被墙）没有 HTTP 状态码 → last_status 为 null、last_error 有值；

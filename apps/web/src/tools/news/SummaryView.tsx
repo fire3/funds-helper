@@ -9,24 +9,38 @@ import {
 } from '@funds-helper/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Badge, EmptyState, ErrorState, SectionCard, Spinner } from '../../components/ui.tsx';
+import { Badge, Chip, EmptyState, ErrorState, SectionCard, Spinner } from '../../components/ui.tsx';
 import { ApiError, api, apiErrorDetail, apiErrorMessage } from '../../lib/api.ts';
 import { formatDateTime } from '../../lib/format.ts';
-import { shanghaiDateTime } from './format.ts';
+import type { NewsFilters } from './filters.ts';
+import { shanghaiDateTime, shanghaiToday, shanghaiYesterday } from './format.ts';
 
 /**
  * 中文简报视图。
  *
+ * 两种进入方式（`view.date` 优先）：
+ * - **按日期**：选任意一天，读库里那一天的历史简报（`report_date`）；只有今天/昨天
+ *   还能重新生成，更早的日期是只读归档。
+ * - **按窗口**：today / yesterday / last7d，与生成记录一一对应。
+ *
  * 三种警示**一律显示在顶部条上，不藏进 tooltip**（dropped / invalidRefs / 旧提示词）——
  * 「模型编造了引用」「预算截断了条目」这类事实必须被看见，否则会变成误导。
  */
-export function NewsSummaryView({ window: win }: { window: NewsWindow }) {
+export function NewsSummaryView({
+  view,
+  onApply,
+}: {
+  view: NewsFilters;
+  onApply: (next: NewsFilters) => void;
+}) {
   const queryClient = useQueryClient();
   const [showHistory, setShowHistory] = useState(false);
+  const win = view.window;
+  const date = view.date;
 
   const summaryQuery = useQuery({
-    queryKey: ['news', 'summary', win],
-    queryFn: () => api.getNewsSummary(win),
+    queryKey: date === null ? ['news', 'summary', win] : ['news', 'summary', 'date', date],
+    queryFn: date === null ? () => api.getNewsSummary(win) : () => api.getNewsSummaryByDate(date),
     retry: false,
     staleTime: 5 * 60_000,
   });
@@ -35,18 +49,37 @@ export function NewsSummaryView({ window: win }: { window: NewsWindow }) {
     queryFn: () => api.getNewsConfig(),
     staleTime: 60_000,
   });
+  /** 历史简报日期索引：哪几天有简报（服务端从库里现取） */
+  const datesQuery = useQuery({
+    queryKey: ['news', 'summary-dates'],
+    queryFn: () => api.getNewsSummaryDates(),
+    staleTime: 60_000,
+  });
   const historyQuery = useQuery({
     queryKey: ['news', 'history', win],
     queryFn: () => api.getNewsSummaryHistory(win),
-    enabled: showHistory,
+    enabled: showHistory && date === null,
     staleTime: 60_000,
   });
 
+  const today = shanghaiToday();
+  // 只有今天/昨天有对应的生成窗口（window 枚举就这三档），更早的日期只能读归档
+  const generateWindow: NewsWindow | null =
+    date === null
+      ? win
+      : date === today
+        ? 'today'
+        : date === shanghaiYesterday()
+          ? 'yesterday'
+          : null;
+
   const generate = useMutation({
-    mutationFn: (force: boolean) => api.generateNewsSummary({ window: win, force }),
+    mutationFn: (force: boolean) =>
+      api.generateNewsSummary({ window: generateWindow ?? 'today', force }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['news', 'summary', win] });
-      queryClient.invalidateQueries({ queryKey: ['news', 'history', win] });
+      queryClient.invalidateQueries({ queryKey: ['news', 'summary'] });
+      queryClient.invalidateQueries({ queryKey: ['news', 'summary-dates'] });
+      queryClient.invalidateQueries({ queryKey: ['news', 'history'] });
       queryClient.invalidateQueries({ queryKey: ['news', 'config'] });
     },
   });
@@ -82,15 +115,19 @@ export function NewsSummaryView({ window: win }: { window: NewsWindow }) {
   const windowTotal = (summary?.itemCount ?? 0) + (summary?.droppedCount ?? 0);
   const latestHistory = historyQuery.data?.history[0];
   const lastFailure = historyQuery.data?.history.find((row) => row.status === 'failed');
+  const title = date !== null ? `${date} 中文简报` : `${NEWS_WINDOW_LABELS[win]}简报`;
+  const availableDates = (datesQuery.data?.dates ?? []).filter((entry) => entry.date !== today);
 
   return (
     <div className="space-y-4">
       {/* ---- 顶部条 ---- */}
       <SectionCard
-        title={`${NEWS_WINDOW_LABELS[win]}简报`}
+        title={title}
         subtitle={
           summary === undefined || summary === null
-            ? '该窗口还没有生成过简报'
+            ? date !== null
+              ? `${date} 还没有简报`
+              : '该窗口还没有生成过简报'
             : `${shanghaiDateTime(summary.generatedAt) ?? '--'} 生成 · 模型 ${summary.model ?? '未知'} · ` +
               `提示词 ${summary.promptKey ?? '未知'} (${summary.promptHash ?? '--'}) · ` +
               `${summary.itemCount ?? 0} 条送入模型` +
@@ -106,29 +143,69 @@ export function NewsSummaryView({ window: win }: { window: NewsWindow }) {
                 今日 AI 调用 {usage.used}/{usage.limit}
               </span>
             ) : null}
-            <button
-              type="button"
-              onClick={() => setShowHistory((value) => !value)}
-              className="rounded-md border border-slate-300 px-2.5 py-1 text-xs text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
-            >
-              {showHistory ? '收起历史' : '历史'}
-            </button>
-            <button
-              type="button"
-              onClick={() => generate.mutate(true)}
-              disabled={generate.isPending}
-              className="rounded-md bg-sky-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-sky-700 disabled:opacity-50"
-            >
-              {generate.isPending
-                ? '生成中…'
-                : summary === undefined || summary === null
-                  ? '生成简报'
-                  : '重新生成'}
-            </button>
+            {date === null ? (
+              <button
+                type="button"
+                onClick={() => setShowHistory((value) => !value)}
+                className="rounded-md border border-slate-300 px-2.5 py-1 text-xs text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+              >
+                {showHistory ? '收起历史' : '历史'}
+              </button>
+            ) : null}
+            {generateWindow !== null ? (
+              <button
+                type="button"
+                onClick={() => generate.mutate(true)}
+                disabled={generate.isPending}
+                className="rounded-md bg-sky-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-sky-700 disabled:opacity-50"
+              >
+                {generate.isPending
+                  ? '生成中…'
+                  : summary === undefined || summary === null
+                    ? '生成简报'
+                    : '重新生成'}
+              </button>
+            ) : (
+              <span className="text-xs text-slate-400">历史日期（只读归档）</span>
+            )}
           </div>
         }
       >
         <div className="space-y-2">
+          {/* ---- 按日期查看 ---- */}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs text-slate-500 dark:text-slate-400">按日期</span>
+            <input
+              type="date"
+              value={date ?? ''}
+              onChange={(event) =>
+                onApply({ ...view, date: event.target.value === '' ? null : event.target.value })
+              }
+              className="rounded-md border border-slate-300 bg-white px-2 py-1 text-xs outline-none focus:border-sky-500 dark:border-slate-700 dark:bg-slate-950"
+            />
+            <Chip active={date === today} onClick={() => onApply({ ...view, date: today })}>
+              今天
+            </Chip>
+            {availableDates.slice(0, 21).map((entry) => (
+              <Chip
+                key={entry.date}
+                active={date === entry.date}
+                onClick={() => onApply({ ...view, date: entry.date })}
+              >
+                {entry.date.slice(5)}
+              </Chip>
+            ))}
+            {date !== null ? (
+              <button
+                type="button"
+                onClick={() => onApply({ ...view, date: null })}
+                className="text-xs text-slate-500 underline"
+              >
+                回到窗口
+              </button>
+            ) : null}
+          </div>
+
           {generate.isSuccess && generate.data.reused ? (
             <p className="rounded-md border border-sky-200 bg-sky-50 px-3 py-2 text-xs text-sky-800 dark:border-sky-900 dark:bg-sky-950/40 dark:text-sky-300">
               距上次生成不足 4 小时且期间没有新条目，返回缓存的那份（本次没有调用模型）。
@@ -168,21 +245,29 @@ export function NewsSummaryView({ window: win }: { window: NewsWindow }) {
 
           {notFound ? (
             <EmptyState
-              message={`「${NEWS_WINDOW_LABELS[win]}」还没有生成过简报`}
+              message={
+                date !== null
+                  ? `${date} 还没有简报`
+                  : `「${NEWS_WINDOW_LABELS[win]}」还没有生成过简报`
+              }
               action={
-                <button
-                  type="button"
-                  onClick={() => generate.mutate(true)}
-                  disabled={generate.isPending}
-                  className="rounded-md bg-sky-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-sky-700 disabled:opacity-50"
-                >
-                  {generate.isPending ? '生成中…' : '生成简报'}
-                </button>
+                generateWindow !== null ? (
+                  <button
+                    type="button"
+                    onClick={() => generate.mutate(true)}
+                    disabled={generate.isPending}
+                    className="rounded-md bg-sky-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-sky-700 disabled:opacity-50"
+                  >
+                    {generate.isPending ? '生成中…' : '生成简报'}
+                  </button>
+                ) : (
+                  <span className="text-xs text-slate-400">换一个日期，或回到窗口查看</span>
+                )
               }
             />
           ) : null}
 
-          {showHistory ? (
+          {showHistory && date === null ? (
             historyQuery.isPending ? (
               <Spinner label="加载历史…" />
             ) : (

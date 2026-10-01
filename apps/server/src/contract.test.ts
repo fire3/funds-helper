@@ -285,8 +285,8 @@ describe('news 工具的口径一致性', () => {
     ).toBe(false);
   });
 
-  it('15 个信源全部登记在册，且都能对上一份 fixture', () => {
-    expect(FEEDS).toHaveLength(15);
+  it('启用的信源全部登记在册，且都能对上一份 fixture', () => {
+    expect(FEEDS).toHaveLength(14);
     const fixtures = new Set(FEEDS.map((feed) => feed.fixture));
     expect(fixtures.size).toBe(FEEDS.length); // 一个信源一份 fixture，不共用
     for (const feed of FEEDS) expect(feed.fixture.endsWith('.xml')).toBe(true);

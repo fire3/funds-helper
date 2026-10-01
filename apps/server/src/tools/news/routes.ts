@@ -3,6 +3,7 @@ import {
   NEWS_RANGES,
   NEWS_WINDOWS,
   type NewsConfigTestResponse,
+  NewsDateSchema,
   NewsGenerateRequestSchema,
   type NewsGenerateResponse,
   NewsPromptUpdateSchema,
@@ -49,6 +50,16 @@ function windowOf(request: FastifyRequest): NewsWindow {
     throw badRequest('窗口参数非法', String(raw));
   }
   return value as NewsWindow;
+}
+
+/**
+ * 可选的上海日历日参数。格式非法**直接 400**（不像前端那样静默丢弃）：
+ * 这是服务端接口，笔误应该被看见，而不是悄悄回退到别的窗口。
+ */
+function dateOf(request: FastifyRequest): string | null {
+  const raw = queryOf(request).date;
+  if (raw === undefined || raw === '') return null;
+  return validated(() => NewsDateSchema.parse(String(raw)));
 }
 
 /** 分组/信源参数**不许静默忽略**：笔误该被看见，而不是悄悄返回全量 */
@@ -107,6 +118,7 @@ export function registerNewsRoutes(
 
     return service.getFeed({
       range: rawRange as NewsRange,
+      date: dateOf(request),
       categories: sanitizeList(csv(query.cat), NEWS_CATEGORIES, '分组'),
       sources: sanitizeList(csv(query.src), FEED_IDS, '信源'),
       q: query.q === undefined ? '' : String(query.q),
@@ -115,11 +127,17 @@ export function registerNewsRoutes(
     });
   });
 
-  /** 16 个信源的健康状态（最近抓取、状态码、连续失败、下次抓取） */
+  /** 各信源的健康状态（最近抓取、状态码、连续失败、下次抓取） */
   app.get('/sources', async () => service.getSources());
 
-  /** 最新一份**成功**简报 + 回填的引用条目；从未生成过 → 404 */
-  app.get('/summary', async (request) => service.getSummary(windowOf(request)));
+  /** 最新一份**成功**简报 + 回填的引用条目；`?date=` 按日历日取历史，`?window=` 取当前窗口 */
+  app.get('/summary', async (request) => {
+    const date = dateOf(request);
+    return date === null ? service.getSummary(windowOf(request)) : service.getSummaryByDate(date);
+  });
+
+  /** 有历史简报的日期索引（倒序）：前端据此渲染「哪几天有简报」 */
+  app.get('/summary/dates', async () => service.getSummaryDates());
 
   app.get('/summary/history', async (request) => service.getHistory(windowOf(request)));
 

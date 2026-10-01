@@ -8,6 +8,14 @@
 > 框架能力见 [`architecture.md`](./architecture.md)。
 >
 > **本文只讨论 `news` 工具的设计**，不重复框架内容。
+>
+> **2026-09-28 实现修订**（本文以下章节的对应实现已随这次修订更新）：
+> 1. **下架不可达信源**：复测发现 `yahoo.finance` 对 Node/undici 的请求指纹持续返回 429
+>    （curl 可达、应用自身不可达），已从注册表移除，启用信源 15 → **14**；
+> 2. **抓完即出今日简报**：`news.fetch` 抓取完成后自动 `generate({window:'today'}, 'scheduled')`，
+>    未配置模型 / 额度用尽 / 陈旧窗口命中都会显式跳过或复用；08:30 的 `news.summary` 保留为兜底；
+> 3. **按日期查看 + 历史简报落库**：`news_summary` 新增 `report_date`（上海日历日，迁移 0014），
+>    `GET /feed?date=`、`GET /summary?date=`、`GET /summary/dates` 支持按日期取信息流与历史简报。
 
 ---
 
@@ -591,11 +599,13 @@ CREATE INDEX idx_news_summary_gen ON news_summary(generated_at DESC);
 
 | 方法 | 路径 | 说明 |
 |---|---|---|
-| `GET` | `/api/tools/news/feed` | 分页信息流：`?range&cat&src&q&cursor&limit`（服务端筛选 + 游标分页） |
-| `GET` | `/api/tools/news/sources` | 16 个信源的健康状态（最近抓取、状态码、连续失败、下次抓取） |
-| `GET` | `/api/tools/news/summary?window=yesterday` | 最新一份成功简报 + 其引用回填的条目 |
+| `GET` | `/api/tools/news/feed` | 分页信息流：`?range&date&cat&src&q&cursor&limit`（`date=YYYY-MM-DD` 优先于 `range`，按上海日历日取数；服务端筛选 + 游标分页） |
+| `GET` | `/api/tools/news/sources` | 14 个信源的健康状态（最近抓取、状态码、连续失败、下次抓取） |
+| `GET` | `/api/tools/news/summary?window=yesterday` | 最新一份成功简报 + 其引用回填的条目（单日窗口校验 `window_start`，不会串天） |
+| `GET` | `/api/tools/news/summary?date=2026-09-25` | 按上海日历日取历史简报（`report_date`，同一天取最新一份） |
+| `GET` | `/api/tools/news/summary/dates` | 有简报的日期索引（倒序），前端据此渲染「哪几天有简报」 |
 | `GET` | `/api/tools/news/summary/history?window=` | 该窗口的历史（模型、时间、token、状态） |
-| `POST` | `/api/tools/news/summaries/generate` | 生成 `{window, promptKey}`，遵守陈旧规则与 `dailyLimit` |
+| `POST` | `/api/tools/news/summaries/generate` | 生成 `{window, promptKey}`，遵守陈旧规则与 `dailyLimit`；`news.fetch` 抓完后也会自动生成 `today` |
 | `GET` | `/api/tools/news/config` | 模型配置（**不含 apiKey 明文**）+ 提示词 + 今日用量 |
 | `PUT` | `/api/tools/news/config` | 更新模型配置 |
 | `PUT` | `/api/tools/news/prompts/:key` | 更新提示词 |

@@ -11,6 +11,7 @@ import { SQL as ETF_FEEDER_FUND_PK } from './0010-etf-feeder-fund-pk.ts';
 import { SQL as ETF_HOTSPOT } from './0011-etf-hotspot.ts';
 import { SQL as NEWS } from './0012-news.ts';
 import { SQL as INDEX_QUOTE } from './0013-index-quote.ts';
+import { SQL as NEWS_REPORT_DATE } from './0014-news-report-date.ts';
 
 export interface Migration {
   id: string;
@@ -37,4 +38,5 @@ export const MIGRATIONS: readonly Migration[] = [
   { id: '0011-etf-hotspot', sql: ETF_HOTSPOT },
   { id: '0012-news', sql: NEWS },
   { id: '0013-index-quote', sql: INDEX_QUOTE },
+  { id: '0014-news-report-date', sql: NEWS_REPORT_DATE },
 ];

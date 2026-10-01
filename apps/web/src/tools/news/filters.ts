@@ -38,6 +38,8 @@ export interface NewsFilters {
   window: NewsWindow;
   /** 信息流窗口 */
   range: NewsRange;
+  /** 按日历日查看（`YYYY-MM-DD`）：设置后优先于 range，两个视图共用 */
+  date: string | null;
   categories: NewsCategory[];
   sources: string[];
   keyword: string;
@@ -47,6 +49,7 @@ export const DEFAULT_NEWS_FILTERS: NewsFilters = {
   tab: 'summary',
   window: 'today',
   range: 'today',
+  date: null,
   categories: [],
   sources: [],
   keyword: '',
@@ -63,6 +66,13 @@ function pick<T extends string>(value: string | null, allowed: Set<string>, fall
   return value !== null && allowed.has(value) ? (value as T) : fallback;
 }
 
+/** 只保留合法的 `YYYY-MM-DD`：日历日的笔误不该让服务端回 400 */
+function pickDate(value: string | null): string | null {
+  if (value === null || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+  const ms = Date.parse(`${value}T00:00:00Z`);
+  return Number.isNaN(ms) || new Date(ms).toISOString().slice(0, 10) !== value ? null : value;
+}
+
 /** 多选值用逗号分隔（`?cat=media,policy`），与服务端的 `csv()` 解析对齐 */
 function pickAll(value: string | null, allowed: Set<string>): string[] {
   if (value === null) return [];
@@ -77,6 +87,7 @@ export function fromSearchParams(params: URLSearchParams): NewsFilters {
     tab: pick(params.get('tab'), TAB_SET, DEFAULT_NEWS_FILTERS.tab),
     window: pick(params.get('window'), WINDOW_SET, DEFAULT_NEWS_FILTERS.window),
     range: pick(params.get('range'), RANGE_SET, DEFAULT_NEWS_FILTERS.range),
+    date: pickDate(params.get('date')),
     categories: pickAll(params.get('cat'), CATEGORY_SET) as NewsCategory[],
     sources: pickAll(params.get('src'), SOURCE_SET),
     keyword: params.get('q') ?? '',
@@ -89,6 +100,7 @@ export function toSearchParams(filters: NewsFilters): URLSearchParams {
   if (filters.tab !== DEFAULT_NEWS_FILTERS.tab) params.set('tab', filters.tab);
   if (filters.window !== DEFAULT_NEWS_FILTERS.window) params.set('window', filters.window);
   if (filters.range !== DEFAULT_NEWS_FILTERS.range) params.set('range', filters.range);
+  if (filters.date !== null) params.set('date', filters.date);
   if (filters.categories.length > 0) params.set('cat', filters.categories.join(','));
   if (filters.sources.length > 0) params.set('src', filters.sources.join(','));
   if (filters.keyword.trim() !== '') params.set('q', filters.keyword.trim());
@@ -103,6 +115,7 @@ export function buildFeedQuery(
 ): string {
   const params = new URLSearchParams();
   params.set('range', filters.range);
+  if (filters.date !== null) params.set('date', filters.date);
   if (filters.categories.length > 0) params.set('cat', filters.categories.join(','));
   if (filters.sources.length > 0) params.set('src', filters.sources.join(','));
   if (filters.keyword.trim() !== '') params.set('q', filters.keyword.trim());

@@ -16,8 +16,11 @@ import {
   type NewsAiConfig,
   type NewsAiConfigPublic,
   NewsAiConfigSchema,
+  type NewsAutoSummary,
   type NewsCategory,
   type NewsConfigResponse,
+  type NewsDateSummary,
+  type NewsDatesResponse,
   type NewsFeedResponse,
   type NewsGenerateRequest,
   type NewsGenerateResponse,
@@ -95,6 +98,8 @@ const TODAY_STALE_AFTER_MS = 4 * 3_600_000;
 const TODAY_STALE_NEW_ITEMS = 30;
 /** 失败退避上限：4 小时（design §3.3） */
 const MAX_BACKOFF_MS = 4 * 3_600_000;
+/** 自动生成失败后的冷却：抓取每 10 分钟一次，失败后别每轮都去撞模型 */
+const AUTO_SUMMARY_FAILURE_COOLDOWN_MS = 30 * 60_000;
 const FEED_PAGE_DEFAULT_LIMIT = 100;
 const FEED_PAGE_MAX_LIMIT = 500;
 
@@ -156,6 +161,17 @@ export function rangeBounds(
     default:
       return { startIso: iso(todayStart), endIso: untilNow };
   }
+}
+
+/** 任意 Asia/Shanghai 日历日（`YYYY-MM-DD`）的显式区间：`[dayStart, dayStart+1d)` */
+export function dayRange(date: string): TimeRange {
+  const start = Date.parse(`${date}T00:00:00+08:00`);
+  return { start, end: start + DAY_MS };
+}
+
+/** 这份简报覆盖的上海日历日：单日窗口取 `windowStart` 那天，跨日窗口没有单一日期 */
+function reportDateOf(window: NewsWindow, range: TimeRange): string | null {
+  return window === 'last7d' ? null : shanghaiDate(range.start);
 }
 
 function windowLabel(window: NewsWindow, range: TimeRange): string {
@@ -246,7 +262,7 @@ export class NewsService {
    * 抓一轮信源：只拉 `next_fetch_at <= now` 的（`force` 全拉）。
    *
    * 单个信源失败**只影响它自己**（退避 + 记 `last_error`），其它信源照常 ——
-   * 一次任务里 16 个信源可能 12 成 4 败，任务是 success 的、信源是坏的，
+   * 一次任务里多个信源可能几成几败，任务是 success 的、信源是坏的，
    * 所以另有一张 `news_fetch_run` 记**信源维度**的健康。
    */
   async fetchFeeds(options: { force?: boolean } = {}): Promise<NewsRefreshResponse> {
@@ -420,13 +436,15 @@ export class NewsService {
 
   getFeed(params: {
     range: NewsRange;
+    /** 指定上海日历日（`YYYY-MM-DD`）时优先于 `range`：按「那一天」而不是预设窗口取数 */
+    date: string | null;
     categories: readonly string[];
     sources: readonly string[];
     q: string;
     cursor: string | null;
     limit: number | undefined;
   }): NewsFeedResponse {
-    if (!(NEWS_RANGES as readonly string[]).includes(params.range)) {
+    if (params.date === null && !(NEWS_RANGES as readonly string[]).includes(params.range)) {
       throw badRequest('时间窗口非法', String(params.range));
     }
     const limit = params.limit ?? FEED_PAGE_DEFAULT_LIMIT;
@@ -435,7 +453,13 @@ export class NewsService {
     }
 
     const nowMs = this.now();
-    const bounds = rangeBounds(params.range, nowMs);
+    const bounds =
+      params.date === null
+        ? rangeBounds(params.range, nowMs)
+        : (() => {
+            const day = dayRange(params.date);
+            return { startIso: iso(day.start), endIso: iso(day.end) };
+          })();
     const filters = {
       startIso: bounds.startIso,
       endIso: bounds.endIso,
@@ -472,7 +496,7 @@ export class NewsService {
   }
 
   getSources(): NewsSourcesResponse {
-    // 信源页在**第一次抓取之前**就该列出 16/15 个信源（状态为「未抓取」），
+    // 信源页在**第一次抓取之前**就该列出注册表里的全部信源（状态为「未抓取」），
     // 否则新装好的实例上这一页是空的，看起来像坏了
     this.deps.repo.ensureSources(iso(this.now()));
     const counts = this.deps.repo.sourceItemCounts();
@@ -641,13 +665,45 @@ export class NewsService {
 
   getSummary(window: NewsWindow): NewsSummaryResponse {
     const row = this.deps.repo.latestSuccessSummary(window);
-    if (row === null) {
+    // 单日窗口必须落在**当前**这一天：否则新的一天还没生成时，
+    // `/summary?window=today` 会把昨天那份 `today` 当真返回（按日期查看的前提）
+    if (row === null || !this.matchesWindowStart(window, row)) {
       throw notFound(
         '该窗口还没有生成过简报',
         '点「生成简报」手动触发一次（会消耗一次 AI 调用额度）',
       );
     }
     return { summary: this.toRecord(row, true), disclaimer: NEWS_DISCLAIMER };
+  }
+
+  private matchesWindowStart(window: NewsWindow, row: NewsSummaryRow): boolean {
+    if (window === 'last7d') return true; // 滚动窗口：最近一份就是当前这份
+    return row.window_start === iso(windowRange(window, this.now()).start);
+  }
+
+  /** 按上海日历日取历史简报（`today` 当天生成的与次日 `yesterday` 生成的是同一天，取最新） */
+  getSummaryByDate(date: string): NewsSummaryResponse {
+    const row = this.deps.repo.successSummaryForDate(date);
+    if (row === null) {
+      throw notFound(
+        `${date} 没有中文简报`,
+        '该日期还没生成过简报，或已超出条目保留期；可换一天看看',
+      );
+    }
+    return { summary: this.toRecord(row, true), disclaimer: NEWS_DISCLAIMER };
+  }
+
+  /** 历史简报的日期索引：前端据此渲染「哪几天有简报」 */
+  getSummaryDates(): NewsDatesResponse {
+    const dates: NewsDateSummary[] = this.deps.repo.summaryDates().map(({ report_date, row }) => ({
+      date: report_date,
+      summaryId: row.id,
+      window: row.window,
+      generatedAt: row.generated_at,
+      model: row.model,
+      itemCount: row.item_count,
+    }));
+    return { dates, disclaimer: NEWS_DISCLAIMER };
   }
 
   getHistory(window: NewsWindow): NewsSummaryHistoryResponse {
@@ -675,6 +731,7 @@ export class NewsService {
       window: row.window,
       windowStart: row.window_start,
       windowEnd: row.window_end,
+      reportDate: row.report_date,
       generatedAt: row.generated_at,
       kind: row.kind as NewsSummaryKind,
       status: row.status,
@@ -738,8 +795,9 @@ export class NewsService {
     // 与 rangeBounds 同理：开放式窗口的右边界含当刻（`yesterday` 的右边界是次日 00:00，必须开）
     const windowEndIso = iso(range.end + (request.window === 'yesterday' ? 0 : 1));
 
-    // `today` 的陈旧规则：距上次生成 ≥ 4 小时或期间新增 ≥ 30 条才真的调模型
-    if (request.force !== true && request.window === 'today' && kind === 'manual') {
+    // `today` 的陈旧规则：距上次生成 ≥ 4 小时或期间新增 ≥ 30 条才真的调模型。
+    // **调度触发的自动生成同样适用**（news.fetch 每 10 分钟一跳，不设防会每轮烧一次配额）
+    if (request.force !== true && request.window === 'today' && kind !== 'test') {
       const latest = this.deps.repo.latestSuccessSummary('today');
       if (latest !== null && latest.window_start === windowStartIso) {
         const age = nowMs - Date.parse(latest.generated_at);
@@ -799,6 +857,7 @@ export class NewsService {
       window: request.window,
       windowStart: windowStartIso,
       windowEnd: windowEndIso,
+      reportDate: reportDateOf(request.window, range),
       generatedAt: iso(nowMs),
       kind,
       status: 'failed',
@@ -896,6 +955,7 @@ export class NewsService {
       window: request.window,
       windowStart: windowStartIso,
       windowEnd: windowEndIso,
+      reportDate: reportDateOf(request.window, range),
       generatedAt,
       kind,
       status: 'success',
@@ -919,6 +979,66 @@ export class NewsService {
       usage: this.usage(),
       disclaimer: NEWS_DISCLAIMER,
     };
+  }
+
+  /**
+   * 抓取完成后自动生成**今日**中文简报（`news.fetch` 任务调用）。
+   *
+   * 这是「抓完就出简报」的落点，但三道护栏都在：AI 未配置 / 已关闭 → 跳过；
+   * 今日额度用尽 → 跳过；`today` 陈旧规则命中 → 复用缓存（不调模型）。
+   * 任何失败都**只记录、不抛出** —— 信息流与抓取结果永远不受模型影响。
+   */
+  async generateTodayAfterFetch(stats: NewsRefreshResponse): Promise<NewsAutoSummary> {
+    if (stats.skipped) {
+      return { status: 'skipped', reason: '本轮没有到期的信源，没有新信息', summaryId: null };
+    }
+
+    const config = this.aiConfig();
+    if (!config.enabled) return { status: 'skipped', reason: 'AI 总结已关闭', summaryId: null };
+    if (config.baseUrl === '' || config.model === '') {
+      return { status: 'skipped', reason: '还没有配置模型地址，未生成今日简报', summaryId: null };
+    }
+
+    const usage = this.usage();
+    if (usage.used >= usage.limit) {
+      return {
+        status: 'skipped',
+        reason: `今日 AI 调用已达上限（${usage.used}/${usage.limit}）`,
+        summaryId: null,
+      };
+    }
+
+    // 失败冷却：模型刚挂过就先别每 10 分钟撞一次，等下一轮或手动重试
+    const latest = this.deps.repo.latestSummary('today');
+    if (latest !== null && latest.status === 'failed') {
+      const age = this.now() - Date.parse(latest.generated_at);
+      if (age < AUTO_SUMMARY_FAILURE_COOLDOWN_MS) {
+        return {
+          status: 'skipped',
+          reason: '上一次自动生成失败，冷却中（30 分钟后重试）',
+          summaryId: null,
+        };
+      }
+    }
+
+    try {
+      const result = await this.generate({ window: 'today' }, 'scheduled');
+      return result.reused
+        ? {
+            status: 'reused',
+            reason: '今日简报仍新鲜，复用缓存（未调用模型）',
+            summaryId: result.summary.id,
+          }
+        : {
+            status: 'generated',
+            reason: '抓取完成，已生成今日中文简报',
+            summaryId: result.summary.id,
+          };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.deps.logger.warn({ err: message }, '抓取完成后自动生成今日简报失败（信息流不受影响）');
+      return { status: 'failed', reason: message.slice(0, 300), summaryId: null };
+    }
   }
 
   private resolvePrompt(key: string | undefined, window: NewsWindow): NewsPrompt {
@@ -1097,6 +1217,7 @@ export class NewsService {
       window: 'today',
       windowStart: iso(range.start),
       windowEnd: iso(range.end),
+      reportDate: null, // 连通性测试不产生简报，不进入按日期索引
       generatedAt: iso(startedAt),
       kind: 'test',
       status: 'failed',

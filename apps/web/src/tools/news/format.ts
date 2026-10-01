@@ -31,3 +31,13 @@ export function shanghaiDateLabel(iso: string | null | undefined): string | null
   if (date === null) return null;
   return `${date.toISOString().slice(0, 10)}（${WEEKDAYS[date.getUTCDay()]}）`;
 }
+
+/** 今天的 Asia/Shanghai 日历日（`YYYY-MM-DD`） */
+export function shanghaiToday(): string {
+  return new Date(Date.now() + 8 * 3_600_000).toISOString().slice(0, 10);
+}
+
+/** 昨天的 Asia/Shanghai 日历日 */
+export function shanghaiYesterday(): string {
+  return new Date(Date.now() + 8 * 3_600_000 - 86_400_000).toISOString().slice(0, 10);
+}

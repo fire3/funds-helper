@@ -31,10 +31,11 @@ export function FeedList({
   const [keywordDraft, setKeywordDraft] = useState(view.keyword);
 
   const query = useInfiniteQuery({
-    queryKey: ['news', 'feed', view.range, view.categories, view.sources, view.keyword],
+    queryKey: ['news', 'feed', view.range, view.date, view.categories, view.sources, view.keyword],
     queryFn: ({ pageParam }) =>
       api.getNewsFeed({
         range: view.range,
+        date: view.date,
         categories: view.categories,
         sources: view.sources,
         q: view.keyword,
@@ -73,12 +74,40 @@ export function FeedList({
             {NEWS_RANGES.map((range) => (
               <Chip
                 key={range}
-                active={view.range === range}
-                onClick={() => onApply({ ...view, range })}
+                // 选了具体日期时预设窗口全部让位（日期更具体）
+                active={view.date === null && view.range === range}
+                onClick={() => onApply({ ...view, range, date: null })}
               >
                 {NEWS_RANGE_LABELS[range]}
               </Chip>
             ))}
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-start gap-2">
+          <span className="w-20 shrink-0 pt-1 text-xs text-slate-500 dark:text-slate-400">
+            日期
+          </span>
+          <div className="flex flex-1 flex-wrap items-center gap-2">
+            <input
+              type="date"
+              value={view.date ?? ''}
+              onChange={(event) =>
+                onApply({ ...view, date: event.target.value === '' ? null : event.target.value })
+              }
+              className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm outline-none focus:border-sky-500 dark:border-slate-700 dark:bg-slate-950"
+            />
+            {view.date !== null ? (
+              <button
+                type="button"
+                onClick={() => onApply({ ...view, date: null })}
+                className="text-xs text-slate-500 underline"
+              >
+                清除（回到窗口）
+              </button>
+            ) : (
+              <span className="text-xs text-slate-400">选一天按 Asia/Shanghai 日历日查看</span>
+            )}
           </div>
         </div>
 
@@ -153,7 +182,8 @@ export function FeedList({
       {query.isSuccess ? (
         <>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            {NEWS_RANGE_LABELS[view.range]}共 {total ?? items.length} 条
+            {view.date !== null ? `${view.date} ` : NEWS_RANGE_LABELS[view.range]}共{' '}
+            {total ?? items.length} 条
             {items.length < (total ?? 0) ? `（已加载 ${items.length} 条）` : ''}
             {freshness ? ` · 最新抓取 ${shanghaiTime(freshness.fetchedAt) ?? '--'}` : ''}
           </p>
@@ -244,7 +274,7 @@ function FeedRow({ item }: { item: NewsItem }) {
   );
 }
 
-/** 信源多选：15 个信源塞进一行 chips 太吵，用可折叠的选择器 */
+/** 信源多选：信源多了塞进一行 chips 太吵，用可折叠的选择器 */
 function SourcePicker({
   view,
   onApply,
@@ -269,7 +299,9 @@ function SourcePicker({
           onClick={() => setOpen((value) => !value)}
           className="rounded-md border border-slate-300 px-2.5 py-1 text-xs text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
         >
-          {view.sources.length === 0 ? '全部信源（15）' : `已选 ${view.sources.length} 个信源`}
+          {view.sources.length === 0
+            ? `全部信源（${sources.length || '…'}）`
+            : `已选 ${view.sources.length} 个信源`}
         </button>
         {view.sources.length > 0 ? (
           <button

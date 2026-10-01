@@ -7,12 +7,11 @@ function fixture(name: string): string {
   return readFileSync(new URL(`../../test/fixtures/feeds/${name}`, import.meta.url), 'utf8');
 }
 
-/** 首版启用的 15 个信源，一个不落 —— 少一个就说明注册表与 fixture 漂移了 */
+/** 当前启用的 14 个信源，一个不落 —— 少一个就说明注册表与 fixture 漂移了 */
 const REAL_FEEDS = [
   'ft-home.xml',
   'ft-markets.xml',
   'cnbc-markets.xml',
-  'yahoo-finance.xml',
   'nikkei-asia.xml',
   'scmp.xml',
   'economist-finance.xml',
@@ -26,7 +25,7 @@ const REAL_FEEDS = [
   'gnews-finance.xml',
 ] as const;
 
-describe('parseFeed —— 15 个真实信源的 fixture', () => {
+describe('parseFeed —— 14 个真实信源的 fixture', () => {
   it.each(REAL_FEEDS)('%s 能解析出条目，且每条都有标题与 http(s) 链接', (name) => {
     const result = parseFeed(fixture(name));
     expect(result.entries.length).toBeGreaterThan(0);
@@ -35,7 +34,7 @@ describe('parseFeed —— 15 个真实信源的 fixture', () => {
       expect(entry.title.length).toBeGreaterThan(0);
       expect(entry.link).toMatch(/^https?:\/\//);
     }
-    // 单条残缺只该被跳过，不该整批失败（15 个信源实测 skipped 均为 0）
+    // 单条残缺只该被跳过，不该整批失败（这些信源实测 skipped 均为 0）
     expect(result.skipped).toBe(0);
   });
 
@@ -110,13 +109,12 @@ describe('parseFeed —— 15 个真实信源的 fixture', () => {
     expect(first?.publishedAt).not.toBeNull();
   });
 
-  it('SCMP / CNBC / BoE / SEC / Yahoo / FT Markets / 三个观点源都可用', () => {
+  it('SCMP / CNBC / BoE / SEC / FT Markets / 三个观点源都可用', () => {
     const counts = [
       'scmp.xml',
       'cnbc-markets.xml',
       'boe-news.xml',
       'sec-press.xml',
-      'yahoo-finance.xml',
       'ft-markets.xml',
       'project-syndicate.xml',
       'foreign-affairs.xml',

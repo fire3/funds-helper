@@ -9,7 +9,6 @@
 | `ft-home.xml` | https://www.ft.com/rss/home | RSS 2.0 | 11 | 8690 |
 | `ft-markets.xml` | https://www.ft.com/rss/markets | RSS 2.0 | 25 | 12033 |
 | `cnbc-markets.xml` | https://www.cnbc.com/id/100003114/device/rss/rss.html | RSS 2.0 | 30 | 20817 |
-| `yahoo-finance.xml` | https://feeds.finance.yahoo.com/rss/2.0/headline?s=%5EGSPC&region=US&lang=en-US | RSS 2.0（首次请求 429，退避后重采） | 19 | 13446 |
 | `nikkei-asia.xml` | https://asia.nikkei.com/rss/feed/nar | RSS 1.0 / RDF（无 pubDate） | 50 | 25663 |
 | `scmp.xml` | https://www.scmp.com/rss/91/feed | RSS 2.0 | 50 | 83531 |
 | `economist-finance.xml` | https://www.economist.com/finance-and-economics/rss.xml | RSS 2.0（CDATA 标题/摘要） | 300 | 150559 |
@@ -26,9 +25,9 @@
 
 | 文件 | 说明 |
 |---|---|
-| `atom-entry.xml` | 按 RFC 4287 构造的 Atom 样例（首版 15 个信源都是 RSS/RDF，但解析器必须支持 Atom —— 换信源时不能重新设计） |
+| `atom-entry.xml` | 按 RFC 4287 构造的 Atom 样例（当前信源都是 RSS/RDF，但解析器必须支持 Atom —— 换信源时不能重新设计） |
 | `html-challenge.html` | WAF/错误页样例：HTTP 200 但返回 HTML，必须抛 `ParseError`（调研文档 §1.2「200 不等于可用」） |
 
-采集环境说明：`global-financial-news-sources.md` 的调研日是 2026-09-25，本次采集 2026-09-26，
-Yahoo Finance 首次请求返回 429，退避后重采成功 —— 这正是 `news_source.consec_failures`
-与退避拉长 `next_fetch_at` 要解决的问题。
+采集环境说明：`global-financial-news-sources.md` 的调研日是 2026-09-25，本次采集 2026-09-26。
+Yahoo Finance 当时首次请求返回 429（退避后重采成功），但 2026-09-28 复测发现它对
+Node/undici 的请求指纹持续 429、对应用自身不可达，已从注册表下架。

@@ -72,6 +72,8 @@ export interface NewsSummaryInput {
   window: NewsWindow;
   windowStart: string;
   windowEnd: string;
+  /** 覆盖的上海日历日（单日窗口才有值，跨日窗口为 null） */
+  reportDate: string | null;
   generatedAt: string;
   kind: string;
   status: 'success' | 'failed';
@@ -93,6 +95,7 @@ export interface NewsSummaryRow {
   window: NewsWindow;
   window_start: string;
   window_end: string;
+  report_date: string | null;
   generated_at: string;
   kind: string;
   status: 'success' | 'failed';
@@ -397,14 +400,15 @@ export class NewsRepository {
   insertSummary(input: NewsSummaryInput): number {
     return this.db.run(
       `INSERT INTO news_summary
-         (window, window_start, window_end, generated_at, kind, status, model, prompt_key,
-          prompt_hash, payload, item_count, dropped_count, invalid_refs,
+         (window, window_start, window_end, report_date, generated_at, kind, status, model,
+          prompt_key, prompt_hash, payload, item_count, dropped_count, invalid_refs,
           prompt_tokens, completion_tokens, duration_ms, error)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         input.window,
         input.windowStart,
         input.windowEnd,
+        input.reportDate,
         input.generatedAt,
         input.kind,
         input.status,
@@ -423,25 +427,66 @@ export class NewsRepository {
     ).lastInsertRowid;
   }
 
-  /** 该窗口最近一次**成功**的简报（UI 取最新，失败的那次要能在历史里看到） */
+  /**
+   * 该窗口最近一次**成功**的简报（UI 取最新，失败的那次要能在历史里看到）。
+   * **排除 `kind='test'`**：连通性测试也写 `window='today'` 且 status='success'，
+   * 不过滤的话它会把真正的简报顶掉（payload 为 null，界面一片空白）。
+   */
   latestSuccessSummary(window: NewsWindow): NewsSummaryRow | null {
     return (
       this.db.get<NewsSummaryRow>(
-        `SELECT * FROM news_summary WHERE window = ? AND status = 'success'
+        `SELECT * FROM news_summary
+         WHERE window = ? AND status = 'success' AND kind <> 'test'
          ORDER BY generated_at DESC, id DESC LIMIT 1`,
         [window],
       ) ?? null
     );
   }
 
-  /** 该窗口最近一次记录（含失败）：`today` 的陈旧规则按它算 */
+  /** 该窗口最近一次记录（含失败、**不含连通性测试**）：`today` 的陈旧规则按它算 */
   latestSummary(window: NewsWindow): NewsSummaryRow | null {
     return (
       this.db.get<NewsSummaryRow>(
-        'SELECT * FROM news_summary WHERE window = ? ORDER BY generated_at DESC, id DESC LIMIT 1',
+        `SELECT * FROM news_summary
+         WHERE window = ? AND kind <> 'test'
+         ORDER BY generated_at DESC, id DESC LIMIT 1`,
         [window],
       ) ?? null
     );
+  }
+
+  /** 指定「报告日」的最新一份成功简报（历史简报按日期取用） */
+  successSummaryForDate(reportDate: string): NewsSummaryRow | null {
+    return (
+      this.db.get<NewsSummaryRow>(
+        `SELECT * FROM news_summary
+         WHERE report_date = ? AND status = 'success' AND kind <> 'test'
+         ORDER BY generated_at DESC, id DESC LIMIT 1`,
+        [reportDate],
+      ) ?? null
+    );
+  }
+
+  /**
+   * 有成功简报的日期索引（倒序）。同一天可能既有当天生成的 `today`、又有次日
+   * 08:30 生成的 `yesterday` —— 每个日期只返回**最新**那一份。
+   */
+  summaryDates(limit = 120): { report_date: string; row: NewsSummaryRow }[] {
+    const rows = this.db.all<NewsSummaryRow>(
+      `SELECT * FROM news_summary
+       WHERE report_date IS NOT NULL AND status = 'success' AND kind <> 'test'
+       ORDER BY report_date DESC, generated_at DESC, id DESC`,
+    );
+    const seen = new Set<string>();
+    const result: { report_date: string; row: NewsSummaryRow }[] = [];
+    for (const row of rows) {
+      const date = row.report_date;
+      if (date === null || seen.has(date)) continue;
+      seen.add(date);
+      result.push({ report_date: date, row });
+      if (result.length >= limit) break;
+    }
+    return result;
   }
 
   history(window: NewsWindow, limit = 50): NewsSummaryRow[] {

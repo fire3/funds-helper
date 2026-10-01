@@ -32,6 +32,7 @@ describe('news 筛选：URL 往返', () => {
       tab: 'feed',
       window: 'yesterday',
       range: '7d',
+      date: '2026-09-27',
       categories: ['policy', 'media'],
       sources: ['ft.home', 'ecb'],
       keyword: 'fed',
@@ -39,8 +40,16 @@ describe('news 筛选：URL 往返', () => {
     const restored = roundTrip(filters);
     expect(restored).toEqual(filters);
     expect(toSearchParams(filters).toString()).toBe(
-      'tab=feed&window=yesterday&range=7d&cat=policy%2Cmedia&src=ft.home%2Cecb&q=fed',
+      'tab=feed&window=yesterday&range=7d&date=2026-09-27&cat=policy%2Cmedia&src=ft.home%2Cecb&q=fed',
     );
+  });
+
+  it('按日期查看：日期往返一致，非法日期被丢弃', () => {
+    const filters = roundTrip({ ...DEFAULT_NEWS_FILTERS, date: '2026-09-27' });
+    expect(filters.date).toBe('2026-09-27');
+    expect(fromSearchParams(new URLSearchParams('date=2026-13-40')).date).toBeNull();
+    expect(fromSearchParams(new URLSearchParams('date=2026-02-30')).date).toBeNull();
+    expect(fromSearchParams(new URLSearchParams('date=09-27-2026')).date).toBeNull();
   });
 
   it('非法取值被丢弃（分享链接里的笔误不该让页面空掉）', () => {
@@ -98,6 +107,14 @@ describe('信息流接口 query', () => {
     expect(params.has('src')).toBe(false);
     expect(params.has('q')).toBe(false);
     expect(params.has('cursor')).toBe(false);
+    expect(params.has('date')).toBe(false);
+  });
+
+  it('选了日期就把 date 发给服务端（range 仍在，服务端优先用 date）', () => {
+    const params = new URLSearchParams(
+      buildFeedQuery({ ...DEFAULT_NEWS_FILTERS, date: '2026-09-27' }),
+    );
+    expect(params.get('date')).toBe('2026-09-27');
   });
 });
 

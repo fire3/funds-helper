@@ -69,6 +69,7 @@ export default function NewsPage() {
           }
         >
           {refresh.data.message}
+          {refresh.data.summary ? ` · 今日简报：${refresh.data.summary.reason}` : ''}
         </p>
       ) : null}
 
@@ -85,12 +86,15 @@ export default function NewsPage() {
         {view.tab === 'summary' ? (
           <div className="flex items-center gap-1.5">
             <span className="text-xs text-slate-500 dark:text-slate-400">窗口</span>
-            <WindowChips value={view.window} onChange={(window) => apply({ ...view, window })} />
+            <WindowChips
+              value={view.date === null ? view.window : null}
+              onChange={(window) => apply({ ...view, window, date: null })}
+            />
           </div>
         ) : null}
       </div>
 
-      {view.tab === 'summary' ? <NewsSummaryView window={view.window} /> : null}
+      {view.tab === 'summary' ? <NewsSummaryView view={view} onApply={apply} /> : null}
       {view.tab === 'feed' ? <FeedList view={view} onApply={apply} /> : null}
       {view.tab === 'sources' ? <SourcesPanel /> : null}
       {view.tab === 'settings' ? <NewsSettingsPanel /> : null}
@@ -104,7 +108,8 @@ function WindowChips({
   value,
   onChange,
 }: {
-  value: NewsFilters['window'];
+  /** null = 当前是「按日期」模式，窗口 chips 全部让位 */
+  value: NewsFilters['window'] | null;
   onChange: (window: NewsFilters['window']) => void;
 }) {
   const labels: Record<NewsFilters['window'], string> = {

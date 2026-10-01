@@ -5,7 +5,7 @@ import { api, apiErrorDetail, apiErrorMessage } from '../../lib/api.ts';
 import { formatDateTime, formatRelative } from '../../lib/format.ts';
 
 /**
- * 信源健康页：**16 个信源各自的运行状态**。
+ * 信源健康页：**各信源各自的运行状态**。
  *
  * 这一页回答的是「上游还好吗」——`last_status` / `last_error` / 连续失败次数 / 下次抓取，
  * 让「某个站点在挑战我」变成一个可查询的事实，而不是只留在日志里。
@@ -36,6 +36,10 @@ export function SourcesPanel() {
   const { sources, lastRun } = query.data;
   const totalItems = sources.reduce((sum, source) => sum + source.itemCount, 0);
   const failing = sources.filter((source) => source.consecFailures > 0);
+  // 网络层失败没有 HTTP 状态码：这类信源本身没问题，是 Node 的 fetch 默认不走系统代理
+  const networkFailing = sources.filter(
+    (source) => source.lastStatus === null && source.lastError !== null,
+  );
 
   return (
     <div className="space-y-4">
@@ -84,6 +88,16 @@ export function SourcesPanel() {
           </p>
         ) : null}
       </SectionCard>
+
+      {networkFailing.length > 0 ? (
+        <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-300">
+          有 {networkFailing.length} 个信源是网络层失败（没有 HTTP 状态码）： Node 的 fetch{' '}
+          <strong>默认不读</strong> 系统代理环境变量，本机直连这些站点会超时。 启动服务时带上{' '}
+          <code className="rounded bg-amber-100 px-1">NODE_USE_ENV_PROXY=1</code>
+          （见 <code className="rounded bg-amber-100 px-1">.env.example</code>
+          ）即可像 curl 一样走代理。
+        </p>
+      ) : null}
 
       <SectionCard
         title="逐信源状态"

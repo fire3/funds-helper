@@ -38,7 +38,6 @@ export const NEWS_SOURCE_IDS = [
   'ft.home',
   'ft.markets',
   'cnbc.markets',
-  'yahoo.finance',
   'nikkei.asia',
   'scmp',
   'economist.finance',
@@ -275,6 +274,8 @@ export const NewsSummaryRecordSchema = z.object({
   promptKey: z.string().nullable(),
   /** system+user 的 sha256 前 8 位：提示词改了但没重新生成时，UI 能提示「旧提示词」 */
   promptHash: z.string().nullable(),
+  /** 这份简报覆盖的 Asia/Shanghai 日历日（`YYYY-MM-DD`）；`last7d` 等跨日窗口为 null */
+  reportDate: z.string().nullable(),
   /** 成功时为结构化结果；失败/连通性测试为 null */
   payload: NewsSummaryBodySchema.nullable(),
   itemCount: z.number().int().nullable(),
@@ -302,6 +303,35 @@ export const NewsSummaryHistoryResponseSchema = z.object({
   disclaimer: z.string(),
 });
 export type NewsSummaryHistoryResponse = z.infer<typeof NewsSummaryHistoryResponseSchema>;
+
+/** `YYYY-MM-DD`（Asia/Shanghai 日历日）：信息流与简报「按日期查看」共用的取值 */
+export const NewsDateSchema = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, '日期必须是 YYYY-MM-DD')
+  .refine((value) => {
+    const ms = Date.parse(`${value}T00:00:00Z`);
+    // 回环校验：2 月 30 日这类「格式对但不存在」的日期会被 Date 悄悄滚动，必须挡住
+    return !Number.isNaN(ms) && new Date(ms).toISOString().slice(0, 10) === value;
+  }, '日期不存在');
+export type NewsDate = z.infer<typeof NewsDateSchema>;
+
+/** 历史简报的日期索引：前端据此渲染「哪几天有简报」 */
+export const NewsDateSummarySchema = z.object({
+  date: z.string(),
+  /** 该日期最新一份成功简报的 id */
+  summaryId: z.number().int(),
+  window: NewsWindowSchema,
+  generatedAt: z.string(),
+  model: z.string().nullable(),
+  itemCount: z.number().int().nullable(),
+});
+export type NewsDateSummary = z.infer<typeof NewsDateSummarySchema>;
+
+export const NewsDatesResponseSchema = z.object({
+  dates: z.array(NewsDateSummarySchema),
+  disclaimer: z.string(),
+});
+export type NewsDatesResponse = z.infer<typeof NewsDatesResponseSchema>;
 
 /** 今日 AI 调用用量（界面显示「今日 3/10」） */
 export const NewsUsageSchema = z.object({
@@ -433,6 +463,17 @@ export type NewsConfigTestResponse = z.infer<typeof NewsConfigTestResponseSchema
 // 抓取
 // ---------------------------------------------------------------------------
 
+/** 抓取完成后自动生成今日简报的结果（抓取任务里附带，失败不影响抓取本身） */
+export const NEWS_AUTO_SUMMARY_STATUSES = ['generated', 'reused', 'skipped', 'failed'] as const;
+export const NewsAutoSummarySchema = z.object({
+  status: z.enum(NEWS_AUTO_SUMMARY_STATUSES),
+  /** 人话说明（界面直接展示）：为什么生成 / 复用 / 跳过 / 失败 */
+  reason: z.string(),
+  /** 生成或复用时对应的简报 id；跳过/失败为 null */
+  summaryId: z.number().int().nullable(),
+});
+export type NewsAutoSummary = z.infer<typeof NewsAutoSummarySchema>;
+
 export const NewsRefreshResponseSchema = z.object({
   ok: z.boolean(),
   /** 本轮到点（或强制）需要抓取的信源数 */
@@ -443,5 +484,7 @@ export const NewsRefreshResponseSchema = z.object({
   skipped: z.boolean(),
   durationMs: z.number(),
   message: z.string(),
+  /** 抓取完成后自动生成的今日简报（未尝试 / 未配置时为 null） */
+  summary: NewsAutoSummarySchema.nullable().optional(),
 });
 export type NewsRefreshResponse = z.infer<typeof NewsRefreshResponseSchema>;
